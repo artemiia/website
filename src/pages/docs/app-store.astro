@@ -171,11 +171,12 @@ ipc.Serve(ctx, conn, d)   <span class="comment">// on the --socket the daemon su
 
   <h3>Broker authorization (exposes + grants)</h3>
 
-  <p>Apps never dial each other's sockets directly - every call goes through the daemon's broker, which enforces two gates before any dispatch:</p>
+  <p>Calls into an app are brokered by the daemon (this is what <code>pilotctl appstore call</code> uses). The broker authorizes every call it routes before dispatching:</p>
   <ul>
-    <li><strong>Exposes gate</strong> - a method is dispatchable only if the target app lists it in its manifest <code>exposes</code> set. That list is the app's entire callable surface; anything else is refused, even for the daemon itself.</li>
-    <li><strong>Grant gate</strong> - when one app calls another, the caller must declare a matching <code>ipc.call</code> grant targeting <code>&lt;app&gt;.&lt;method&gt;</code> (exact, <code>&lt;app&gt;.*</code>, or <code>*</code>). No grant, no call.</li>
+    <li><strong>Exposes gate</strong> - a method is dispatchable only if the target app lists it in its manifest <code>exposes</code> set. That list is the app's entire brokered surface; anything else is refused, including for the daemon's own <code>appstore call</code>. <em>Active today.</em></li>
+    <li><strong>Grant gate</strong> - for app-to-app calls, the broker requires the caller to hold a matching <code>ipc.call</code> grant targeting <code>&lt;app&gt;.&lt;method&gt;</code> (exact, <code>&lt;app&gt;.*</code>, or <code>*</code>). The manifest declares this surface; the user reviews it at install. <em>The enforcement is in the broker; the daemon path that brokers inter-app calls is being wired up.</em></li>
   </ul>
+  <p class="muted">Brokering is the sanctioned inter-app path and the place authorization is enforced; co-located <code>shareable</code> apps are not yet isolated at the OS level, so the grants describe and enforce intended access through the broker rather than a kernel sandbox.</p>
 
   <h3>Supervisor hardening</h3>
 
@@ -187,9 +188,9 @@ ipc.Serve(ctx, conn, d)   <span class="comment">// on the --socket the daemon su
     <li><strong>Audit log rotation</strong> - every lifecycle event (spawn, exit, verify-fail, suspend, resume) is written to a per-app JSONL audit log that rotates across a bounded number of generations, so a crash-looping app can't fill the disk while recent forensics are retained.</li>
   </ul>
 
-  <h3>Extension hooks</h3>
+  <h3>Extension hooks (framework)</h3>
 
-  <p>Apps may register hooks on daemon primitives (declared in the manifest), but the hook surface is bounded: per-app rate limiting caps how often the daemon will dispatch into an app's hooks, and the number of dynamic hook registrations per app is capped - so a hostile hook can't become a DoS amplifier.</p>
+  <p>The app-store includes an extension framework where an app can register hooks on daemon primitives (declared in its manifest <code>extends</code>/<code>dynamic_extends</code>). The framework is built with DoS bounds from the start: per-app rate limiting on hook dispatch and a cap on dynamic registrations per app, so a hostile hook can't become an amplifier. <em>The framework and its safeguards are implemented in the app-store module; wiring hook dispatch into daemon primitives is in progress.</em></p>
 
   <h2 id="example">Worked example: io.pilot.cosift</h2>
 
