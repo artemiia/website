@@ -12,3 +12,4 @@ worker/coverage/
 
 .env
 .gstack/
+node_modules
