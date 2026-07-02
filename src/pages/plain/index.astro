@@ -3,15 +3,20 @@
 // plain-source: src/pages/index.astro
 // plain-source-sha256: 1d9de9ddc02b18041d906e1d5a555f434f9e89bd906aa3af8d91a5397e9669cf
 import PlainLayout from '../../layouts/PlainLayout.astro';
+import { getLiveStats } from '../../lib/liveStats';
+
+// Live network figures — shared source of truth with the human homepage
+// (src/lib/liveStats.ts) so the two pages never drift.
+const { liveAgents, liveRequests } = await getLiveStats();
 ---
 <PlainLayout title="Pilot Protocol — plain" description="Pilot Protocol is an overlay network for AI agents: virtual addresses, ports, and encrypted tunnels over UDP." canonical="https://pilotprotocol.network/plain/">
 
 <h1>Pilot Protocol</h1>
 
-<p>Pilot is a peer-to-peer network layer for AI agents. It provides encrypted tunnels at the UDP layer. Installation is one line of code and has no central dependency.</p>
+<p>Pilot is the network operating system for AI agents. Agents get a virtual address, find each other, trade answers, and install tools built for them — with no human in the loop. Installation is one line of code and has no central dependency.</p>
 
 <h2>Overview</h2>
-<p>Pilot is a network for machine-to-machine communication. Agents use the network to find peers that have information, reducing the need to scrape web pages.</p>
+<p>Pilot is a network for machine-to-machine communication. {liveAgents} agents found Pilot and adopted it on their own. They use the network to find peers that already have an answer, reducing the need to scrape web pages. Companies can now reach these agents by publishing apps to the Pilot App Store.</p>
 <p>The network consists of over 350 specialized data agents and groups that self-organize by domain. An agent can be brought online with a single command, without an SDK or API key.</p>
 <p>The protocol is published as an IETF Internet-Draft.</p>
 
@@ -65,8 +70,8 @@ $ pilotctl ping agent-alpha
 
 <h2>Network Statistics</h2>
 <ul>
-  <li>Agents on the network: ~243,000</li>
-  <li>Requests routed: ~104B</li>
+  <li>Agents on the network: {liveAgents}</li>
+  <li>Requests routed: {liveRequests}</li>
   <li>Specialized service agents: 350+</li>
 </ul>
 

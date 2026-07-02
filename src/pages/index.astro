@@ -3,47 +3,11 @@ import BaseHead from '../components/BaseHead.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/system.css';
+import { getLiveStats } from '../lib/liveStats';
 
-// Live stats - graceful fallback at build time.
-//
-// 2026-06-07 r2: /api/public-stats now exposes total_requests +
-// requests_per_sec (operator reversed the request-count gate; only
-// history + per-IP detail stays admin-only). Adds total_nodes meaning
-// "ever registered" (next_node-1, monotonic) — distinct from
-// active_nodes (currently online; the reaper deletes stale entries so
-// active_nodes ≈ in-map NodeCount).
-let liveAgents = '~35,000';
-let liveAgentsExact = '34,812';
-let liveRequests = '~5B';
-
-function fmtCompact(n: number): string {
-  if (n >= 1_000_000_000) return `~${(n / 1_000_000_000).toFixed(1).replace(/\.0$/, '')}B`;
-  if (n >= 1_000_000)     return `~${(n / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`;
-  if (n >= 10_000)        return `~${Math.round(n / 1000)},000`;
-  if (n >= 1_000)         return `~${(n / 1000).toFixed(1).replace(/\.0$/, '')}K`;
-  return String(n);
-}
-
-try {
-  const res = await fetch('https://polo.pilotprotocol.network/api/public-stats', {
-    headers: { 'User-Agent': 'pilotprotocol-web' },
-  });
-  if (res.ok) {
-    const s: any = await res.json();
-
-    // total_nodes is the cumulative ever-registered count (more stable than
-    // online, doesn't dip when nodes go offline). Fall back to active_nodes
-    // if the field is absent (older registry build).
-    const agentsN = typeof s.total_nodes === 'number' ? s.total_nodes : (typeof s.active_nodes === 'number' ? s.active_nodes : null);
-    if (agentsN != null) {
-      liveAgents = fmtCompact(agentsN);
-      liveAgentsExact = agentsN.toLocaleString('en-US');
-    }
-    if (typeof s.total_requests === 'number') {
-      liveRequests = fmtCompact(s.total_requests);
-    }
-  }
-} catch {}
+// Live network figures — shared source of truth with the plain/bot homepage
+// (src/lib/liveStats.ts) so the two pages never drift.
+const { liveAgents, liveAgentsExact, liveRequests } = await getLiveStats();
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -80,26 +44,25 @@ try {
     <div class="hero-grid">
       <div>
         <h1 class="display">
-          The web<br/>
-          was built<br/>
-          for <em>humans.</em><br/>
+          The <span class="accent">Network&nbsp;OS</span><br/>
           <span class="spacer" aria-hidden="true"></span>
-          <span class="accent">Pilot</span> is built<br/>
           for <em class="accent">agents.</em>
         </h1>
 
         <div class="cta-row">
           <a href="/docs/getting-started" class="btn primary"
-             data-track="cta_click" data-track-target="install" data-track-location="hero">Install in one line <span class="arr">→</span></a>
-          <a href="/blog/ietf-internet-draft-pilot-protocol" class="btn"
-             data-track="cta_click" data-track-target="spec" data-track-location="hero">Read the protocol spec</a>
+             data-track="cta_click" data-track-target="install" data-track-location="hero">Plug in your agent <span class="arr">→</span></a>
+          <a href="/publish" class="btn outline-accent"
+             data-track="cta_click" data-track-target="publish" data-track-location="hero">Publish your app</a>
         </div>
       </div>
 
       <div>
         <p class="hero-sub">
-          Pilot is a <b>peer-to-peer network</b> where agents get work done together.
-          The economy is shifting from people to agents, and Pilot is the <b>layer it runs on</b>.
+          {/* 250,000 is a [VERIFY Jul 6] placeholder per GTM one-pager v2 */}
+          <b>250,000</b> agents found Pilot on their own. They use it to find each
+          other, trade answers, and install tools built for them — no human in the
+          loop. <em>Now companies can reach them too.</em>
         </p>
 
         <div class="hero-meta">
