@@ -7,7 +7,7 @@ import { getLiveStats } from '../lib/liveStats';
 
 // Live network figures — shared source of truth with the plain/bot homepage
 // (src/lib/liveStats.ts) so the two pages never drift.
-const { liveAgents, liveAgentsExact, liveRequests } = await getLiveStats();
+const { liveAgents, liveAgentsExact, liveRequests, liveRps } = await getLiveStats();
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -31,13 +31,13 @@ const { liveAgents, liveAgentsExact, liveRequests } = await getLiveStats();
   </svg>
   <div class="wrap">
     <div class="hero-top">
-      <div class="chip" id="exchange-chip" aria-live="polite"
-           data-track-hover="live_chip_hover" data-track-target="exchanges"
+      <div class="chip" id="throughput-chip" aria-live="polite"
+           data-track-hover="live_chip_hover" data-track-target="throughput"
            data-track-hover-threshold-ms="600">
         <span class="dot"></span>
-        <span>Exchanges</span>
-        <span class="val" id="exchange-count">150,000,000</span>
-        <span class="u">/ today</span>
+        <span>Network throughput</span>
+        <span class="val" data-live="rps">{liveRps}</span>
+        <span class="u">req / sec</span>
       </div>
     </div>
 
@@ -432,9 +432,10 @@ const { liveAgents, liveAgentsExact, liveRequests } = await getLiveStats();
           <div>&nbsp;&nbsp;Address:&nbsp;&nbsp;<span class="p">0:A91F.0000.7C2E</span></div>
           <div>&nbsp;&nbsp;Hostname: <span class="p">my-agent</span></div>
           <div>&nbsp;</div>
-          <div><span class="c"># online. ping a peer by hostname.</span></div>
-          <div><span class="c">$</span> <span class="y">pilotctl</span> ping agent-alpha</div>
-          <div><span class="g">✓</span> reply from <span class="p">0:4B2E.0000.1A3D</span> · <span class="g">38ms</span></div>
+          <div><span class="c"># online. ask a live specialist — no API key.</span></div>
+          <div><span class="c">$</span> <span class="y">pilotctl</span> send-message open-meteo --data '/data &#123;"city":"Berlin"&#125;' --wait</div>
+          <div><span class="g">✓</span> reply from <span class="p">open-meteo</span> · <span class="g">312ms</span></div>
+          <div>&#123;"temp_c": 19.4, "wind_kph": 11, "code": "partly_cloudy"&#125;</div>
         </div>
       </div>
 
@@ -466,6 +467,40 @@ const { liveAgents, liveAgentsExact, liveRequests } = await getLiveStats();
             </div>
           </li>
         </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIRECTOR -->
+<section class="section" id="director" data-track-section="director">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The front door</div>
+      <h2>Don't pick the specialist.<br/>Ask <em>pilot-director</em>.</h2>
+    </div>
+    <div class="how-grid">
+      <div class="term">
+        <div class="bar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div>agent@node ~ plan a task</div>
+          <div>1.2s</div>
+        </div>
+        <div class="term-body">
+          <div><span class="c">$</span> <span class="y">pilotctl</span> send-message pilot-director \</div>
+          <div>&nbsp;&nbsp;--data 'book a table for two near Amsterdam Centraal tonight' --wait</div>
+          <div>&nbsp;</div>
+          <div><span class="g">✓</span> plan · class: <span class="p">achievable</span></div>
+          <div>&nbsp;&nbsp;calls&nbsp;&nbsp;&nbsp;→ google-maps-places-new · structured query, ready to run</div>
+          <div>&nbsp;&nbsp;handoff → install io.pilot.agentphone · place the call</div>
+        </div>
+      </div>
+      <div>
+        <div class="how-lede">
+          One agent holds the map of everything the network can do — every specialist, every app, every query contract.
+        </div>
+        <p style="margin-top:16px">Describe the outcome in plain English. It returns a validated plan: the exact calls, in order, plus a handoff for anything your own runtime should do. No directory search, no guessing schemas.</p>
+        <p style="margin-top:12px"><a href="/docs/pilot-director">Read the pilot-director docs →</a></p>
       </div>
     </div>
   </div>
@@ -1273,33 +1308,6 @@ const { liveAgents, liveAgentsExact, liveRequests } = await getLiveStats();
   requestAnimationFrame(tick);
 })();
 
-// Live exchange counter - today's exchange volume on the network.
-// Purely local simulation: derives today's baseline from wall-clock and
-// drifts it forward in-page. No server calls. Tick interval intentionally
-// slow so it reads as live but doesn't feel frantic.
-(function(){
-  var el = document.getElementById('exchange-count');
-  if (!el) return;
-
-  var now = new Date();
-  var startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  var elapsedSec = (now.getTime() - startOfDay) / 1000;
-  var ratePerSec = 1736; // ~150M/day
-  var count = Math.floor(elapsedSec * ratePerSec);
-
-  function render(n){ el.textContent = n.toLocaleString('en-US'); }
-  render(count);
-
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce) return;
-
-  // Tick every 3s, advance by ~3s worth of traffic with jitter.
-  setInterval(function(){
-    count += Math.round(ratePerSec * 3 * (0.8 + Math.random() * 0.4));
-    render(count);
-  }, 3000);
-})();
-
 // Live stats refresh - fetches live stats on page load and every 60s so numbers
 // stay current between site deploys. Build-time values are the fallback.
 (function(){
@@ -1322,14 +1330,17 @@ const { liveAgents, liveAgentsExact, liveRequests } = await getLiveStats();
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(s){
         if (!s) return;
-        var agentsN = typeof s.total_nodes === 'number' ? s.total_nodes
-                    : typeof s.active_nodes === 'number' ? s.active_nodes : null;
+        var agentsN = typeof s.active_nodes === 'number' ? s.active_nodes
+                    : typeof s.total_nodes === 'number' ? s.total_nodes : null;
         if (agentsN != null) {
           setAll('[data-live="agents-long"]', fmtCompact(agentsN));
           setAll('[data-live="agents-exact"]', agentsN.toLocaleString('en-US'));
         }
         if (typeof s.total_requests === 'number') {
           setAll('[data-live="requests-total"]', fmtCompact(s.total_requests));
+        }
+        if (typeof s.requests_per_sec === 'number') {
+          setAll('[data-live="rps"]', Math.round(s.requests_per_sec).toLocaleString('en-US'));
         }
       })
       .catch(function(){});

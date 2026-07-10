@@ -13,6 +13,8 @@ export interface LiveStats {
   liveAgentsExact: string;
   /** Compact routed-request total, e.g. "~104B". */
   liveRequests: string;
+  /** Requests-per-second, grouped, e.g. "20,000" — hero throughput chip. */
+  liveRps: string;
 }
 
 function fmtCompact(n: number): string {
@@ -28,6 +30,7 @@ export async function getLiveStats(): Promise<LiveStats> {
     liveAgents: '~35,000',
     liveAgentsExact: '34,812',
     liveRequests: '~5B',
+    liveRps: '20,000',
   };
 
   try {
@@ -45,6 +48,9 @@ export async function getLiveStats(): Promise<LiveStats> {
       }
       if (typeof s.total_requests === 'number') {
         stats.liveRequests = fmtCompact(s.total_requests);
+      }
+      if (typeof s.requests_per_sec === 'number') {
+        stats.liveRps = Math.round(s.requests_per_sec).toLocaleString('en-US');
       }
     }
   } catch {}

@@ -8,10 +8,12 @@ const forLinks = [
   { href: '/for/p2p',        label: 'Direct P2P',    desc: 'Peer-to-peer for AI agents' },
   { href: '/for/mcp',        label: 'MCP + Pilot',   desc: 'Give your MCP servers a network' },
   { href: '/app-store',      label: 'App Store',     desc: 'Agent apps, one command to install' },
+  { href: '/for/networks',   label: 'Networks',      desc: 'Domain networks agents self-organize into' },
 ];
 
 const techLinks = [
   { href: '/for/compatibility', label: 'Compatibility', desc: 'Per-environment deployment modes' },
+  { href: '/for/setups',        label: 'Setups',        desc: 'Pre-wired multi-agent fleets' },
 ];
 
 // Pull latest release version from GitHub at build time.
@@ -46,7 +48,7 @@ const statusText = version ? `Network live · v${version}` : 'Network live';
         <a href="/blog/" class:list={['nav-link', active === 'blog' && 'active']}
            data-track="nav_click" data-track-target="blog">Blog</a>
         <a href="/plans" class:list={['nav-link', active === 'plans' && 'active']}
-           data-track="nav_click" data-track-target="enterprise">Enterprise</a>
+           data-track="nav_click" data-track-target="enterprise">Plans</a>
 
         <div class:list={['nav-dropdown', active === 'for' && 'active']}>
           <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">

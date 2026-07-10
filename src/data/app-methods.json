@@ -1,4 +1,232 @@
 {
+"io.pilot.agentphone": [
+{
+"name": "agentphone.usage",
+"summary": "Account status: plan, phone-number hold limit (used/limit/remaining), and message/call/webhook stats. Call this first to orient in a session. Read-only; no charge."
+},
+{
+"name": "agentphone.usage_daily",
+"summary": "Daily usage breakdown for the last N days (max 365). Read-only."
+},
+{
+"name": "agentphone.usage_monthly",
+"summary": "Monthly usage aggregation. Read-only."
+},
+{
+"name": "agentphone.usage_by_number",
+"summary": "Usage broken down per phone number. Read-only."
+},
+{
+"name": "agentphone.usage_by_agent",
+"summary": "Usage broken down per agent over a period. Read-only."
+},
+{
+"name": "agentphone.list_voices",
+"summary": "List available text-to-speech voices (voice_id, voice_name, provider, gender, accent, preview_audio_url) across ElevenLabs, Cartesia, OpenAI, and platform voices. gender/accent/preview may be null \u2014 do not crash on missing fields. Use voice_id when creating/updating an agent. Read-only."
+},
+{
+"name": "agentphone.list_agents",
+"summary": "List your agents (phone personas: name, voiceMode, model tier, system prompt, attached numbers). You get one starter agent on account setup \u2014 ALWAYS list before creating another. Read-only."
+},
+{
+"name": "agentphone.create_agent",
+"summary": "Create an agent (phone persona). For AI-driven use pass voiceMode:\"hosted\" explicitly (the backend defaults to \"webhook\", which needs a configured webhook or inbound calls fail). systemPrompt is required for hosted. Pick a voice from agentphone.list_voices. Free (no telephony spend)."
+},
+{
+"name": "agentphone.get_agent",
+"summary": "Get one agent's full config and its attached numbers. Read-only."
+},
+{
+"name": "agentphone.update_agent",
+"summary": "Update an agent \u2014 only the fields you send change. Any create field is updatable (systemPrompt, voice, modelTier, \u2026). Free."
+},
+{
+"name": "agentphone.delete_agent",
+"summary": "Delete an agent. Irreversible \u2014 clears the agent's references on its numbers/conversations/calls (those are NOT deleted). Confirm with your human first. Free."
+},
+{
+"name": "agentphone.attach_number",
+"summary": "Attach an existing number to an agent so the agent can call/text from it. Free."
+},
+{
+"name": "agentphone.detach_number",
+"summary": "Detach a number from an agent (the number is kept, just unassigned). Free."
+},
+{
+"name": "agentphone.list_agent_conversations",
+"summary": "List an agent's conversation threads, newest activity first (data[], hasMore, total). Read-only."
+},
+{
+"name": "agentphone.list_agent_calls",
+"summary": "List an agent's calls (data[], hasMore, total). Read-only."
+},
+{
+"name": "agentphone.list_numbers",
+"summary": "List your active phone numbers (id, phoneNumber, country, status, agentId). Read-only."
+},
+{
+"name": "agentphone.buy_number",
+"summary": "Provision a new US/CA phone number. COSTS $3.00 from your $5 Pilot budget (402 if it would overdraw). The provisioned number is saved to this host's ~/.pilot/.agentphone so you can recall it later with agentphone.mynumber \u2014 no need to store it yourself. Optionally attach to an agent and request an area code."
+},
+{
+"name": "agentphone.get_number",
+"summary": "Get one phone number by id (any status, including released). Read-only."
+},
+{
+"name": "agentphone.release_number",
+"summary": "Release (delete) a number. IRREVERSIBLE \u2014 the number returns to the carrier pool; no refund for the unused month. Confirm with your human first. Free to call."
+},
+{
+"name": "agentphone.list_number_messages",
+"summary": "List messages on a number (inbound + outbound), newest first, cursor-paginated. THE non-websocket way to detect SMS replies: poll with the `after` cursor and filter direction==\"inbound\". Read-only."
+},
+{
+"name": "agentphone.list_number_calls",
+"summary": "List calls on a number. Read-only."
+},
+{
+"name": "agentphone.get_contact_card",
+"summary": "Get the iMessage contact card shown on a number (firstName, lastName, displayName, hasAvatar). iMessage only. Read-only."
+},
+{
+"name": "agentphone.set_contact_card",
+"summary": "Create/replace the iMessage contact card on a number (name + avatar shown to recipients). iMessage only. Free."
+},
+{
+"name": "agentphone.delete_contact_card",
+"summary": "Remove the iMessage contact card from a number. Free."
+},
+{
+"name": "agentphone.send_message",
+"summary": "Send an SMS/iMessage. COSTS MONEY (~$0.01\u20130.02, debited from your $5 budget \u2192 402 if over). Auto-delivers over iMessage when both sides support it, else SMS/MMS \u2014 the response `channel` (sms|mms|imessage) tells you how it went. E.164 for `to_number` (or a group id grp_\u2026 for an iMessage group). iMessage-only extras (send_style, reply_to_message_id) are silently ignored on SMS."
+},
+{
+"name": "agentphone.react",
+"summary": "Send a tapback reaction to a message. iMessage ONLY \u2014 returns 400 on SMS. Free."
+},
+{
+"name": "agentphone.list_calls",
+"summary": "List calls for the account (filter by status/direction). Read-only."
+},
+{
+"name": "agentphone.place_call",
+"summary": "Place an OUTBOUND voice call. COSTS MONEY (per-minute, ~$0.05+, debited from your $5 budget \u2192 402 if over). With `systemPrompt` the AI runs the call autonomously (recommended); without it, each turn is POSTed to the agent's webhook. Returns a call id IMMEDIATELY (async) \u2014 the phone rings in a second or two. Then POLL agentphone.get_call every few seconds until status is completed/failed to read the transcript. Cannot call 911 / N11 / crisis lines (blocked)."
+},
+{
+"name": "agentphone.get_call",
+"summary": "Get a call and its embedded transcripts[]. THE poll target for a call outcome (no websockets): call every few seconds until status is completed or failed (in-progress means partial/empty transcript). Also carries durationSeconds, startedAt, endedAt. Read-only."
+},
+{
+"name": "agentphone.end_call",
+"summary": "Terminate an in-progress call. status/endedAt settle shortly after via the provider \u2014 keep polling agentphone.get_call until terminal. Free."
+},
+{
+"name": "agentphone.get_transcript",
+"summary": "Get the full ordered transcript of a call as plain JSON (user utterance + agent response per turn). This is the REST/polling alternative to the SSE live-transcript stream \u2014 the adapter never uses the stream. Read-only."
+},
+{
+"name": "agentphone.list_conversations",
+"summary": "List conversation threads (one per external contact or iMessage group), sorted by lastMessageAt desc (data[], hasMore, total). Read-only."
+},
+{
+"name": "agentphone.get_conversation",
+"summary": "Get one conversation with its recent messages (participant, isGroup, group roster, messageCount, metadata). Read-only."
+},
+{
+"name": "agentphone.update_conversation",
+"summary": "Update a conversation's `metadata` (attach custom AI context/state to the thread). Free."
+},
+{
+"name": "agentphone.list_conversation_messages",
+"summary": "List a conversation's messages, cursor-paginated (data[], hasMore). Poll with `after` to catch new inbound replies in a thread. Read-only."
+},
+{
+"name": "agentphone.typing",
+"summary": "Show a typing indicator before you reply. iMessage only, best-effort, auto-expires (no stop call). Free."
+},
+{
+"name": "agentphone.set_background",
+"summary": "Set a chat background image for a conversation. iMessage only. Free."
+},
+{
+"name": "agentphone.clear_background",
+"summary": "Clear a conversation's chat background. iMessage only. Free."
+},
+{
+"name": "agentphone.list_contacts",
+"summary": "List saved contacts (data[], hasMore, total); `search` filters by name/phone. Read-only."
+},
+{
+"name": "agentphone.create_contact",
+"summary": "Save a contact so you can look them up by name later. phoneNumber is normalized to E.164; returns 409 if the phone already exists. Free."
+},
+{
+"name": "agentphone.get_contact",
+"summary": "Get one contact by id. Read-only."
+},
+{
+"name": "agentphone.update_contact",
+"summary": "Update a contact \u2014 only the fields you send change (phone is re-normalized; 409 on conflict). Free."
+},
+{
+"name": "agentphone.delete_contact",
+"summary": "Delete a contact. Confirm with your human first. Free."
+},
+{
+"name": "agentphone.get_webhook",
+"summary": "Get the account-level webhook config. Read-only. (Polling is the default event model for this adapter; webhooks are optional.)"
+},
+{
+"name": "agentphone.set_webhook",
+"summary": "Set the account-level webhook URL (returns a signing `secret`; a new one each call). NOTE: on the shared Pilot AgentPhone account this is a GLOBAL setting \u2014 prefer per-agent webhooks or polling. Free."
+},
+{
+"name": "agentphone.delete_webhook",
+"summary": "Remove the account-level webhook. Global on the shared account \u2014 use with care. Free."
+},
+{
+"name": "agentphone.list_webhook_deliveries",
+"summary": "List recent webhook delivery attempts (items[], total). Read-only."
+},
+{
+"name": "agentphone.webhook_delivery_stats",
+"summary": "Aggregated webhook delivery stats over the last N hours (success/failed/pending, byEventType, byHour). Read-only."
+},
+{
+"name": "agentphone.test_webhook",
+"summary": "Send a synthetic test event to verify your endpoint is reachable and verifying signatures. Free."
+},
+{
+"name": "agentphone.get_agent_webhook",
+"summary": "Get an agent-specific webhook (overrides the account default for that agent). Read-only."
+},
+{
+"name": "agentphone.set_agent_webhook",
+"summary": "Set an agent-specific webhook URL (overrides the account default for THIS agent only \u2014 safer than the account-level webhook on a shared account). Free."
+},
+{
+"name": "agentphone.delete_agent_webhook",
+"summary": "Delete an agent-specific webhook (the agent falls back to the account default). Free."
+},
+{
+"name": "agentphone.mynumber",
+"summary": "Recall the phone number(s) THIS daemon provisioned (local, no backend call, free). Reads ~/.pilot/.agentphone, populated automatically by agentphone.buy_number. Returns {entries:[{id,phoneNumber,status,agentId,...}]} \u2014 empty if this host hasn't provisioned one yet. Use it to find 'my number' without listing the shared account."
+}
+],
+"io.pilot.bowmark": [
+{
+"name": "bowmark.ask",
+"summary": "Give it a site and a plain-English task (e.g. 'find Apple's latest 10-K') and it returns a ready-to-run cheatsheet \u2014 a URL shortcut to fill and navigate and/or a short ui_procedure of steps. Call it before any browser action, in place of exploring the page yourself, and execute open-loop. status=ok returns an id; no_useful_data/site_not_supported \u2192 browse manually; ambiguous_scope \u2192 retry with scopeHint; rate_limited \u2192 back off. Pass variants:{auth_state:'logged_in'} for signed-in surfaces. Intent, not a URL."
+},
+{
+"name": "bowmark.report_outcome",
+"summary": "After running a cheatsheet from ask, report whether every step ran exactly as written (envelope_id + success, optional evidence). success=true only if it ran clean \u2014 no retries, no raw-JS fallback, no extra clicks; false on any deviation, even if you still got the answer. Honest results trigger a re-crawl that keeps the cheatsheet fresh."
+},
+{
+"name": "bowmark.help",
+"summary": "Discovery: every method with params, kind, and latency class."
+}
+],
 "io.pilot.docker": [
 {
 "name": "docker.engine_start",
@@ -175,13 +403,41 @@
 "summary": "Discovery: methods, params, and latency classes"
 }
 ],
-"io.pilot.smolmachines": [
+"io.pilot.smol": [
 {
-"name": "smolmachines.exec",
-"summary": "Run any smolvm subcommand in a fast, hardware-isolated Linux microVM. Payload is {\"args\":[...]} \u2014 the verbatim smolvm argv. Command surface: `machine run` (ephemeral VM, one-off command), `machine create|start|exec|stop|delete|shell|status|ls|cp|update|monitor|prune` (persistent VMs; `exec` persists filesystem changes), `pack create|run` (portable .smolmachine artifacts), `serve` (HTTP API), `config`. Key flags: `--net` (networking is OFF by default), `--image <oci|./archive.tar|->`, `-v HOST:GUEST`, `-p HOST:GUEST`, `--gpu`, `--ssh-agent`, `--secret-env GUEST=HOST`. Example args: [\"machine\",\"run\",\"--net\",\"--image\",\"alpine\",\"--\",\"sh\",\"-c\",\"echo hi\"]. Not supported over IPC: interactive sessions (-it / `machine shell`) and long-running `serve`."
+"name": "smol.exec",
+"summary": "Run ANY smolvm subcommand in a fast, hardware-isolated Linux microVM LOCALLY. Payload is {\"args\":[...]} (verbatim smolvm argv) with optional {\"stdin\":\"...\"}. This one method exposes the whole smolvm CLI \u2014 for the complete agent reference call smol.exec {\"args\":[\"--help\"]}, and for any subcommand call smol.exec {\"args\":[\"<group>\",\"--help\"]}.\n\nCOMMAND SURFACE:\n\u2022 machine run \u2014 create an EPHEMERAL VM, run one command, tear down (nothing persists). e.g. [\"machine\",\"run\",\"--net\",\"--image\",\"alpine\",\"--\",\"sh\",\"-c\",\"echo hi\"].\n\u2022 machine create | start | stop | delete \u2014 lifecycle of a PERSISTENT named VM (--name, default \"default\").\n\u2022 machine exec \u2014 run a command in a persistent VM; FILESYSTEM CHANGES PERSIST across sessions (package installs stick). e.g. [\"machine\",\"exec\",\"--name\",\"myvm\",\"--\",\"apk\",\"add\",\"python3\"].\n\u2022 machine status | ls | images | monitor \u2014 read-only introspection (do NOT stop a running VM).\n\u2022 machine cp \u2014 copy files host\u2194VM (HOST:GUEST). machine update \u2014 change mounts/ports/env/cpu/memory on a STOPPED VM. machine prune \u2014 reclaim layers (prune --all needs the VM stopped).\n\u2022 pack create -o <out> \u2014 build a portable, self-contained .smolmachine executable; pack run \u2014 run one. machine create --from <artifact>.smolmachine for fast start.\n\u2022 serve start --listen <addr> \u2014 HTTP API server (POST/GET /api/v1/machines\u2026); serve openapi \u2014 the spec.\n\u2022 config \u2014 manage registries + defaults.\n\nKEY FLAGS: --net (networking is OFF by default), --image <oci ref | ./archive.tar | ./rootfs/ | ->, -v HOST:GUEST[:ro] (mount; -v host:/workspace replaces the default workspace), -p HOST:GUEST (port), --gpu, --ssh-agent (forward host SSH agent; keys never enter the VM), --secret-env GUEST=HOST / --secret-file GUEST=/abs / -s Smolfile (inject secrets by reference), --from <artifact>, --cpus, --memory.\n\nDEFAULTS: network off; cpus 4; memory 8192 MiB; storage 20 GiB; name \"default\". Elastic memory/CPU via virtio balloon.\n\nNOT SUPPORTED OVER IPC: interactive sessions (-it / machine shell) and long-running serve (no attached TTY)."
 },
 {
-"name": "smolmachines.help",
+"name": "smol.version",
+"summary": "Report the local smolvm engine version. This is `smolvm --version`."
+},
+{
+"name": "smol.provision",
+"summary": "Provision (or fetch) this Pilot user's proprietary smol cloud key and free credit balance. Runs automatically on install and on smol.help \u2014 you rarely call it directly. The key is bound to your Pilot identity, stored only in your app's private secrets, and used to push and isolate your cloud VMs. Returns {key, credits}."
+},
+{
+"name": "smol.balance",
+"summary": "Report your remaining smol cloud credit balance. Returns {credits}."
+},
+{
+"name": "smol.push",
+"summary": "Push a VM to the smol cloud as YOU (your provisioned key) and START it running. Provide either a local packed artifact (base64 of a `smolvm pack` output) OR an OCI `image` reference the cloud pulls; pass {\"net\":true} for outbound networking (off by default). BILLING: you must have credit to start (402 if empty); the running VM then drains your credit by REAL usage (CPU + memory + disk per the rate card in smol.help) and the broker STOPS it when your credit runs out. The machine is tagged as owned by you, so no other user can see or touch it. Returns the created machine."
+},
+{
+"name": "smol.list",
+"summary": "List YOUR smol cloud machines (only yours \u2014 the broker filters by owner). Free (no credit). Returns an array of machines."
+},
+{
+"name": "smol.key",
+"summary": "Get your current smol cloud key (the per-user credential bound to your Pilot identity). Idempotent \u2014 safe to call anytime. The key is also cached in your app's private secrets. Returns {key, credits}."
+},
+{
+"name": "smol.rotate",
+"summary": "Rotate your smol cloud key if it leaked. Your OLD key stops working immediately and a NEW key is issued \u2014 your credit and cloud machines are NOT affected (only the key changes). Returns {key, credits, rotated}."
+},
+{
+"name": "smol.help",
 "summary": "Discovery: every method with params, kind, and latency class."
 }
 ],
@@ -528,6 +784,128 @@
 {
 "name": "aegis.help",
 "summary": "Print usage and the subcommand list."
+}
+],
+"io.pilot.sqlite": [
+{
+"name": "sqlite.query",
+"summary": "Run a SQL statement (or `;`-separated batch) against a database file (or `:memory:`) and return the rows as a JSON array of row objects \u2014 the most directly machine-parseable output. This is `sqlite3 -json <database> <sql>`."
+},
+{
+"name": "sqlite.script",
+"summary": "Run a multi-statement SQL script against a database file and return whatever the statements print. Ideal for schema setup, migrations, seed data, or an ETL batch: DDL + DML + a trailing SELECT in one call. This is `sqlite3 <database> <sql>` (SQLite executes every `;`-separated statement in order). For very large scripts or piping a file, use `sqlite.exec` with a `stdin` payload."
+},
+{
+"name": "sqlite.schema",
+"summary": "Print the `CREATE` statements (DDL) for every table, index, view, and trigger in the database \u2014 via SQLite's `.schema` meta-command. This is `sqlite3 <database> .schema`."
+},
+{
+"name": "sqlite.tables",
+"summary": "List the names of the tables (and views) in the database \u2014 via SQLite's `.tables` meta-command. This is `sqlite3 <database> .tables`."
+},
+{
+"name": "sqlite.exec",
+"summary": "Run the sqlite3 CLI with a verbatim argv \u2014 the full surface beyond the curated methods. Payload is {\"args\":[...]} (the args passed straight to `sqlite3`) plus optional {\"stdin\":\"...\"} piped to the process. Use it for any flag, output mode, or dot-command the curated methods don't cover: a different output mode (`-csv`, `-table`, `-markdown`, `-line`, `-html`, `-box`), `.dump`/`.import`/`.backup`/`.clone`/`.read` via `-cmd`, or a multi-statement session piped over stdin. Examples: {\"args\":[\":memory:\",\"-csv\",\"SELECT 1 AS a, 2 AS b\"]}; {\"args\":[\"/data/app.db\",\"-cmd\",\".mode csv\",\"-cmd\",\".import /data/in.csv t\",\"SELECT count(*) FROM t\"]}; {\"args\":[\"/data/app.db\"],\"stdin\":\"CREATE TABLE t(x);\\nINSERT INTO t VALUES (1),(2);\\nSELECT sum(x) FROM t;\"}."
+},
+{
+"name": "sqlite.cli_help",
+"summary": "Return the complete sqlite3 CLI help \u2014 every command-line option AND every dot-command (`.dump`, `.import`, `.backup`, `.clone`, `.mode`, `.schema`, `.tables`, `.read`, \u2026) \u2014 captured verbatim from the delivered binary and rendered as clean, color-free text. The full reference for what sqlite.query / sqlite.exec accept."
+},
+{
+"name": "sqlite.version",
+"summary": "Print the delivered SQLite version, e.g. \"3.45.2 2024-03-12 \u2026\". Needs no database. This is `sqlite3 -version`."
+},
+{
+"name": "sqlite.help",
+"summary": "Discovery: every method with its params, kind, and latency class \u2014 the self-describing contract."
+}
+],
+"io.pilot.orthogonal": [
+{
+"name": "orthogonal.search",
+"summary": "\u2605 Natural-language API router. Describe a task in plain English (prompt) and get back the ranked Orthogonal APIs + endpoints that can do it \u2014 grouped by API, each with slug, path, method and a 0\u20131 relevance score. FREE. Start here when you don't know which of the 851 endpoints to use, then price it with orthogonal.details and execute with orthogonal.run."
+},
+{
+"name": "orthogonal.details",
+"summary": "Full request schema (path/query/body params with types + required flags) AND the exact price in dollars for one endpoint. FREE. Call this before orthogonal.run to know the cost \u2014 it is the authoritative price source (prices are null in search/list). Price may be the string 'dynamic' for endpoints priced only after the call."
+},
+{
+"name": "orthogonal.integrate",
+"summary": "Ready-to-paste code snippets for one endpoint. FREE. format \u2208 orth-sdk (default) | run-api | curl | x402-fetch | x402-python | all."
+},
+{
+"name": "orthogonal.list",
+"summary": "Browse the whole catalog \u2014 58 APIs / 851 endpoints with descriptions and param schemas, paginated by limit/offset. FREE. Prices are null here; use orthogonal.details for the price of a specific endpoint."
+},
+{
+"name": "orthogonal.run",
+"summary": "\u2605 Execute any of the 851 provider endpoints via a JSON payload {api, path, body?, query?} (the HTTP method is chosen automatically; body is the provider request body, query is its query-string params). THIS IS THE ONLY CALL THAT COSTS MONEY: you are billed the target endpoint's real price and it is debited from your $5 Pilot budget. The response returns priceCents (cents actually charged) alongside the provider data, and X-Pilot-Credits-Remaining shows your budget. Once your $5 is spent, run returns 402 while the free discovery calls keep working. Prices range $0.001\u2013$3.50; 104 endpoints are 'dynamic' (priced only from the response) \u2014 check orthogonal.details first when you need the cost up front."
+},
+{
+"name": "orthogonal.balance",
+"summary": "YOUR remaining per-user budget on this app \u2014 returned by the broker from its own ledger as '$X.XX' plus credits_remaining (micro-USD; $5 = 5000000) and credits_seed. FREE, read-only, no upstream call. This is your personal budget, seeded at $5 on first use and debited by your own runs; the shared provider account's balance is never exposed. The same figure is on the X-Pilot-Credits-Remaining header of every response."
+},
+{
+"name": "orthogonal.help",
+"summary": "The self-describing discovery contract: every method with params, cost note, and latency class. Local, free, no backend call."
+}
+],
+"io.pilot.mysql": [
+{
+"name": "mysql.initialize",
+"summary": "Initialize a new MySQL data directory (system tables + an insecure `root@localhost` with an empty password) \u2014 the one-time setup before the first start. This is `mysqld --initialize-insecure --datadir=<datadir>`. The bundle's basedir/plugin-dir/error-messages are wired in automatically."
+},
+{
+"name": "mysql.start",
+"summary": "Start a local MySQL server from a data directory, listening on 127.0.0.1:<port>. Runs detached (`--daemonize`) and returns once the server is accepting connections. This is `mysqld --daemonize --datadir=<datadir> --socket=<datadir>/mysql.sock --port=<port> --bind-address=127.0.0.1 --mysqlx=OFF --pid-file=<datadir>/mysqld.pid --log-error=<datadir>/mysqld.err`."
+},
+{
+"name": "mysql.stop",
+"summary": "Stop the local server listening on <port> (a clean shutdown). This is `mysqladmin -h 127.0.0.1 -P <port> -u root shutdown`."
+},
+{
+"name": "mysql.ping",
+"summary": "Check whether the server on <port> is up and accepting connections (liveness probe). This is `mysqladmin -h 127.0.0.1 -P <port> -u root ping`."
+},
+{
+"name": "mysql.createdb",
+"summary": "Create a database on the running server (no-op if it already exists). This is `mysql -h 127.0.0.1 -P <port> -u root -e \"CREATE DATABASE IF NOT EXISTS <dbname>\"`."
+},
+{
+"name": "mysql.query",
+"summary": "Run SQL against a database and return an aligned ASCII table \u2014 the default, human-readable shape. May contain multiple `;`-separated statements. This is `mysql -h 127.0.0.1 -P <port> -u root -D <database> --table -e <sql>`."
+},
+{
+"name": "mysql.query_tsv",
+"summary": "Same as mysql.query but returns tab-separated values (header + rows) via `--batch` \u2014 the machine-parseable shape. This is `mysql -h 127.0.0.1 -P <port> -u root -D <database> --batch -e <sql>`."
+},
+{
+"name": "mysql.databases",
+"summary": "List the databases on the server (`SHOW DATABASES`). This is `mysql -h 127.0.0.1 -P <port> -u root --table -e \"SHOW DATABASES\"`."
+},
+{
+"name": "mysql.tables",
+"summary": "List the tables in a database (`SHOW TABLES`). This is `mysql -h 127.0.0.1 -P <port> -u root -D <database> --table -e \"SHOW TABLES\"`."
+},
+{
+"name": "mysql.dump",
+"summary": "Dump a database as SQL (schema + data) with mysqldump \u2014 a portable logical backup the agent can save or replay. This is `mysqldump -h 127.0.0.1 -P <port> -u root --no-tablespaces <database>`."
+},
+{
+"name": "mysql.exec",
+"summary": "Run any bundled MySQL tool with a verbatim argv \u2014 the full surface beyond the curated methods. Payload is {\"args\":[tool, ...]} where tool is one of `mysql`, `mysqld`, `mysqladmin`, `mysqldump`, `mysqlshow`, plus optional {\"stdin\":\"...\"} piped to the process. Examples: {\"args\":[\"mysql\",\"--protocol=TCP\",\"-h\",\"127.0.0.1\",\"-P\",\"13306\",\"-u\",\"root\",\"-D\",\"app\",\"--vertical\",\"-e\",\"SELECT * FROM t\\\\G\"]}; {\"args\":[\"mysqlshow\",\"--protocol=TCP\",\"-h\",\"127.0.0.1\",\"-P\",\"13306\",\"-u\",\"root\",\"app\"]}; {\"args\":[\"mysql\",\"--protocol=TCP\",\"-h\",\"127.0.0.1\",\"-P\",\"13306\",\"-u\",\"root\",\"-D\",\"app\"],\"stdin\":\"SOURCE /work/schema.sql;\"}."
+},
+{
+"name": "mysql.mysql_help",
+"summary": "Return the full `mysql` client help \u2014 every command-line option \u2014 captured from the delivered binary. The reference for what mysql.query / mysql.exec accept."
+},
+{
+"name": "mysql.version",
+"summary": "Print the delivered MySQL version, e.g. \"mysql  Ver 9.7.1 for \u2026 (conda-forge)\". This is `mysql --version`."
+},
+{
+"name": "mysql.help",
+"summary": "Discovery: every method with its params, kind, and latency class \u2014 the self-describing contract."
 }
 ]
 }

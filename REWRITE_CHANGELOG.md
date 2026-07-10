@@ -45,6 +45,22 @@ Legend: 🟢 done · 🟡 partial · ⛔ blocked/gated · `[VERIFY Jul 6]` = num
 ## Upstream syncs
 - 🟢 Merged `upstream/main` again: #72 (App Store reconciled with live catalogue,
   placeholder data removed) and #75 (blog registry → JSON). No conflicts.
+- 🟢 **Merged `upstream/main` — session 2026-07-09** (through #113). Brought in all
+  additive upstream work (new doc pages: node-sdk, swift-sdk, security, pilot-director
+  + plain twins; app-store cards: Didit, MySQL, SQLite, Smol, Orthogonal, Bowmark,
+  AgentPhone; new blog posts; `install.sh` sync). Resolved 4 conflicts, keeping our
+  homepage rewrite:
+  - `index.astro` — kept our hero, thesis, stats, economy, two-paths. **Adopted
+    upstream's new DIRECTOR section** ("Don't pick the specialist. Ask pilot-director.")
+    between how-it-works and two-paths. Pulled in upstream's USE CASES section too, then
+    **removed it per request** ("What agents actually ask Pilot for" / "Surveyed across
+    the network").
+  - `src/lib/liveStats.ts` — added `liveRps` (requests/sec) to the shared stats so the
+    new hero throughput chip works without abandoning our centralized-stats architecture.
+  - `plain/index.astro`, `plain/docs/getting-started.astro` — kept our rewritten plain
+    content, folded in upstream's new pilot-director/overview links; re-stamped the
+    plain-source hash.
+  - `for/skills.astro` — kept deleted (our removal) against upstream's edit.
 
 ## Homepage — section order + more motion
 - 🟢 Brief §3/§4: **lifted the "Network stats" proof strip near the top** — now

@@ -17,7 +17,7 @@ const canonicalUrl = 'https://pilotprotocol.network/app-store';
 const featured = featuredApps();
 const hero = featured[0];
 const sideFeatured = featured.slice(1, 4);
-const freshPinned = ['io.pilot.miren', 'io.pilot.smolmachines', 'io.pilot.wallet', 'io.pilot.slipstream'];
+const freshPinned = ['io.pilot.didit', 'io.pilot.agentphone', 'io.pilot.orthogonal', 'io.pilot.bowmark', 'io.pilot.miren', 'io.pilot.smol', 'io.pilot.wallet', 'io.pilot.slipstream'];
 const freshExclude = new Set(['io.pilot.postgres', 'io.pilot.docker']);
 const fresh = [
   ...freshPinned.map((id) => apps.find((a) => a.id === id)).filter(Boolean),
@@ -27,10 +27,10 @@ const fresh = [
 ].slice(0, 10);
 const liveCount = apps.filter((a) => a.real).length;
 
-// category shelves (only categories with at least a couple of apps to fill a rail)
+// category shelves (every category that has at least one app gets a rail)
 const shelves = categories
   .map((c) => ({ cat: c, list: appsByCategory(c.id).sort((a, b) => a.name.localeCompare(b.name)) }))
-  .filter((s) => s.list.length >= 2);
+  .filter((s) => s.list.length >= 1);
 
 // all apps for the search/filter results grid
 const allSorted = [...apps].sort((a, b) => a.name.localeCompare(b.name));
@@ -171,7 +171,7 @@ const publishHref = '/publish';
       <div class="bc-copy">
         <div class="eyebrow" style="font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);">For builders</div>
         <h2>Ship an agent app.<br/><em>It’s just a manifest.</em></h2>
-        <p>Sign a <code>manifest.json</code>, attach a bundle, open one PR. Once merged, <code>pilotctl appstore install &lt;id&gt;</code> works everywhere on the overlay.</p>
+        <p>Describe your app's methods in a guided submission — we build, sign, and review the adapter. Once approved, <code>pilotctl appstore install &lt;id&gt;</code> works everywhere on the overlay.</p>
       </div>
       <div class="bc-actions">
         <a class="pub-btn" href={publishHref}>Publish your app <span class="arr">→</span></a>
