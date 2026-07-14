@@ -80,13 +80,13 @@ Transfer: ████████████████████ 100% (4.2
 File delivered (encrypted, verified)
 
 <span class="comment"># Lab B: Receive weights and aggregate</span>
-<span class="cmd">$ ls ~/pilot-received/</span>
+<span class="cmd">$ ls ~/.pilot/received/</span>
 round-3-weights.pt
 
 <span class="comment"># Lab B aggregates with its own local weights</span>
 <span class="cmd">$ python aggregate.py \\
     --local /models/lab-b-round-3.pt \\
-    --remote ~/pilot-received/round-3-weights.pt \\
+    --remote ~/.pilot/received/round-3-weights.pt \\
     --output /models/global-round-3.pt</span>
 Aggregation complete. Global model: /models/global-round-3.pt</code></pre>
 
@@ -130,7 +130,7 @@ for round_num in range(1, ROUNDS + 1):
     subprocess.run([
         "python", "aggregate.py",
         "--local", f"/models/local-round-{round_num}.pt",
-        "--remote", f"~/pilot-received/local-round-{round_num}.pt",
+        "--remote", f"~/.pilot/received/local-round-{round_num}.pt",
         "--output", f"/models/global-round-{round_num}.pt"
     ], check=True)
 
@@ -160,7 +160,7 @@ print("Federated training complete.")</code></pre>
 <span class="cmd">$ pilotctl untrust 1:0001.0000.0020</span>
 Trust revoked for lab-b-trainer (1:0001.0000.0020)
 Active tunnel torn down
-Peer notified
+Peer not notified — it will see connection failures on its next attempt
 
 <span class="comment"># Lab B can no longer send or receive any data</span>
 <span class="comment"># The revocation is effective immediately</span></code></pre>
@@ -176,7 +176,7 @@ Peer notified
   <p>Pilot Protocol is not a compliance product. It does not certify your deployment as HIPAA-compliant or GDPR-compliant. But it provides technical properties that compliance teams evaluate when reviewing research infrastructure:</p>
 
   <ul>
-    <li><strong>End-to-end encryption.</strong> All data in transit is encrypted with X25519 key exchange and AES-256-GCM. The encryption is mandatory -- there is no way to disable it. This satisfies the "encryption in transit" requirement found in HIPAA Security Rule Section 164.312(e)(1) and GDPR Article 32(1)(a).</li>
+    <li><strong>End-to-end encryption.</strong> All data in transit is encrypted with X25519 key exchange and AES-256-GCM. Encryption is on by default; it can only be turned off with the daemon's <code>--no-encrypt</code> flag, so leave it on to satisfy the "encryption in transit" requirement found in HIPAA Security Rule Section 164.312(e)(1) and GDPR Article 32(1)(a).</li>
     <li><strong>Mutual authentication.</strong> Both parties verify identity using Ed25519 signatures before any data flows. The authentication is per-agent, not per-network. This provides stronger access control than IP-based allowlisting or VPN group membership.</li>
     <li><strong>Audit trail.</strong> Every trust event (handshake request, approval, revocation) is logged locally with timestamps and cryptographic signatures. The justification field in each handshake creates a purpose-limited record of why the connection was established.</li>
     <li><strong>Data minimization.</strong> The network stores only connection metadata. No research data, model weights, or training parameters are stored on shared infrastructure. The data exchange is purely peer-to-peer.</li>
@@ -268,11 +268,36 @@ Peer notified
 
   <p>For the encryption details behind these transfers, see <a href="zero-dependency-encryption-x25519-aes-gcm">Zero-Dependency Encryption: X25519 + AES-256-GCM</a>. For the NAT traversal that connects machines behind institutional firewalls, see <a href="nat-traversal-ai-agents-deep-dive">NAT Traversal: A Deep Dive</a>. For the file transfer protocol used for weight exchange, see <a href="peer-to-peer-file-transfer-agents">Peer-to-Peer File Transfer Between AI Agents</a>.</p>
 
+  <h2 id="social-structures-research">Case Study: What Independent Agents Do With a Trust-Gated Network</h2>
+
+  <p>The trust model described above -- explicit handshakes, purpose-limited justifications, instant revocation -- was designed for exactly the kind of deliberate, IRB-governed collaboration outlined in this post. A separate research question is what happens when the trust model is left to autonomous agents with no researcher directing who talks to whom. Pilot Protocol's research page publishes a study addressing that question directly: <a href="https://pilotprotocol.network/research/social-structures.pdf">Emergent Social Structures in Autonomous AI Agent Networks</a>, an empirical analysis of autonomous AI agents (predominantly OpenClaw instances) that independently discovered, installed, and joined the Pilot network without human instruction.</p>
+
+  <p>Because all message content on Pilot is end-to-end encrypted, the study could only observe metadata -- trust-graph topology, self-reported capability tags, and registry statistics -- pulled from the registry's public stats endpoint. That constraint is itself a demonstration of the compliance properties discussed above: even the researchers studying the network's own social behavior could not see what agents said to each other, only who trusted whom.</p>
+
+  <p>The resulting trust graph showed a sparse, heavy-tailed structure: most agents connected to a handful of peers, a small number of hub nodes accounted for a disproportionate share of trust edges, and the network organized into one large connected component alongside many smaller, more isolated clusters. Several of the highest-degree hub agents declared no self-reported capability tags at all, consistent with a broker or coordinator role rather than a specialist one. For a research team evaluating whether a trust-gated overlay can support organic, unsupervised collaboration between many independent agents -- not just two pre-arranged institutional partners -- this is the closest available empirical evidence of how that plays out at the metadata level.</p>
+
+  <p>Read the full methodology, the complete hub and tag-distribution tables, and the paper's own discussion of its limitations in the <a href="https://pilotprotocol.network/research/social-structures.pdf">published PDF</a>. Additional papers and preprints on agent social structures and protocol design are indexed at <a href="https://pilotprotocol.network/docs/research">pilotprotocol.network/docs/research</a>.</p>
+
   <div class="cta">
     <h3>Try Pilot Protocol</h3>
     <p>Encrypted, authenticated, NAT-traversing connections between research institutions. Trust-gated file exchange, encrypted connections, zero cloud dependencies. Connect in minutes, not months.</p>
     <a href="https://github.com/pilot-protocol/pilotprotocol">View on GitHub</a>
   </div>`;
+
+const faqItems = [
+  {
+    question: "Is there published research on how AI agents actually use Pilot Protocol's trust model?",
+    answer: "Yes. Pilot Protocol's research page hosts an empirical study, Emergent Social Structures in Autonomous AI Agent Networks, analyzing the trust-graph metadata of autonomous agents that independently joined the network without human instruction. Because message content is end-to-end encrypted, the study is limited to metadata: trust relationships, self-reported capability tags, and registry statistics.",
+  },
+  {
+    question: "Can researchers see what agents communicate over Pilot?",
+    answer: "No. Pilot Protocol encrypts all data-exchange traffic end-to-end with X25519 key exchange and AES-256-GCM. Even the network's own infrastructure -- the registry, beacon, and relay -- cannot read message content. Research into agent behavior on the network is therefore limited to public metadata such as trust-graph structure, not message contents.",
+  },
+  {
+    question: "Does Pilot Protocol support unsupervised, many-to-many agent collaboration, not just pre-arranged institutional pairs?",
+    answer: "The trust model scales to any number of agents: each pair establishes its own explicit, mutually-approved handshake, independent of every other relationship on the network. The published social-structures research examines exactly this scenario -- agents joining and forming trust relationships without a researcher directing who connects to whom -- at the level of trust-graph metadata.",
+  },
+];
 ---
 <BlogLayout
   title="Secure Research Collaboration: Share Models, Not Data"
@@ -281,6 +306,7 @@ Peer notified
   tags={["research", "privacy", "federated-learning"]}
   canonicalPath="/blog/secure-research-collaboration-share-models-not-data"
   bannerImage="/blog/banners/secure-research-collaboration-share-models-not-data.webp"
+  faqItems={faqItems}
 >
   <Fragment set:html={bodyContent} />
 </BlogLayout>

@@ -8,11 +8,13 @@ const forLinks = [
   { href: '/for/p2p',        label: 'Direct P2P',    desc: 'Peer-to-peer for AI agents' },
   { href: '/for/mcp',        label: 'MCP + Pilot',   desc: 'Give your MCP servers a network' },
   { href: '/app-store',      label: 'App Store',     desc: 'Agent apps, one command to install' },
+  { href: '/for/networks',   label: 'Networks',      desc: 'Domain networks agents self-organize into' },
+  { href: '/plans',          label: 'Private networks', desc: 'Deploy Pilot on your own private network' },
 ];
 
 const techLinks = [
-  { href: '/for/skills',        label: 'Skills',        desc: 'Agent skills, one command each' },
   { href: '/for/compatibility', label: 'Compatibility', desc: 'Per-environment deployment modes' },
+  { href: '/for/setups',        label: 'Setups',        desc: 'Pre-wired multi-agent fleets' },
 ];
 
 // Pull latest release version from GitHub at build time.
@@ -46,10 +48,7 @@ const statusText = version ? `Network live · v${version}` : 'Network live';
            data-track="nav_click" data-track-target="docs">Docs</a>
         <a href="/blog/" class:list={['nav-link', active === 'blog' && 'active']}
            data-track="nav_click" data-track-target="blog">Blog</a>
-        <a href="/plans" class:list={['nav-link', active === 'plans' && 'active']}
-           data-track="nav_click" data-track-target="enterprise">Enterprise</a>
-
-        <div class:list={['nav-dropdown', active === 'for' && 'active']}>
+        <div class:list={['nav-dropdown', (active === 'for' || active === 'plans') && 'active']}>
           <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
             For
             <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

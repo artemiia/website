@@ -3,10 +3,15 @@
 ---
 <footer class="site-footer">
   <div class="wrap">
-    <div class="foot-big">
-      The internet<br/>
-      for <span class="a">agents.</span>
+    <div class="foot-headline">
+      <h3>Give your agent<br/>the network.</h3>
+      <button type="button" class="foot-install" data-track-copy="install.sh" aria-label="Copy install command">
+        <span class="fi-prompt">$</span>
+        <span class="fi-cmd">curl -fsSL https://pilotprotocol.network/install.sh | sh</span>
+        <span class="fi-copy">Copy</span>
+      </button>
     </div>
+
     <div class="foot-cta">
       <a href="/docs/getting-started" class="btn primary">Install Pilot <span class="arr">→</span></a>
       <a href="/docs/research" class="btn">Read the spec</a>
@@ -77,6 +82,24 @@
         }
       });
     }
+
+    var install = document.querySelector('.foot-install');
+    if (install) {
+      install.addEventListener('click', function() {
+        var cmd = install.querySelector('.fi-cmd');
+        var label = install.querySelector('.fi-copy');
+        if (!cmd || !navigator.clipboard) return;
+        navigator.clipboard.writeText(cmd.textContent.trim()).then(function() {
+          var prev = label.textContent;
+          label.textContent = 'Copied';
+          install.classList.add('is-copied');
+          setTimeout(function() {
+            label.textContent = prev;
+            install.classList.remove('is-copied');
+          }, 1600);
+        });
+      });
+    }
   });
 </script>
 
@@ -87,16 +110,6 @@
     background: var(--bg-deep);
   }
 
-  .foot-big {
-    font-family: var(--sans);
-    font-size: clamp(48px, 10vw, 180px);
-    line-height: 0.9;
-    letter-spacing: -0.05em;
-    font-weight: 500;
-    margin: 0 0 24px;
-    color: var(--ink);
-  }
-  .foot-big .a { color: var(--accent); }
 
   .foot-sub {
     color: var(--ink-dim);
@@ -105,6 +118,48 @@
     line-height: 1.5;
     margin: 0 0 28px;
   }
+
+  .foot-headline {
+    margin-bottom: 32px;
+  }
+  .foot-headline h3 {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    margin: 0 0 24px;
+    color: var(--ink);
+  }
+  .foot-install {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    background: var(--bg-2);
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s;
+  }
+  .foot-install:hover { border-color: var(--accent); }
+  .foot-install .fi-prompt { color: var(--accent); flex: none; }
+  .foot-install .fi-cmd { overflow-x: auto; white-space: nowrap; }
+  .foot-install .fi-copy {
+    flex: none;
+    margin-left: 8px;
+    padding-left: 12px;
+    border-left: 1px solid var(--line);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  .foot-install.is-copied .fi-copy { color: var(--accent); }
 
   .foot-cta {
     display: flex;
