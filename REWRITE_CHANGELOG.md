@@ -265,6 +265,121 @@ Legend: 🟢 done · 🟡 partial · ⛔ blocked/gated · `[VERIFY Jul 6]` = num
   - **"With Pilot" comparison card + recommended path card** (`.cmp-with`,
     `.path-full`, shared box-shadow): accent ring 20% → 14%, outer glow 22% → 10%.
 
+## Homepage — hero rotating capability line — session 2026-07-10
+- 🟢 Added a line under the hero — **"Pilot lets your agent …"** — where the "…"
+  is a **vertical slot-machine rotator** cycling green phrases: discover other
+  agents · install apps built for it · get accurate live data · pay other agents
+  directly · reach any peer, anywhere · tap 400+ live specialists · run tools on
+  demand. Screen-reader users get the full list via an `.sr-only` span; reduced
+  motion shows a single static phrase.
+- 🟢 Iterated per feedback: moved from below the headline → **below the CTA
+  buttons** → finally a **full-width centered line below the whole hero row**
+  (`grid-column: 1 / -1`). Sizing grew from ~22px to a big **clamp(28px, 4.4vw,
+  52px)**; gap after "agent" tightened to a single normal word-space.
+- 🟢 Reworked from a CSS-keyframe track to a **JS rotator** so the box hugs each
+  word (auto width, no dead space) — word slides up/out, next drops in from
+  below, box eases its width; re-fits after fonts load + on resize.
+- 🟢 **Mobile:** on ≤960px the line reorders **above** the "Agents use Pilot to
+  connect…" sub-paragraph; on ≤560px it goes two centered lines (sentence on top,
+  big green word beneath) since one big line can't fit a phone.
+
+## Homepage — DIRECTOR section polish — session 2026-07-10
+- 🟢 On the DIRECTOR section (merged from upstream #113): **"pilot-director" now
+  renders green** (`<em class="accent">`), **terminal moved to the right**, copy
+  to the left. Reworded the lede to **"Pilot-director — your one-stop navigator
+  for the network. …"** with the name in accent green.
+- 🟢 **Removed the USE CASES section** ("What agents actually ask Pilot for /
+  Surveyed across the network") that had come in with the same upstream merge,
+  and dropped its now-unused `.uc-*`/`.rows` CSS.
+
+## Homepage — App Store callout: featured-app carousel — session 2026-07-10
+- 🟢 Expanded the big **App Store callout** with a **Featured** strip below the
+  existing eyebrow/heading/floating-icon row (wrapped the original content in
+  `.ac-top`, added `.ac-featured` below with a top divider).
+- 🟢 The strip **shuffles through every live app** (`apps.filter(a => a.real)`),
+  showing the real **app logo** (reusing the `AppIcon` component — same render as
+  `/app-store`), **name**, and **short description** (`tagline`). Slides
+  **left→right**, dwelling **4.2s** (deliberately slower than the 2.2s hero word
+  rotator). Reduced motion → gentle fade.
+- 🔧 Ported the `.app-icon` CSS from `appstore.css` into the homepage `<style>`
+  using **`:global(...)`** (the icon markup is rendered by the `AppIcon`
+  component, which Astro scopes to a different cid — without `:global` the styles
+  never matched and the logos rendered unstyled / wrong aspect ratio). Did **not**
+  import the whole `appstore.css` because its `.chip` rule would clobber the hero
+  throughput chip.
+- 🟢 Iterated on placement per feedback (verified each pass with a puppeteer
+  screenshot at 1440px). Final desktop layout: **two columns** — the **left is a
+  clean vertical stack** (eyebrow → "Discover the Pilot Protocol App Store"
+  heading → sub → floating icon rail), the **right is a compact featured panel**
+  (`flex: 0 0 clamp(230px, 24%, 300px)`, 56px logo, name, one-line description)
+  divided by a left rule. The icon rail spans the full left width with
+  `justify-content: space-between` so it fills the row instead of leaving a dead
+  gap before the divider. Stacks vertically (featured below) ≤760px.
+  - Earlier missteps (recorded so we don't repeat them): three items strung
+    across **one flex row** crushed the heading into a skinny 5-line column; a
+    **wide** right panel (88px logo) overflowed and `overflow:hidden` clipped it;
+    briefly **hid the rail** which lost the floating icons. All reverted.
+
+## Homepage — App Store callout redesign + dev strip + featured links — session 2026-07-10
+- 🟢 **Callout became a `<div>`** (was one big `<a>`): the heading area (`.ac-top`)
+  links to `/app-store`; each **featured card is now its own link to `/apps/{id}`**
+  (only the active card is `pointer-events:auto`). Un-nested the anchors so this is
+  valid HTML.
+- 🟢 **Featured carousel** finalized: logo + name side-by-side on top, description
+  below; **"Lets your agent …" blurbs** per app (green, `var(--accent)`), keyed by
+  id via `featuredBlurbs` map in frontmatter; 88px logo, name 27px, desc 17px; icons
+  **lined up in a straight row** (drift animation killed) and spread edge-to-edge.
+- 🟢 **Removed the interior green glow** (`.appstore-callout::after` deleted).
+- 🟢 **Green developer strip** pinned to the bottom edge (callout is now a column:
+  `.ac-main` row + `.ac-devstrip`): copy "Are you a developer? Get your app in front
+  of agents and publish it to the Pilot App Store." + **PUBLISH YOUR APP →** pill →
+  `/publish`. Copy enlarged to 18px.
+- 🟢 Real harness/app logos live in `public/brand/harness/` (claude, cursor, cline
+  from Simple Icons; openai from svgl) — see MCP section entry.
+
+## Homepage — section reorder + copy — session 2026-07-10
+- 🟢 Moved **"What Pilot does for your agent"** (pillars + service wheel) ABOVE the
+  "AI agents are the biggest shift…" thesis text — split the old `#thesis` section:
+  callout stays in `#thesis`, thesis copy became a new `#thesis-copy` section placed
+  after `#agent-value`.
+- 🟢 **Removed the Without Pilot / With Pilot compare cards** (`.compare` block) from
+  the agent-value section. (Dead `.cmp-*` CSS left behind, harmless.)
+- 🟢 Copy: box 2 (Live data) now "**400+ specialist agents**"; hero sub now
+  "install **tools and apps** built for them"; rotator gained **"connect over MCP"**.
+
+## Homepage — new "Works with MCP" section — session 2026-07-10
+- 🟢 Added `#mcp` section after `#thesis-copy` ("Already on MCP? Pilot plugs right
+  in.") — terminal on the left, copy on the right. **All facts sourced verbatim from
+  `src/pages/docs/mcp-setup.astro`** (upstream PR #112, live at
+  `pilotprotocol.network/docs/mcp-setup`, publisher Vulture Labs) — NOT invented.
+  Setup command corrected to `npx -y pilot-mcp setup`.
+- 🟢 **Realistic typewriter TUI**: the terminal types char-by-char (command slower,
+  output faster) with a blinking block cursor (`.tw-cursor`), fires on scroll into
+  view, and **loops/replays** (~3s hold between runs). Static content kept as no-JS /
+  reduced-motion fallback. Data-driven via `[data-mcp-term]` + JS at the bottom of
+  the page. `min-height: 9.6em` reserves the box so it doesn't jump.
+- 🟢 **Harness logo row** above the docs link — Claude Code · Cursor · Cline · Codex
+  as chips using the **real official brand logos** (files in `public/brand/harness/`),
+  rendered via CSS `mask` (`.mcp-hn-i`). NOTE (in progress when Mac died): user wants
+  these **in colour + larger**, and the whole MCP section text **larger + briefer +
+  value-oriented** — NOT yet done.
+- 🟢 Section made **always-visible** (dropped the `reveal` class) so the scroll-fade
+  can't hide it.
+
+## Session 2026-07-10 (resumed after Mac died)
+- 🟢 **MCP section polish — DONE.** Harness logos enlarged 22px→30px, chip text
+  14px→17px, roomier padding; hover now washes each chip in its own brand colour
+  (`--logo-color`). Copy tightened to be briefer + value-led: lede "The whole overlay,
+  native in your MCP client", body cut from 3 paras to 2 ("400+ live specialists,
+  typed queries, and agent-to-agent messaging — as MCP tools…" / "Your own identity,
+  peer-to-peer, no API keys"). Lede/body font sizes bumped. NOTE: logos are
+  single-path Simple Icons, so "in colour" = brand-tinted mask (true multicolor isn't
+  in those asset files); enlargement + brand-colour hover is the practical ceiling.
+- 🟢 **End-to-end validation — DONE.** Every MCP-section claim verified verbatim
+  against `src/pages/docs/mcp-setup.astro` (→ github.com/TeoSlayer/pilot-mcp): setup
+  command, daemon behaviour, harness list, 400+ specialists, no-API-keys/P2P identity,
+  ~1m. No invented claims. `npm run build` passes (344 pages).
+
 ## Outstanding (from brief, not yet done)
 - ⬆️ App Store **module** (shelf of live apps + install counts) under hero (Brief §2).
 - Email capture — hero secondary + footer (Brief §4). **Front-end stub only until
@@ -306,3 +421,100 @@ where submissions are stored; and (per brief) keep it an **interest list**, not 
 newsletter commitment. Until an endpoint exists, the form should be shipped
 **disabled or pointed at a placeholder** so it doesn't silently drop addresses.
 </content>
+
+---
+
+## Session 2026-07-10 (part 2) — homepage polish pass
+
+Large iterative pass on `src/pages/index.astro` (+ `src/styles/system.css`,
+`src/styles/global.css`, `src/lib/liveStats.ts`). Highlights:
+
+**Hero**
+- Rotating capability line reworded "Pilot lets your agent" → **"With Pilot your
+  agent can…"**; added app-capability phrases (spin up VMs, get a phone number, run
+  SQL, sandbox code, send an SMS); faster cadence + motion-blur on the swap.
+- Shrunk "Network OS for agents" headline + tightened hero padding so the rotator
+  lands in first view; later softened to a middle ground.
+- "on tools built for people" set in Pilot green.
+
+**App Store callout**
+- Featured card moved to the LEFT, "Discover…" text to the RIGHT; divider flipped +
+  extended full-height (top-to-bottom), made solid.
+- "+5" tile → arrow (→). Removed "Agent-native apps" eyebrow; enlarged then scaled
+  the whole callout back down. Featured panel widened, fill extended edge-to-edge
+  (no gap, squared bottom-left), green toned down.
+- Featured badge: "Featured" → "Featured app" with centred ✦; **animated spotlight**
+  (rotating conic sheen + base tint) behind the featured card.
+
+**Agent economy** (`#economy`)
+- Title → "Make money with your agent."; removed the "foundation of the agent
+  economy" intro and the Bain $300–500B stat.
+- Wallet copy: "download a free wallet app", pays over **x402** (verified vs the
+  wallet app: x402 + EIP-3009 USDC). Wallet app card (icon + green bullet list,
+  links to /apps/io.pilot.wallet), title "Pilot Wallet". Em dashes removed.
+- New **"Advertise to agents"** developer callout (250,000+ agents).
+
+**How it works** (`#how`)
+- Terminal replaced with a focused **install card**: single curl one-liner + direct
+  Copy button, plus an "or / tell your agent to join Pilot Protocol
+  (pilotprotocol.network)" prompt with its own Copy button.
+- Steps → 3 numbered **green circles connected by a line**; copy tightened.
+
+**MOM section** (`#director`, formerly pilot-director)
+- Renamed pilot-director → **MOM** (heading all-caps green); copy rephrased (refer
+  to it as "it"). NOTE: terminal command shows `mom` and docs link still points to
+  `/docs/pilot-director` — underlying agent rename NOT propagated site-wide.
+- Built an **animated planning TUI**: agent types a request → spinner "compiling
+  tools" → colour-coded plan (service agent = green highlight, agentphone = blue +
+  app logo, calendar = violet) streams in → **green success banner** ("table
+  booked…"). Static fallback carries identical colours. Cleaned spacing (hairline
+  step separators, grid-areas layout).
+
+**Network stats** (`#numbers`)
+- "Requests routed" → **"Requests per hour"** (derived from polo API
+  `requests_per_sec × 3600`; added `liveRequestsPerHour` to `liveStats.ts`).
+- Reworked layout: killed the 200px min-height dead space; grouped header/number/
+  label, gradient-filled numbers, pulsing live dot.
+
+**The Stack** (`#stack`)
+- Heading fact-checked and changed to **"Pilot is the network overlay built for
+  agents."** (avoids the false OSI-number precision — Pilot is an overlay over
+  transport, not a clean L-number). Graphic relabelled: "L5 · Pilot Protocol" →
+  "Overlay · Pilot Protocol"; connector softened. Rebuilt as a vertical 3-tier
+  stack (on-top chips → Pilot band → foundation) with defined outlines. OSI button
+  centred.
+
+**Two paths → skill injection** (`#paths`)
+- Reframed from two equal options to a single persuasive **skill-injection** pitch
+  ("Get the most out of Pilot for your agent"); Pilot Lite demoted to a one-line
+  compliance footnote.
+
+**Global**
+- Removed the thin grey `border-top` divider on every `.section` (site-wide).
+- **Standardised section vertical rhythm** (60px desktop / 44px mobile) via
+  `.section#id` selectors, replacing the scattered per-section padding tweaks.
+- All three terminal boxes now share **rounded corners + the same green outline**
+  (base `.term` in system.css; removed the mom-shell one-off).
+
+- 🟢 App Store featured panel: **toned down the spotlight glow** — sheen opacity 0.75→0.5, bright lobes 14%→8%, base tint 4%→3%.
+- 🟢 Thesis body ("Pilot is a UDP-level networking stack…") now **slides in from the right** on scroll-into-view (keyed to `#thesis-copy.visible`; reduced-motion static).
+- 🟢 Removed the redundant "Open the wallet app →" link from the wallet card (whole card already links to /apps/io.pilot.wallet).
+- 🟢 Nudged the hero rotator line ("With Pilot your agent can…") down slightly (margin-top 20→30px).
+- 🟢 Fixed install card being invisible in **light mode**: the terminal stays dark in both themes, but the copy/caption/or-divider used `var(--ink)`/`var(--ink-dim)` (dark in light mode). Switched to fixed light terminal tones + re-declared `.c/.y` syntax colours for `.ic-cmd`.
+- 🟢 MOM TUI animation now **plays once and freezes** on the final booked state (removed the `wait(run, 4200)` loop-back).
+- 🟢 Nav: moved standalone **Plans** link into the **For** dropdown, relabelled **"Private networks"** (→ /plans). For-dropdown stays active on the plans route.
+- 🟢 Fixed App Store callout + featured panel on **mobile**: the ≤760px rules now fully reset the desktop edge-extension (negative margins, rounded corner, side divider, spotlight, base tint) so the featured card stacks cleanly below the text with a top divider; carousel viewport min-height instead of fixed.
+- 🟢 Mobile featured card: shrank the app icon (88→56px), name (27→20px) and desc (16→13.5px, 2-line clamp); tighter viewport min-height.
+- 🟢 Mobile: condensed the "Make your agent smarter" pillars (≤600px) — smaller padding (24→18px), num (21→16px) and lead (17→14.5px, clamped to 3 lines) so the three boxes take far less vertical space.
+- 🟢 Mobile: shrank the hero "Network throughput" chip (≤600px) — font 13→10.5px, val 17→13px, tighter padding/letter-spacing so it no longer dominates the top of the page.
+- 🟢 MOM steps: raised the vertical-stack breakpoint 520→640px (name/pill/desc stack with clear row-gap) so phones never render the step text glued.
+- 🟢 Mobile: terminal bar labels now truncate (ellipsis) instead of colliding with the traffic-light dots; the right-side time label is hidden on ≤600px so the bar title no longer clips.
+- 🟢 MOM steps rebuilt with a **flex wrapper** (badge · [name+pill row / desc]) instead of CSS grid-areas — spacing is now structural in the markup (both animated JS + static), so the step text can never render glued together regardless of viewport/cache. Removed the obsolete grid mobile block.
+- 🟢 MOM steps: added explicit `margin-left` between name and pill (`.mom-head > * + *`) as a fallback for flex `gap`, so they can never glue together.
+- 🟢 **Root cause fix** for glued MOM step text: Astro scopes the `<style>` with a `data-astro-cid-*` attribute, but the animation builds elements via JS `innerHTML` so they lacked that attribute — the scoped `.mom-pill/.mom-head/…` rules never applied (pill rendered as unstyled text glued to the name). Now `row()` stamps the cid onto every generated element + descendants (and re-stamps the plan header). Step styling + spacing now applies to the animated DOM.
+- 🟢 MOM steps: fixed the agentphone logo not showing (removed the white-bg/padding on `.mom-ico`; app icons are self-contained → `object-fit: cover`). Reduced step padding (11→8px). Replaced the fictional **google-calendar** step with the real **io.pilot.wallet** app ("pay the reservation deposit over x402") + its icon.
+- 🟢 MOM terminal made a little smaller (font clamp 15–18→13.5–16px, line-height 1.7→1.6, min-height 16.5→15em).
+- 🟢 MOM terminal: another compaction pass (font 13.5–16→12.5–15px, line-height 1.6→1.55, body padding 28/24→22/20, step padding 8→6px, min-height 15→13.5em).
+- 🟢 MOM success line: dropped "· added to your calendar" (last step is now the wallet, not a calendar) → "table booked · Fri 8:00pm".
+- 🟢 Stack legend: **centered** the three items; gave "shared transport" a distinct **blue** swatch (#6ea8ff) instead of the muted grey.
+- 🟢 Stack: gave the shared-transport tier (sv-base, Network/Transport) a **blue** tint + border + label to match the "shared transport" legend swatch.

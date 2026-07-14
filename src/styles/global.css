@@ -356,7 +356,6 @@ pre:hover .copy-btn { opacity: 1; }
 /* Section shell */
 .section {
   padding: 140px 0;
-  border-top: 1px solid var(--line);
   position: relative;
 }
 @media (max-width: 900px) { .section { padding: 96px 0; } }

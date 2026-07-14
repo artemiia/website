@@ -230,6 +230,7 @@ h1.display,
 .stack-legend {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 24px;
   margin-bottom: 24px;
   font-family: var(--mono);
@@ -251,7 +252,7 @@ h1.display,
 }
 .stack-legend .sw-human { background: var(--bg); }
 .stack-legend .sw-agent { background: var(--accent); border-color: var(--accent); }
-.stack-legend .sw-shared { background: var(--bg-2); }
+.stack-legend .sw-shared { background: #6ea8ff; border-color: #6ea8ff; }
 
 .stack {
   display: grid;
@@ -445,9 +446,9 @@ h1.display,
 
 .stack-cta {
   margin-top: 20px;
-  margin-bottom: 40px;
+  margin-bottom: 0;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
 }
 .osi-trigger {
   font-family: var(--mono);
@@ -597,6 +598,12 @@ html.osi-modal-open { overflow: hidden; }
   background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
 
+/* L4 highlighted green across the whole row. */
+.osi-row-green .osi-cell {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+.osi-row-green .osi-lname { color: var(--accent); }
+
 .osi-cell-span {
   grid-column: 2 / span 2;
   color: var(--ink-dim);
@@ -723,14 +730,19 @@ html.osi-modal-open { overflow: hidden; }
    TERMINAL
    ============================================================ */
 .term {
-  border: 1px solid var(--line);
+  border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 14px;
   background: var(--term-bg);
   font-family: var(--mono);
   font-size: 14px;
   padding: 0;
   overflow: hidden;
   color: #eceae3;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 16%, transparent),
+    0 0 30px color-mix(in srgb, var(--accent) 16%, transparent);
 }
+.term .bar { border-bottom-color: color-mix(in srgb, var(--accent) 22%, var(--line)) !important; }
 .term .bar {
   display: flex;
   align-items: center;
@@ -742,12 +754,19 @@ html.osi-modal-open { overflow: hidden; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.term .dots { display: flex; gap: 6px; }
+.term .dots { display: flex; gap: 6px; flex: none; }
 .term .dots span {
   width: 9px;
   height: 9px;
   border-radius: 50%;
   background: #3a3a37;
+}
+/* The bar's middle label can be long; let it truncate instead of colliding
+   with the dots, and drop the time on narrow phones. */
+.term .bar > div { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 600px) {
+  .term .bar { gap: 10px; padding: 11px 14px; }
+  .term .bar > div:last-child { display: none; }
 }
 .term .term-body {
   padding: 28px 24px;
@@ -785,23 +804,46 @@ html.osi-modal-open { overflow: hidden; }
   padding: 0;
   margin: 0;
   list-style: none;
-  border-top: 1px solid var(--line);
 }
 .how-steps li {
-  padding: 20px 0;
-  border-bottom: 1px solid var(--line);
+  position: relative;
   display: grid;
-  grid-template-columns: 32px 1fr;
+  grid-template-columns: 40px 1fr;
   gap: 20px;
+  padding-bottom: 28px;
 }
+.how-steps li:last-child { padding-bottom: 0; }
+/* Connecting line: runs from each circle down to the next. */
+.how-steps li::before {
+  content: "";
+  position: absolute;
+  left: 19px;               /* centre of the 40px circle column */
+  top: 40px;                /* just below the circle */
+  bottom: -4px;
+  width: 2px;
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.how-steps li:last-child::before { display: none; }
+/* Green numbered circle — doubles as the bullet. */
 .step-num {
-  font-family: var(--mono);
-  color: var(--accent);
-  font-size: 12px;
-  padding-top: 4px;
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 18px;
+  color: #fff;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent);
 }
-.step-t { font-size: 17px; font-weight: 500; letter-spacing: -0.01em; color: var(--ink); }
-.step-d { font-size: 14px; color: var(--ink-dim); line-height: 1.5; margin-top: 4px; }
+.step-body { padding-top: 6px; }
+.step-t { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); }
+.step-d { font-size: 15px; color: var(--ink-dim); line-height: 1.55; margin-top: 5px; }
 
 /* ============================================================
    MOAT / CARDS
