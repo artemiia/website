@@ -2771,7 +2771,9 @@ const featuredBlurbs: Record<string, string> = {
       white-space: normal;
       line-height: 1.25;
     }
-    .rotator { display: block; margin: 0.18em auto 0; }
+    /* Never let a long phrase push wider than the line; the JS width is
+       capped to the line so the word stays centered and fully visible. */
+    .rotator { display: block; margin: 0.18em auto 0; max-width: 100%; }
   }
   /* Box hugs the current word (auto width) — no dead space — and clips the
      vertical slide. Width eases between words so it never jumps. */
@@ -3158,13 +3160,18 @@ const featuredBlurbs: Record<string, string> = {
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Size the box to the current word so it hugs it (no dead space).
-    function fit() { box.style.width = word.offsetWidth + 'px'; }
+    function fit() {
+      var max = box.parentElement ? box.parentElement.clientWidth : Infinity;
+      box.style.width = Math.min(word.offsetWidth, max) + 'px';
+    }
     // Wait for fonts, then lock the initial width.
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fit); }
     fit();
     window.addEventListener('resize', fit);
-    var compact = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
-    if (reduce || compact) return;
+    // Rotate on every viewport. Mobile used to bail out here, which froze the
+    // line on "discover other agents" for phones; the sr-only copy still lists
+    // every phrase, so nothing about accessibility changes by rotating.
+    if (reduce) return;
 
     var i = 0;
     setInterval(function () {
