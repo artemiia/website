@@ -1447,5 +1447,15 @@
   ],
   "banner": "banners/claude-agent-teams-over-pilot.webp",
   "iso_date": "2026-07-15"
+ },
+ {
+  "slug": "how-to-watch-a-coding-agent-remotely-after-you-turn-off-its-permission-prompts",
+  "title": "How to Watch a Coding Agent Remotely After You Turn Off Its Permission Prompts",
+  "description": "Claude Code 2.1.259 runs headless with no prompts. Here is how to watch a coding agent remotely from a phone with a read-only, end-to-end encrypted link.",
+  "date": "Sep 8",
+  "category": "Guide",
+  "tags": ["shell-online", "claude-code", "coding-agents", "read-only-terminal", "remote-monitoring"],
+  "banner": "banners/how-to-watch-a-coding-agent-remotely-after-you-turn-off-its-permission-prompts.svg",
+  "iso_date": "2026-09-08"
  }
 ]
