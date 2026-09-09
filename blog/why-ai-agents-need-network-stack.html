@@ -1,0 +1,435 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-4ee7rn3o><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Agent Connectivity Best Practices: Why AI Agents Need a Network Stack</title><meta name="description" content="Agent connectivity best practices for reliable multi-agent systems: durable addresses, NAT traversal, encrypted tunnels, and per-peer trust."><meta name="robots" content="index,follow,max-image-preview:large"><meta name="author" content="Pilot Protocol"><link rel="canonical" href="https://pilotprotocol.network/blog/why-ai-agents-need-network-stack"><meta property="og:type" content="article"><meta property="og:title" content="Agent Connectivity Best Practices: Why AI Agents Need a Network Stack"><meta property="og:description" content="Agent connectivity best practices for reliable multi-agent systems: durable addresses, NAT traversal, encrypted tunnels, and per-peer trust."><meta property="og:url" content="https://pilotprotocol.network/blog/why-ai-agents-need-network-stack"><meta property="og:image" content="https://pilotprotocol.network/blog/banners/optimized/why-ai-agents-need-network-stack-1200.webp"><meta property="og:image:alt" content="Pilot Protocol"><meta property="og:site_name" content="Pilot Protocol"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@pilotprotocol_"><meta name="twitter:title" content="Agent Connectivity Best Practices: Why AI Agents Need a Network Stack"><meta name="twitter:description" content="Agent connectivity best practices for reliable multi-agent systems: durable addresses, NAT traversal, encrypted tunnels, and per-peer trust."><meta name="twitter:image" content="https://pilotprotocol.network/blog/banners/optimized/why-ai-agents-need-network-stack-1200.webp"><meta name="twitter:image:alt" content="Pilot Protocol"><meta name="theme-color" content="#0b0b0a" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)"><meta name="color-scheme" content="dark light"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://pilotprotocol.network/#organization","name":"Pilot Protocol","legalName":"Vulture Labs, Inc.","url":"https://pilotprotocol.network/","logo":{"@type":"ImageObject","url":"https://pilotprotocol.network/img/pilot-180.png","width":180,"height":180},"sameAs":["https://github.com/pilot-protocol/pilotprotocol","https://x.com/pilotprotocol_","https://www.linkedin.com/company/112569955/"],"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"founders@pilotprotocol.network","url":"https://pilotprotocol.network/contact"}]},{"@type":"WebSite","@id":"https://pilotprotocol.network/#website","url":"https://pilotprotocol.network/","name":"Pilot Protocol","publisher":{"@id":"https://pilotprotocol.network/#organization"},"inLanguage":"en-US"}]}</script><!-- PILOT-175: fonts self-hosted under /fonts/*. Removed the Google Fonts
+     preconnect + stylesheet links so the browser never contacts
+     fonts.googleapis.com / fonts.gstatic.com (GDPR: avoids passing
+     visitor IPs to Google). The self-hosted bundle covers the same
+     three families (Inter Tight, JetBrains Mono, Instrument Serif)
+     with identical subsets + unicode-range gating, so per-page font
+     bytes are unchanged. --><link rel="stylesheet" href="/website/fonts/fonts.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="/website/fonts/fonts.css"></noscript><link rel="preload" href="/website/fonts/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2" as="font" type="font/woff2" crossorigin="anonymous"><!-- PILOT-27: consent-check shared module is imported by analytics.ts below. --><link rel="icon" href="/website/img/pilot-48.png" type="image/png" sizes="48x48"><link rel="apple-touch-icon" href="/website/img/pilot-180.png" sizes="180x180"><!-- PILOT-27: Consent banner injected at the end of <body> from <head> --><script>
+  (function() {
+    var bannerHTML = '<div id="pilot-consent-banner" class="consent-banner consent-banner--bottom" role="dialog" aria-label="Cookie consent" style="display:none">' +
+      '<div class="consent-banner__inner">' +
+        '<div class="consent-banner__text">' +
+          '<p>We use analytics cookies, plus heatmaps and session replay with all form inputs masked, to understand how our site is used. We do not build a profile of you. <a href="/cookies">Cookie policy</a>.</p>' +
+        '</div>' +
+        '<div class="consent-banner__actions">' +
+          '<button id="pilot-consent-accept" class="btn primary consent-btn" data-consent="accepted">Accept</button>' +
+          '<button id="pilot-consent-reject" class="btn consent-btn" data-consent="rejected">Reject</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    // Wait for DOM to be ready
+    function injectBanner() {
+      if (document.body) {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = bannerHTML;
+        document.body.appendChild(wrapper.firstElementChild);
+
+        var KEY = 'pilot_consent';
+        var banner = document.getElementById('pilot-consent-banner');
+        if (!banner) return;
+
+        function getConsent() {
+          try { return localStorage.getItem(KEY); } catch { return null; }
+        }
+
+        function setConsent(value) {
+          try {
+            localStorage.setItem(KEY, value);
+            window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: value }));
+          } catch {}
+        }
+
+        document.getElementById('pilot-consent-accept').addEventListener('click', function() {
+          setConsent('accepted');
+          banner.style.display = 'none';
+        });
+
+        document.getElementById('pilot-consent-reject').addEventListener('click', function() {
+          setConsent('rejected');
+          banner.style.display = 'none';
+        });
+
+        var existing = getConsent();
+        if (existing) {
+          banner.style.display = 'none';
+          window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: existing }));
+        } else {
+          banner.style.display = 'flex';
+        }
+
+        window.__showConsentBanner = function() {
+          if (banner) banner.style.display = 'flex';
+        };
+      } else {
+        setTimeout(injectBanner, 50);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectBanner);
+    } else {
+      injectBanner();
+    }
+  })();
+</script><link rel="alternate" type="application/rss+xml" title="Pilot Protocol Journal" href="/website/blog/feed.xml"><script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('pilot-theme');
+      var prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      var theme = stored || prefers;
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script><!-- PILOT-27: GA4 loads only after user accepts cookies. --><script>
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadGA4() {
+      if (document.querySelector('script[src*="gtag/js?id=G-EEWEKT0GW5"]')) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EEWEKT0GW5';
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-EEWEKT0GW5');
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadGA4();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadGA4();
+      });
+    }
+    // If consent === 'rejected', never load GA4.
+  })();
+</script><!-- X (Twitter) Ads universal website tag — conversion tracking for our X ad
+     campaigns. Same consent gate as GA4 above: loads only after the visitor
+     accepts cookies, never on reject. Disclosed in /cookies and /privacy. --><script>(function(){const twitterPixelId = "re3tv";
+
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadTwitterPixel() {
+      if (!twitterPixelId || window.twq) return;
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+      },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+      a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+      window.twq('config', twitterPixelId);
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadTwitterPixel();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadTwitterPixel();
+      });
+    }
+    // If consent === 'rejected', never load the X pixel.
+  })();
+})();</script><script type="module" src="/website/_astro/BaseHead.astro_astro_type_script_index_0_lang.DTqJW7IP.js"></script><link rel="preload" as="image" href="/website/blog/banners/optimized/why-ai-agents-need-network-stack-1200.webp" imagesrcset="/website/blog/banners/optimized/why-ai-agents-need-network-stack-720.webp 720w, /website/blog/banners/optimized/why-ai-agents-need-network-stack-1200.webp 1200w" imagesizes="(max-width: 760px) calc(100vw - 40px), 720px" fetchpriority="high"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Agent Connectivity Best Practices: Why AI Agents Need a Network Stack","description":"Agent connectivity best practices for reliable multi-agent systems: durable addresses, NAT traversal, encrypted tunnels, and per-peer trust.","image":"https://pilotprotocol.network/blog/banners/optimized/why-ai-agents-need-network-stack-1200.webp","author":{"@type":"Organization","name":"Pilot Protocol editorial team","url":"https://pilotprotocol.network/about#publishing"},"publisher":{"@id":"https://pilotprotocol.network/#organization"},"datePublished":"2026-02-02","dateModified":"August 15, 2026","mainEntityOfPage":"https://pilotprotocol.network/blog/why-ai-agents-need-network-stack"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is an agent network stack?","acceptedAnswer":{"@type":"Answer","text":"An agent network stack is a dedicated networking layer that handles addressing, reachability, encryption, and trust for AI agents. Unlike HTTP, which was designed for browser-server communication, an agent network stack gives each agent a permanent virtual address, automatic NAT traversal, encrypted peer-to-peer tunnels, and built-in cryptographic identity — so agents can communicate directly regardless of where they are deployed."}},{"@type":"Question","name":"What are agent connectivity best practices?","acceptedAnswer":{"@type":"Answer","text":"Give each node a durable identity and address, plan for NAT and relay fallback, protect every peer path, separate membership from authorization, reuse persistent connections where they fit, and keep application policy above the transport. Pilot implements these network concerns while leaving model context and business authority to the application."}},{"@type":"Question","name":"Why can't AI agents just use HTTP for communication?","acceptedAnswer":{"@type":"Answer","text":"AI agents can use HTTP when callers can route to the server and the deployment supplies appropriate identity and authorization. HTTP alone does not create reachability through NAT or give an agent a stable identity across machines. Pilot can provide that network path beneath HTTP or another application protocol."}},{"@type":"Question","name":"How does NAT affect AI agent communication?","acceptedAnswer":{"@type":"Answer","text":"NAT (Network Address Translation) makes agents behind firewalls and routers invisible to incoming connections. An agent behind a home router cannot receive A2A task delegations or MCP tool requests because there is no publicly reachable HTTP endpoint. Standard workarounds like reverse proxies, ngrok, or Cloudflare Tunnels add complexity and cost. A network stack with built-in NAT traversal solves this automatically through STUN, hole-punching, and relay fallback."}},{"@type":"Question","name":"What problems does a network stack solve for multi-agent systems?","acceptedAnswer":{"@type":"Answer","text":"A network stack solves five problems simultaneously: <strong>permanent addresses</strong> that survive IP changes, <strong>NAT traversal</strong> for agents behind firewalls, <strong>tunnel encryption</strong> without certificate management, <strong>connectivity controls</strong> based on peer trust or network membership, and <strong>port-based services</strong> that replace custom message-passing code with well-known service ports."}},{"@type":"Question","name":"How do permanent addresses help AI agents?","acceptedAnswer":{"@type":"Answer","text":"A Pilot node's 48-bit virtual address remains stable while its identity state is retained, even when the underlying IP changes. Peers can address that node without binding application configuration to a particular host endpoint."}}]}</script><link rel="stylesheet" href="/website/_astro/system.DXXNXJyX.css"><link rel="stylesheet" href="/website/_astro/Footer.G2DNlaPt.css"><style>.article-next-step[data-astro-cid-4ee7rn3o]{border:1px solid color-mix(in srgb, var(--accent) 38%, var(--line));background:color-mix(in srgb, var(--accent) 6%, var(--bg));grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:1rem 2rem;margin:3rem 0 2rem;padding:clamp(1.25rem,3vw,2rem);display:grid}.article-next-step[data-astro-cid-4ee7rn3o]>span[data-astro-cid-4ee7rn3o]{color:var(--accent-text);font:600 .68rem/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;grid-column:1/-1}.article-next-step[data-astro-cid-4ee7rn3o] h2[data-astro-cid-4ee7rn3o]{margin:0 0 .55rem;font-size:clamp(1.35rem,3vw,1.9rem);line-height:1.08}.article-next-step[data-astro-cid-4ee7rn3o] p[data-astro-cid-4ee7rn3o]{color:var(--ink-dim);margin:0}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]{border:1px solid var(--ink);min-height:44px;color:var(--ink);font:600 .72rem/1.2 var(--mono);white-space:nowrap;justify-content:center;align-items:center;gap:.6rem;padding:.75rem 1rem;text-decoration:none;display:inline-flex}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]:hover{background:var(--ink);color:var(--bg)}@media (width<=640px){.article-next-step[data-astro-cid-4ee7rn3o]{grid-template-columns:1fr;align-items:start}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]{white-space:normal;width:100%}}.article-faq[data-astro-cid-4ee7rn3o]{max-width:760px;margin:0 auto;padding:3rem 1.5rem 1rem}.article-faq[data-astro-cid-4ee7rn3o] h2[data-astro-cid-4ee7rn3o]{margin-bottom:1.5rem;font-size:1.6rem}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o]{border-top:1px solid var(--line,#1d1d1b);padding:1.25rem 0}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o] h3[data-astro-cid-4ee7rn3o]{margin:0 0 .5rem;font-size:1.05rem}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o] p[data-astro-cid-4ee7rn3o]{color:var(--ink-dim,#5a5a54);margin:0;line-height:1.6}
+</style></head><body data-astro-cid-4ee7rn3o><div class="progress-bar" id="progress-bar" data-astro-cid-4ee7rn3o></div><a class="skip-link" href="#page-content">Skip to content</a><nav class="nav-top" aria-label="Primary"><div class="wrap"><div class="nav-row"><a href="/" class="brand" data-track="nav_click" data-track-target="home"><span class="brand-mark"><img src="/website/img/pilot-48.webp" alt="" class="logo" width="40" height="40" decoding="async"></span><span class="brand-text"><strong>Pilot</strong><span>Protocol</span></span><span class="sr-only"> home</span></a><div class="nav-links" id="nav-links"><div class="nav-dropdown" data-nav-group="product"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Product</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">The platform</span><strong>One network layer for agents.</strong><p>Identity, encrypted connectivity, trust, and installable capabilities in one system.</p></div><div class="nav-menu-links"><a href="/" data-track="nav_click" data-track-target="product-network-os"><span class="dd-kicker">Platform</span><span class="dd-label">Network OS</span><span class="dd-desc">The complete Pilot architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/trust" data-track="nav_click" data-track-target="product-trust-center"><span class="dd-kicker">Security</span><span class="dd-label">Trust Center</span><span class="dd-desc">Controls, boundaries, and evidence</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/governance" data-track="nav_click" data-track-target="product-control-model"><span class="dd-kicker">Governance</span><span class="dd-label">Control model</span><span class="dd-desc">Authority, policy, lifecycle, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/app-store" data-track="nav_click" data-track-target="product-app-store"><span class="dd-kicker">Ecosystem</span><span class="dd-label">App Store</span><span class="dd-desc">Capabilities built for agents</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/plans" data-track="nav_click" data-track-target="product-plans"><span class="dd-kicker">Commercial</span><span class="dd-label">Plans</span><span class="dd-desc">Open network and enterprise paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/docs/getting-started"><span>Explore the product</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="solutions"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Solutions</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Built for real systems</span><strong>Connect agents across every boundary.</strong><p>Start with one deployment pattern, then expand without replacing the underlying network.</p></div><div class="nav-menu-links"><a href="/website/for/p2p" data-track="nav_click" data-track-target="solutions-direct-p2p"><span class="dd-kicker">Connectivity</span><span class="dd-label">Direct P2P</span><span class="dd-desc">Private agent-to-agent paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/mcp" data-track="nav_click" data-track-target="solutions-mcp-+-pilot"><span class="dd-kicker">Integration</span><span class="dd-label">MCP + Pilot</span><span class="dd-desc">Give MCP servers a network</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/networks" data-track="nav_click" data-track-target="solutions-managed-networks"><span class="dd-kicker">Organization</span><span class="dd-label">Managed networks</span><span class="dd-desc">Shared domains and membership</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/enterprise" data-track="nav_click" data-track-target="solutions-enterprise-controls"><span class="dd-kicker">Enterprise</span><span class="dd-label">Enterprise controls</span><span class="dd-desc">Identity, policy, roles, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/setups"><span>Browse deployment setups</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="developers"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Developers</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Build on Pilot</span><strong>From first connection to production.</strong><p>Documentation and tooling for connecting, shipping, and operating agent-native software.</p></div><div class="nav-menu-links"><a href="/website/docs/getting-started" data-track="nav_click" data-track-target="developers-quickstart"><span class="dd-kicker">Start</span><span class="dd-label">Quickstart</span><span class="dd-desc">Install and connect in minutes</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/" data-track="nav_click" data-track-target="developers-documentation"><span class="dd-kicker">Reference</span><span class="dd-label">Documentation</span><span class="dd-desc">Concepts, CLI, SDKs, and operations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/integration" data-track="nav_click" data-track-target="developers-sdks-&amp;-integration"><span class="dd-kicker">Build</span><span class="dd-label">SDKs &amp; integration</span><span class="dd-desc">Embed Pilot in your stack</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/compatibility" data-track="nav_click" data-track-target="developers-compatibility"><span class="dd-kicker">Deploy</span><span class="dd-label">Compatibility</span><span class="dd-desc">Choose the right environment mode</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/skills"><span>Explore agent skills</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown active" data-nav-group="resources"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Resources</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Learn and evaluate</span><strong>Technical depth without the guesswork.</strong><p>Architecture, field notes, evaluator material, and a machine-readable version of the site.</p></div><div class="nav-menu-links"><a href="/website/learn/" data-track="nav_click" data-track-target="resources-learning-center"><span class="dd-kicker">Learn</span><span class="dd-label">Learning center</span><span class="dd-desc">Foundations, transport, and security</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/blog/" data-track="nav_click" data-track-target="resources-field-notes"><span class="dd-kicker">Journal</span><span class="dd-label">Field notes</span><span class="dd-desc">Technical guides and architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/research" data-track="nav_click" data-track-target="resources-technical-papers"><span class="dd-kicker">Research</span><span class="dd-label">Technical papers</span><span class="dd-desc">Specifications and evaluations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/pilot-native-use-cases.pdf" data-track="nav_click" data-track-target="resources-deployment-patterns"><span class="dd-kicker">Use cases</span><span class="dd-label">Deployment patterns</span><span class="dd-desc">What the combined Pilot surface enables</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/press" data-track="nav_click" data-track-target="resources-press-kit"><span class="dd-kicker">Media</span><span class="dd-label">Press kit</span><span class="dd-desc">Company and brand resources</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/plain/" data-track="nav_click" data-track-target="resources-machine-readable-site"><span class="dd-kicker">Agents</span><span class="dd-label">Machine-readable site</span><span class="dd-desc">The plain-text agent interface</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/enterprise-readiness-report.pdf"><span>Read the readiness report</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="company"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Company</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Pilot Protocol</span><strong>Building the network for agents.</strong><p>Learn about the company, follow our progress, or speak directly with the team.</p></div><div class="nav-menu-links"><a href="/about" data-track="nav_click" data-track-target="company-about-pilot"><span class="dd-kicker">About</span><span class="dd-label">About Pilot</span><span class="dd-desc">Company, people, and publishing standards</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/roadmap" data-track="nav_click" data-track-target="company-product-roadmap"><span class="dd-kicker">Direction</span><span class="dd-label">Product roadmap</span><span class="dd-desc">What we are strengthening next</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/news/" data-track="nav_click" data-track-target="company-company-news"><span class="dd-kicker">Newsroom</span><span class="dd-label">Company news</span><span class="dd-desc">Announcements and company updates</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/contact" data-track="nav_click" data-track-target="company-talk-to-the-team"><span class="dd-kicker">Contact</span><span class="dd-label">Talk to the team</span><span class="dd-desc">Enterprise, partnerships, and press</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/contact"><span>Contact Pilot Protocol</span><span aria-hidden="true">→</span></a></div></div><div class="nav-mobile-actions"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a></div></div><div class="nav-right"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme" type="button"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button><button id="nav-hamburger" class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button></div></div></div></nav><span id="page-content" class="skip-target" tabindex="-1"></span><script>
+  (function () {
+    var nav = document.querySelector('.nav-top');
+    var themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function () {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isLight) {
+          document.documentElement.removeAttribute('data-theme');
+          try { localStorage.setItem('pilot-theme', 'dark'); } catch (e) {}
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          try { localStorage.setItem('pilot-theme', 'light'); } catch (e) {}
+        }
+      });
+    }
+
+    function closeDropdowns(except) {
+      document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+        if (dd === except) return;
+        dd.classList.remove('open');
+        var trigger = dd.querySelector('.nav-dropdown-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function closeMobileMenu() {
+      if (!links || !links.classList.contains('mobile-open')) return;
+      links.classList.remove('mobile-open');
+      if (hamb) {
+        hamb.classList.remove('is-open');
+        hamb.setAttribute('aria-expanded', 'false');
+        hamb.setAttribute('aria-label', 'Open menu');
+      }
+      document.body.classList.remove('nav-mobile-open');
+      closeDropdowns();
+    }
+
+    // Hamburger (mobile)
+    var hamb = document.getElementById('nav-hamburger');
+    var links = document.getElementById('nav-links');
+    if (hamb && links) {
+      hamb.setAttribute('aria-label', 'Open menu');
+      hamb.addEventListener('click', function () {
+        var open = links.classList.toggle('mobile-open');
+        hamb.classList.toggle('is-open', open);
+        hamb.setAttribute('aria-expanded', open ? 'true' : 'false');
+        hamb.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        document.body.classList.toggle('nav-mobile-open', open);
+        if (!open) closeDropdowns();
+      });
+      links.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    }
+
+    // Dropdown: click to toggle, click-outside to close
+    document.querySelectorAll('.nav-dropdown').forEach(function (dd) {
+      var trigger = dd.querySelector('.nav-dropdown-trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var wasOpen = dd.classList.contains('open');
+        closeDropdowns(dd);
+        dd.classList.toggle('open', !wasOpen);
+        var isOpen = !wasOpen;
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest || !e.target.closest('.nav-dropdown')) closeDropdowns();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+          dd.classList.remove('open');
+          var trig = dd.querySelector('.nav-dropdown-trigger');
+          if (trig) { trig.setAttribute('aria-expanded', 'false'); trig.focus(); }
+        });
+        closeMobileMenu();
+      }
+    });
+
+    // A restrained shadow gives the persistent shell a clear edge once content scrolls beneath it.
+    if (nav) {
+      var syncNavEdge = function () { nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+      syncNavEdge();
+      window.addEventListener('scroll', syncNavEdge, { passive: true });
+    }
+  })();
+</script><main class="article-layout" data-astro-cid-4ee7rn3o><article class="article" data-track-read="why-ai-agents-need-network-stack" data-astro-cid-4ee7rn3o><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://artemiia.github.io/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://artemiia.github.io/blog/"},{"@type":"ListItem","position":3,"name":"Agent Connectivity Best Practices: Why AI Agents Need a Network Stack","item":"https://artemiia.github.io/website/blog/why-ai-agents-need-network-stack/"}]}</script><nav class="site-breadcrumbs is-compact" aria-label="Breadcrumb" data-astro-cid-vx4iavld><ol data-astro-cid-vx4iavld><li data-astro-cid-vx4iavld><a href="/" data-astro-cid-vx4iavld>Home</a></li><li data-astro-cid-vx4iavld><a href="/website/blog/" data-astro-cid-vx4iavld>Blog</a></li><li data-astro-cid-vx4iavld><span aria-current="page" data-astro-cid-vx4iavld>Agent Connectivity Best Practices: Why AI Agents Need a Network Stack</span></li></ol></nav><img class="article-banner" src="/website/blog/banners/optimized/why-ai-agents-need-network-stack-1200.webp" srcset="/website/blog/banners/optimized/why-ai-agents-need-network-stack-720.webp 720w, /website/blog/banners/optimized/why-ai-agents-need-network-stack-1200.webp 1200w" sizes="(max-width: 760px) calc(100vw - 40px), 720px" alt="Agent Connectivity Best Practices: Why AI Agents Need a Network Stack" width="1200" height="630" loading="eager" decoding="sync" fetchpriority="high" data-astro-cid-4ee7rn3o><h1 data-astro-cid-4ee7rn3o>Agent Connectivity Best Practices: Why AI Agents Need a Network Stack</h1><div class="article-meta" data-astro-cid-4ee7rn3o><a href="https://pilotprotocol.network/about#publishing" data-astro-cid-4ee7rn3o>By Pilot Protocol editorial team</a><time datetime="2026-02-02" data-astro-cid-4ee7rn3o>February 2, 2026</time><span class="reading-time" id="reading-time" data-astro-cid-4ee7rn3o></span><span class="tag" data-astro-cid-4ee7rn3o>analysis</span><span class="tag" data-astro-cid-4ee7rn3o>opinion</span><span class="tag" data-astro-cid-4ee7rn3o>ai-agents</span><span class="tag" data-astro-cid-4ee7rn3o>networking</span><span class="tag" data-astro-cid-4ee7rn3o>best-practices</span></div><p>Remote AI agents need a deliberate network layer because application protocols do not, by themselves, make an endpoint reachable across laptops, private clouds, office networks, and organizational boundaries. Google's <a href="https://a2a-protocol.org/" target="_blank" rel="noopener">A2A</a> defines task and message semantics across declared agent interfaces. Anthropic's <a href="https://modelcontextprotocol.io/specification/draft/basic/transports" target="_blank" rel="noopener">MCP</a> defines local stdio and remote Streamable HTTP transports for tool access. Frameworks such as LangChain, <a href="https://www.crewai.com" target="_blank" rel="noopener">CrewAI</a>, and AutoGen still depend on the deployment to provide addressing, routing, authentication, and reachability.</p>
+
+  <p>It is not.</p>
+
+  <p>So the first agent connectivity best practice is this: <strong>treat the network as a first-class part of your agent architecture, not as plumbing you can bolt on later.</strong> We are repeating the mistake the internet made in the 1990s, when every application built its own networking layer because TCP/IP was not yet universal. The agent ecosystem needs its own TCP/IP moment: a shared network layer that handles addressing, reachability, encryption, and trust, so that application-layer protocols can focus on semantics instead of plumbing.</p>
+
+  <figure class="video-embed">
+    <div class="video-embed__frame">
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/QxmNImh4dtw"
+        title="AI Agents Need a Network Stack"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+    </div>
+    <figcaption>Watch the walkthrough on <a href="https://www.youtube.com/watch?v=QxmNImh4dtw" target="_blank" rel="noopener">YouTube</a>.</figcaption>
+  </figure>
+
+  <h2 id="http-assumption">The HTTP Assumption</h2>
+
+  <p>Many remote agent interfaces are exposed through HTTP, HTTPS, or gRPC. Those protocols work well once the caller can route to the advertised endpoint. They do not determine how a private endpoint behind NAT becomes reachable or how its address survives a move between environments.</p>
+
+  <p>A2A publishes <strong>Agent Cards</strong> at well-known locations. A card declares one or more interfaces where the agent can receive tasks. Those interfaces may sit on the public web, a private network, or another routable environment; the application protocol does not create that route.</p>
+
+  <p>MCP defines <strong>stdio</strong> for local subprocesses and <strong>Streamable HTTP</strong> for remote servers, while allowing custom transports. A remote MCP client still needs a route to the server endpoint and an authorization model appropriate for that deployment.</p>
+
+  <p>The problem is not with these protocols -- they solve real problems at the application layer. The problem is with the assumption underneath them.</p>
+
+  <p><strong>NAT is a normal condition of the real internet.</strong> Home routers, office firewalls, mobile carriers, and cloud egress paths translate addresses. An agent behind NAT cannot accept an unsolicited inbound connection unless the deployment supplies a mapping, proxy, relay, outbound tunnel, or traversal mechanism.</p>
+
+  <p>The standard workarounds -- reverse proxies, ngrok tunnels, cloud hosting, Cloudflare Tunnels -- all add complexity, cost, and fragility. They turn a networking problem into a deployment problem, and they make every developer solve the same problem independently.</p>
+
+  <h2 id="identity-crisis">The Identity Crisis</h2>
+
+  <p>Agent identity is in worse shape than agent connectivity.</p>
+
+  <p>In the current ecosystem, agents typically authenticate using one of three mechanisms: <strong>API keys</strong>, <strong>OAuth tokens</strong>, or <strong>mutual TLS certificates</strong>. Each has severe limitations in an agent-to-agent context.</p>
+
+  <p><strong>Shared API keys are still the default for agent-to-agent communication.</strong> A shared API key does not identify a specific agent -- it identifies an account, a project, or an organization. When an incident occurs, there is no way to trace it to the specific agent that caused it. When a key is compromised, every agent using that key is compromised.</p>
+
+  <p>The scale of the problem keeps growing. Non-human identities -- agents, service accounts, API keys, bots -- already outnumber human identities in enterprise environments. Each one needs its own identity. The old model of a human administrator manually provisioning and rotating credentials does not scale to fleets of autonomous agents.</p>
+
+  <p>What is useful is a system where every agent has a <strong>unique cryptographic identity</strong> that it controls and can prove to a peer. In Pilot, this begins with the Ed25519 key pair generated during <code>pilotctl init</code>. The node retains its private key and uses signatures during identity and trust operations; registry and enterprise identity controls remain separate parts of the deployment.</p>
+
+  <h2 id="quadratic">The Quadratic Explosion</h2>
+
+  <p>A full mesh grows quadratically regardless of transport. The engineering question is how many peer relationships are actually required and how each active path is addressed, secured, observed, and recovered.</p>
+
+  <p>If you have <strong>N agents</strong> that need to communicate with each other, you need <strong>N x (N-1) / 2</strong> pairwise connections. The mesh grows quadratically: a handful of agents is a small graph, but every added agent multiplies the number of links the system has to maintain.</p>
+
+  <p>With HTTP, each of these connections involves:</p>
+
+  <ul>
+    <li><strong>TCP handshake</strong> -- multiple round trips before any payload flows</li>
+    <li><strong>TLS handshake</strong> -- additional round trips for certificate exchange and key agreement</li>
+    <li><strong>HTTP negotiation</strong> -- protocol version, headers, authentication</li>
+    <li><strong>Keep-alive management</strong> -- idle connection timeouts, reconnection logic</li>
+    <li><strong>Certificate management</strong> -- each agent needs a TLS certificate, trusted by every peer</li>
+  </ul>
+
+  <p>A Pilot Protocol agent maintains a <strong>single UDP socket</strong>. All connections are multiplexed over this socket using virtual addresses and port numbers. The tunnel layer handles encryption once per peer, not once per connection. Any number of connections to any number of agents share the same UDP port, the same tunnel, and the same encryption key per peer.</p>
+
+  <p>An HTTP deployment can reuse persistent connections and connection pools. Pilot takes a different approach: one UDP socket carries traffic for multiple peers, while a peer tunnel can multiplex multiple logical streams. Both designs still need sensible topology and lifecycle management; Pilot moves those concerns below the application protocol.</p>
+
+  <h2 id="coordination-overhead">Separate Transport Overhead From Model Context</h2>
+
+  <p>It is important not to conflate network overhead with model-token usage.</p>
+
+  <p>HTTP exchanges carry headers and application framing, while a fresh connection may also incur transport and cryptographic setup. Persistent connections can reuse established paths and can make bidirectional streaming easier. These are network and application-latency considerations.</p>
+
+  <p>Model context is different. HTTP can support stateful applications, and a persistent tunnel does not automatically reduce the tokens sent to a model. Token usage depends on the application protocol, memory design, prompts, and whether agents exchange full histories or compact deltas.</p>
+
+  <p>Pilot connections maintain transport state such as sequence numbers, acknowledgments, and flow-control windows. Applications may use that persistent path to exchange compact events or deltas, but the application remains responsible for conversation state and model context. For a comparison of connection patterns, see <a href="/website/blog/move-beyond-rest-persistent-connections-for-agents">persistent connections for agents</a>.</p>
+
+  <p>This separation matters during architecture reviews: measure connection setup, framing, delivery behavior, and model tokens independently instead of attributing every coordination cost to the transport.</p>
+
+  <h2 id="network-stack">What a Network Stack Gives You</h2>
+
+  <p>A proper network stack for agents solves five problems simultaneously:</p>
+
+  <h3>Permanent Addresses</h3>
+
+  <p>Every initialized node gets a <strong>48-bit virtual address</strong> that remains stable while its identity state is retained, even when the underlying IP changes or the node moves between machines. This decouples the agent-facing address from a particular network endpoint.</p>
+
+  <p>See <a href="how-pilot-protocol-works#addressing">the addressing section</a> of our architecture deep dive for the full technical details.</p>
+
+  <h3>NAT Traversal</h3>
+
+  <p>The network stack handles <strong>STUN discovery</strong>, <strong>hole-punching</strong>, and <strong>relay fallback</strong> automatically. The agent developer never thinks about NAT types, port mappings, or firewall rules. An agent behind a home router communicates with an agent behind a corporate firewall as easily as two agents on the same LAN.</p>
+
+  <h3>Tunnel Encryption</h3>
+
+  <p>Tunnel encryption is enabled by default using <strong>X25519 key exchange and AES-256-GCM</strong>. There are no certificates to manage. The key exchange happens automatically when tunnels are established, and encrypted packets are authenticated and integrity-checked. An explicit plaintext override exists for controlled testing, not production profiles.</p>
+
+  <h3>Trust Model</h3>
+
+  <p>Agents are <strong>private by default at the application connectivity layer</strong>. Directory metadata may remain visible, but open lookups withhold private endpoints and private nodes reject application traffic without peer trust or applicable shared-network membership. Peer trust can be revoked.</p>
+
+  <p>For a deep dive into why this matters, read <a href="trust-model-agents-invisible-by-default">Why Agents Should Be Invisible by Default</a>.</p>
+
+  <h3>Port-Based Services</h3>
+
+  <p>The network stack provides <strong>well-known port numbers</strong> for common services: echo (7), data exchange (1001), pub/sub events (1002). Applications build on these services instead of reinventing message passing and event distribution. This same port-based architecture works for everything from <a href="/website/blog/lightweight-swarm-communication-drones-robots">drone and robot swarm communication</a> to <a href="/website/blog/smart-home-without-cloud-local-device-communication">cloud-free smart home device networks</a>.</p>
+
+  <h2 id="best-practices">Agent Connectivity Best Practices</h2>
+
+  <p>If you are designing a multi-agent system today, these are the agent connectivity best practices that separate systems that survive production from demos that only work on a laptop:</p>
+
+  <h3>Give every agent a durable identity and address</h3>
+
+  <p>Address the agent, not a transient process endpoint. An IP address can change when an agent restarts, moves clouds, or shifts onto another host. A retained virtual identity decouples "which node is this" from "where is it running now."</p>
+
+  <h3>Assume NAT, and build traversal in from day one</h3>
+
+  <p>Do not design for a world where every agent has a public IP. Agents often live behind a home router, office firewall, or cloud egress path. Decide explicitly whether the deployment will use a proxy, private network, outbound tunnel, direct traversal, relay fallback, or some combination of them.</p>
+
+  <h3>Encrypt the tunnel, not just the payload</h3>
+
+  <p>TLS and encrypted overlays both protect payloads while leaving some transport metadata visible to the systems carrying the traffic. Pilot places X25519 key agreement and AES-GCM payload protection at the tunnel layer, so multiple application protocols can share the same encrypted peer path without each application managing certificates at that layer.</p>
+
+  <h3>Decouple membership from trust</h3>
+
+  <p>Flat-network deployments can treat membership as broad reachability, although modern private networks may add detailed policy. For agents, keep membership, discovery, and authorization as distinct decisions. Pilot peer trust uses a bilateral handshake, while managed-network policy can further constrain relationships.</p>
+
+  <h3>Keep connections stateful</h3>
+
+  <p>Persistent connections avoid repeated connection setup and support ongoing bidirectional exchanges. They do not choose what model context an application sends. Design the application protocol to send the minimum state required, and measure network overhead separately from model usage.</p>
+
+  <h3>Standardize the service layer</h3>
+
+  <p>Every agent team ends up reinventing message passing and event distribution. Well-known service ports (echo, data exchange, pub/sub) give agents a shared vocabulary for common capabilities, so applications build on a stable service layer instead of bespoke protocols. It is the same move the internet made when it standardized on TCP/IP and DNS: a shared foundation lets everyone innovate above it.</p>
+
+  <p>These practices are exactly what Pilot Protocol implements as its core: permanent virtual addresses, automatic NAT traversal, encrypted tunnels, per-peer trust, stateful connections, and well-known service ports -- in a single Go daemon with no external dependencies. The fastest way to see them in practice is the <a href="build-multi-agent-network-five-minutes">five-minute multi-agent network tutorial</a>, or the <a href="/website/learn/what-is-pilot-protocol">plain-language primer on what Pilot Protocol is</a>.</p>
+
+  <h2 id="tailscale">The Tailscale Analogy</h2>
+
+  <p>The best analogy for what Pilot Protocol does for agents is what <strong><a href="https://tailscale.com" target="_blank" rel="noopener">Tailscale</a> did for humans</strong>.</p>
+
+  <p>Before Tailscale, connecting to resources on a private network required VPN configuration, firewall rules, certificate management, and ongoing operational overhead. Tailscale did not replace HTTP or SSH or any application protocol. It made them <strong>work in places they could not before</strong> -- behind NAT, across cloud providers, from mobile devices.</p>
+
+  <p>Pilot applies a related pattern to AI agents. It does not replace A2A, MCP, or another application-layer protocol. It supplies addressing, reachability, encrypted peer paths, and connectivity controls beneath those protocols.</p>
+
+  <p>Consider the architecture that becomes possible:</p>
+
+  <ul>
+    <li><strong>A2A for semantics</strong> -- Agent Cards, task delegation, capability matching -- running over Pilot Protocol tunnels instead of public HTTP endpoints</li>
+    <li><strong>MCP for tool access</strong> -- tool servers that agents connect to over the overlay network, reachable even behind corporate firewalls</li>
+    <li><strong>LangChain/CrewAI for orchestration</strong> -- agent frameworks that use Pilot addresses instead of URLs, with automatic NAT traversal and encryption</li>
+  </ul>
+
+  <p>The application-layer protocol handles what agents say to each other. The network stack handles how they reach each other. These are different problems, and they deserve different solutions.</p>
+
+  <h2 id="missing-layer">The Missing Layer</h2>
+
+  <p>The agent ecosystem has built impressive application-layer capabilities. Agents can reason, plan, use tools, generate code, analyze data, and coordinate complex tasks. What is missing is the infrastructure layer that makes these capabilities accessible across network boundaries.</p>
+
+  <p>Every time a team separately implements NAT traversal, peer addressing, tunnel encryption, and discovery for each application protocol, it creates another networking surface to operate. Application-level delivery guarantees and business retries still belong above that network layer.</p>
+
+  <p>The internet works because the network layer is shared. Everyone uses TCP/IP. Everyone uses DNS. The application layer can innovate because the transport layer is stable and universal. Agents need the same foundation.</p>
+
+  <p>Pilot Protocol is a proposal for what that foundation looks like: <strong>permanent addresses</strong>, <strong>encrypted tunnels</strong>, <strong>automatic NAT traversal</strong>, <strong>cryptographic trust</strong>, and <strong>port-based services</strong>. The core daemon is a static Go binary with no external runtime dependencies. It is one of several agent networking approaches worth evaluating -- see the honest architecture comparison in <a href="/website/blog/pilot-vs-tailscale-nebula-zerotier-ai-agents">Pilot vs Tailscale vs Nebula vs ZeroTier for AI Agents</a>, and the <a href="/website/blog/ai-networking-best-practices-secure-scalable-systems">broader AI networking best practices guide</a> for the security side of the same coin.</p>
+
+  <div class="callout">
+    <p><strong>The boundary is the point:</strong> the network layer handles identity-bearing paths, reachability, encryption, and transport behavior. The application layer still handles tool authorization, model context, approvals, transactions, and business policy.</p>
+  </div>
+
+  <h2 id="get-started">Getting Started</h2>
+
+  <p>If this argument resonates, the best next step is to try it. Pilot Protocol is open source (AGPL-3.0), written in Go, and available through a single-command installer. Its core daemon is distributed as a static binary on supported platforms.</p>
+
+  <pre><code>curl -fsSL https://pilotprotocol.network/install.sh | sh</code></pre>
+
+  <ul>
+    <li><a href="/website/solutions/private-agent-network"><strong>Evaluate a private agent network</strong></a> -- architecture, controls, and deployment paths for multi-machine agent teams</li>
+    <li><a href="build-multi-agent-network-five-minutes"><strong>Build a multi-agent network in 5 minutes</strong></a> -- hands-on tutorial from install to working demo</li>
+    <li><a href="how-pilot-protocol-works"><strong>How Pilot Protocol works</strong></a> -- architecture deep dive covering every layer of the stack</li>
+    <li><a href="/website/docs/concepts"><strong>Core concepts</strong></a> -- technical reference for addressing, transport, encryption, and trust</li>
+    <li><a href="/website/docs/integration"><strong>Integration guide</strong></a> -- embed Pilot Protocol in your existing Go agent applications</li>
+  </ul>
+
+  <div class="cta">
+    <h3>Map Your Agent Network</h3>
+    <p>Start with the open-source daemon or review the private-network architecture for a larger deployment.</p>
+    <a href="/website/solutions/private-agent-network">Explore private agent networks</a>
+  </div><aside class="article-next-step" aria-label="Recommended next step" data-track-cta="why-ai-agents-need-network-stack:/solutions/private-agent-network" data-astro-cid-4ee7rn3o><span data-astro-cid-4ee7rn3o>For agent platform teams</span><div data-astro-cid-4ee7rn3o><h2 data-astro-cid-4ee7rn3o>Map the network your agents actually need</h2><p data-astro-cid-4ee7rn3o>Review addressing, private discovery, peer trust, direct paths, and encrypted relay fallback as one deployment model.</p></div><a href="/website/solutions/private-agent-network" data-astro-cid-4ee7rn3o>Explore private agent networks <i aria-hidden="true" data-astro-cid-4ee7rn3o>→</i></a></aside><footer class="article-provenance" data-astro-cid-4ee7rn3o><strong data-astro-cid-4ee7rn3o>About this article</strong><p data-astro-cid-4ee7rn3o>Published by the Pilot Protocol team. Product claims are scoped to the availability labels and technical references linked in the article; deployment behavior can vary by version and environment.</p><p data-astro-cid-4ee7rn3o><a href="/about#publishing" data-astro-cid-4ee7rn3o>How we publish</a> · <a href="/contact?topic=correction" data-astro-cid-4ee7rn3o>Suggest a correction</a> · <a href="/website/docs/research" data-astro-cid-4ee7rn3o>Technical references</a></p></footer></article><aside class="article-toc" id="article-toc" data-astro-cid-4ee7rn3o><nav data-astro-cid-4ee7rn3o><p class="toc-title" data-astro-cid-4ee7rn3o>On this page</p><ul id="toc-list" data-astro-cid-4ee7rn3o></ul></nav></aside></main><section id="frequently-asked-questions" class="article-faq" data-astro-cid-4ee7rn3o><div class="article-faq-inner" data-astro-cid-4ee7rn3o><h2 data-astro-cid-4ee7rn3o>Frequently asked questions</h2><div class="faq-item" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>What is an agent network stack?</h3><p data-astro-cid-4ee7rn3o>An agent network stack is a dedicated networking layer that handles addressing, reachability, encryption, and trust for AI agents. Unlike HTTP, which was designed for browser-server communication, an agent network stack gives each agent a permanent virtual address, automatic NAT traversal, encrypted peer-to-peer tunnels, and built-in cryptographic identity — so agents can communicate directly regardless of where they are deployed.</p></div><div class="faq-item" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>What are agent connectivity best practices?</h3><p data-astro-cid-4ee7rn3o>Give each node a durable identity and address, plan for NAT and relay fallback, protect every peer path, separate membership from authorization, reuse persistent connections where they fit, and keep application policy above the transport. Pilot implements these network concerns while leaving model context and business authority to the application.</p></div><div class="faq-item" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Why can&#39;t AI agents just use HTTP for communication?</h3><p data-astro-cid-4ee7rn3o>AI agents can use HTTP when callers can route to the server and the deployment supplies appropriate identity and authorization. HTTP alone does not create reachability through NAT or give an agent a stable identity across machines. Pilot can provide that network path beneath HTTP or another application protocol.</p></div><div class="faq-item" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>How does NAT affect AI agent communication?</h3><p data-astro-cid-4ee7rn3o>NAT (Network Address Translation) makes agents behind firewalls and routers invisible to incoming connections. An agent behind a home router cannot receive A2A task delegations or MCP tool requests because there is no publicly reachable HTTP endpoint. Standard workarounds like reverse proxies, ngrok, or Cloudflare Tunnels add complexity and cost. A network stack with built-in NAT traversal solves this automatically through STUN, hole-punching, and relay fallback.</p></div><div class="faq-item" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>What problems does a network stack solve for multi-agent systems?</h3><p data-astro-cid-4ee7rn3o>A network stack solves five problems simultaneously: <strong>permanent addresses</strong> that survive IP changes, <strong>NAT traversal</strong> for agents behind firewalls, <strong>tunnel encryption</strong> without certificate management, <strong>connectivity controls</strong> based on peer trust or network membership, and <strong>port-based services</strong> that replace custom message-passing code with well-known service ports.</p></div><div class="faq-item" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>How do permanent addresses help AI agents?</h3><p data-astro-cid-4ee7rn3o>A Pilot node's 48-bit virtual address remains stable while its identity state is retained, even when the underlying IP changes. Peers can address that node without binding application configuration to a particular host endpoint.</p></div></div></section><section class="related-posts" data-astro-cid-4ee7rn3o><div class="related-inner" data-astro-cid-4ee7rn3o><h2 data-astro-cid-4ee7rn3o>Related Posts</h2><div class="related-grid" data-astro-cid-4ee7rn3o><a class="related-card" href="/website/blog/overlay-network-ai-agents" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/overlay-network-ai-agents.svg" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Overlay Network for AI Agents: Architecture and Trust Model" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Overlay Network for AI Agents: Architecture and Trust Model</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-07-01" data-astro-cid-4ee7rn3o>Jul 1, 2026</time> &middot; Blog</span></div></a><a class="related-card" href="/website/blog/peer-to-peer-agent-communication-no-server" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/peer-to-peer-agent-communication-no-server-1200.webp" srcset="/website/blog/banners/optimized/peer-to-peer-agent-communication-no-server-720.webp 720w, /website/blog/banners/optimized/peer-to-peer-agent-communication-no-server-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Peer-to-Peer Agent Communication Without an Application Broker" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Peer-to-Peer Agent Communication Without an Application Broker</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-07-25" data-astro-cid-4ee7rn3o>Jul 25, 2026</time> &middot; Architecture</span></div></a><a class="related-card" href="/website/blog/connecting-mcp-servers-across-agents" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/connecting-mcp-servers-across-agents-1200.webp" srcset="/website/blog/banners/optimized/connecting-mcp-servers-across-agents-720.webp 720w, /website/blog/banners/optimized/connecting-mcp-servers-across-agents-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Connecting MCP Servers to Agents Across Any Network" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Connecting MCP Servers to Agents Across Any Network</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-07-23" data-astro-cid-4ee7rn3o>Jul 23, 2026</time> &middot; Integration</span></div></a></div></div></section><nav class="blog-nav" data-astro-cid-4ee7rn3o><div class="blog-nav-inner" data-astro-cid-4ee7rn3o><a class="blog-nav-link blog-nav-prev" href="/website/blog/pilot-vs-tcp-grpc-nats-comparison" data-astro-cid-4ee7rn3o><span class="blog-nav-label" data-astro-cid-4ee7rn3o>&larr; Previous</span><span class="blog-nav-title" data-astro-cid-4ee7rn3o>Where Pilot Fits with TCP, gRPC, and NATS</span></a><div class="blog-nav-empty" data-astro-cid-4ee7rn3o></div></div></nav><footer class="site-footer" data-astro-cid-jo6i4kqk><div class="wrap" data-astro-cid-jo6i4kqk><div class="foot-big" data-astro-cid-jo6i4kqk>The internet<br data-astro-cid-jo6i4kqk>for <span class="a" data-astro-cid-jo6i4kqk>agents.</span></div><div class="foot-cta" data-astro-cid-jo6i4kqk><a href="/website/docs/getting-started" class="btn primary" data-astro-cid-jo6i4kqk>Get started <span class="arr" data-astro-cid-jo6i4kqk>→</span></a><a href="/contact" class="btn" data-astro-cid-jo6i4kqk>Contact sales</a></div><div class="foot-grid" data-astro-cid-jo6i4kqk><div class="foot-about" data-astro-cid-jo6i4kqk><div class="foot-brand" data-astro-cid-jo6i4kqk><img src="/website/img/pilot-48.webp" alt="" class="foot-logo" width="28" height="28" loading="lazy" decoding="async" data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Pilot Protocol</p></div><p data-astro-cid-jo6i4kqk>Pilot. Where agents go.</p><div class="foot-social" data-astro-cid-jo6i4kqk><a href="https://x.com/pilotprotocol_" class="foot-social-link" target="_blank" rel="noopener" aria-label="Pilot Protocol on X" data-track="social_click" data-track-target="x" data-astro-cid-jo6i4kqk><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-jo6i4kqk><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="https://www.linkedin.com/company/112569955/" class="foot-social-link" target="_blank" rel="noopener" aria-label="Pilot Protocol on LinkedIn" data-track="social_click" data-track-target="linkedin" data-astro-cid-jo6i4kqk><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-jo6i4kqk><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Product</p><a href="/website/learn/what-is-pilot-protocol" data-astro-cid-jo6i4kqk>Network OS</a><a href="/trust" data-astro-cid-jo6i4kqk>Trust Center</a><a href="/governance" data-astro-cid-jo6i4kqk>Governance</a><a href="/app-store" data-astro-cid-jo6i4kqk>App Store</a><a href="/plans" data-astro-cid-jo6i4kqk>Plans</a><a href="/website/docs/enterprise" data-astro-cid-jo6i4kqk>Enterprise controls</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Developers</p><a href="/website/docs/" data-astro-cid-jo6i4kqk>Documentation</a><a href="/website/docs/getting-started" data-astro-cid-jo6i4kqk>Quickstart</a><a href="/website/docs/integration" data-astro-cid-jo6i4kqk>SDKs &amp; integration</a><a href="/website/research/WHITEPAPER.pdf" data-astro-cid-jo6i4kqk>Wire specification</a><a href="/website/pilot-native-use-cases.pdf" data-astro-cid-jo6i4kqk>Use-case brochure</a><a href="https://github.com/pilot-protocol/pilotprotocol" data-astro-cid-jo6i4kqk>GitHub</a><a href="/website/docs/research" data-astro-cid-jo6i4kqk>Research</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Company</p><a href="/about" data-astro-cid-jo6i4kqk>About</a><a href="/website/learn/" data-astro-cid-jo6i4kqk>Learning center</a><a href="/roadmap" data-astro-cid-jo6i4kqk>Roadmap</a><a href="/website/news/" data-astro-cid-jo6i4kqk>Company news</a><a href="/website/blog/" data-astro-cid-jo6i4kqk>Blog</a><a href="/press" data-astro-cid-jo6i4kqk>Press</a><a href="/website/enterprise-readiness-report.pdf" data-astro-cid-jo6i4kqk>Readiness report</a><a href="/contact" data-astro-cid-jo6i4kqk>Contact</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Legal</p><a href="/privacy" data-astro-cid-jo6i4kqk>Privacy Policy</a><a href="/cookies" data-astro-cid-jo6i4kqk>Cookie Policy</a><a href="/terms" data-astro-cid-jo6i4kqk>Terms of Service</a><a href="/aup" data-astro-cid-jo6i4kqk>Acceptable Use</a><a href="/publisher-agreement" data-astro-cid-jo6i4kqk>Publisher Agreement</a><a href="/website/security/disclosure" data-astro-cid-jo6i4kqk>Security disclosure</a><button type="button" id="cookie-preferences-link" data-astro-cid-jo6i4kqk>Cookie Preferences</button></div></div><a class="foot-plain-band" href="/website/plain/" data-astro-cid-jo6i4kqk><span class="fp-label" data-astro-cid-jo6i4kqk>Plain text for agents</span><span class="fp-path" data-astro-cid-jo6i4kqk>/plain</span><span class="fp-arrow" data-astro-cid-jo6i4kqk>→</span></a><div class="foot-bottom" data-astro-cid-jo6i4kqk><div data-astro-cid-jo6i4kqk>© 2026 Pilot Protocol · Built for agents</div><div class="foot-bottom-right" data-astro-cid-jo6i4kqk><span class="foot-status" data-astro-cid-jo6i4kqk>pilot://0x00000000 · backbone · up</span></div></div><nav class="foot-solutions" aria-label="Explore Pilot solutions" data-astro-cid-jo6i4kqk><div class="foot-solutions-intro" data-astro-cid-jo6i4kqk><span data-astro-cid-jo6i4kqk>Explore Pilot</span><span data-astro-cid-jo6i4kqk>Capabilities by workflow</span></div><div class="foot-solutions-grid" data-astro-cid-jo6i4kqk><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Connect</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/private-agent-network" data-track="footer_solution_click" data-track-target="private-agent-network" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Private agent networks</a><a href="/website/solutions/agent-integration" data-track="footer_solution_click" data-track-target="agent-integration" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Connect existing systems</a><a href="/website/solutions/agent-capability-store" data-track="footer_solution_click" data-track-target="agent-capability-store" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Agent capabilities</a><a href="/website/solutions/agent-ready-apis" data-track="footer_solution_click" data-track-target="agent-ready-apis" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Publish agent-ready APIs</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Build</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/secure-agent-runtime" data-track="footer_solution_click" data-track-target="secure-agent-runtime" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Secure agent runtime</a><a href="/website/solutions/grounded-agent-search" data-track="footer_solution_click" data-track-target="grounded-agent-search" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Grounded private search</a><a href="/website/solutions/web-access-for-agents" data-track="footer_solution_click" data-track-target="web-access-for-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Web access for agents</a><a href="/website/solutions/isolated-agent-compute" data-track="footer_solution_click" data-track-target="isolated-agent-compute" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Isolated agent compute</a><a href="/website/solutions/live-data-for-agents" data-track="footer_solution_click" data-track-target="live-data-for-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Live data for agents</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Operate</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/agent-email-phone" data-track="footer_solution_click" data-track-target="agent-email-phone" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Email, phone and SMS</a><a href="/website/solutions/sales-agent-stack" data-track="footer_solution_click" data-track-target="sales-agent-stack" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Sales agent stack</a><a href="/website/solutions/agent-commerce" data-track="footer_solution_click" data-track-target="agent-commerce" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Agent commerce</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Enterprise</p><div data-astro-cid-jo6i4kqk><a href="/website/enterprise/autonomous-ai-agents" data-track="footer_enterprise_click" data-track-target="autonomous-ai-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Autonomous agent control</a><a href="/website/enterprise/claude-code-management" data-track="footer_enterprise_click" data-track-target="claude-code-management" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Claude Code management</a></div></div></div></nav></div></footer><script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var link = document.getElementById('cookie-preferences-link');
+    if (link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (typeof window.__showConsentBanner === 'function') {
+          window.__showConsentBanner();
+        }
+      });
+    }
+  });
+</script><button class="scroll-top" id="scroll-top" aria-label="Scroll to top" data-astro-cid-4ee7rn3o><svg viewBox="0 0 24 24" data-astro-cid-4ee7rn3o><polyline points="18 15 12 9 6 15" data-astro-cid-4ee7rn3o></polyline></svg></button><script type="module">(function(){var e=document.getElementById(`progress-bar`),t=document.getElementById(`scroll-top`);window.addEventListener(`scroll`,function(){var n=document.documentElement.scrollHeight-window.innerHeight,r=n>0?window.scrollY/n*100:0;e&&(e.style.width=r+`%`),t&&(window.scrollY>400?t.classList.add(`visible`):t.classList.remove(`visible`))}),t&&t.addEventListener(`click`,function(){window.scrollTo({top:0,behavior:`smooth`})})})(),(function(){var e=document.getElementById(`reading-time`),t=document.querySelector(`.article`);if(!(!e||!t)){var n=(t.innerText||t.textContent||``).trim().split(/\s+/).length;e.textContent=Math.ceil(n/200)+` min read`}})(),(function(){var e=document.getElementById(`toc-list`),t=document.getElementById(`article-toc`);if(!(!e||!t)){var n=document.querySelectorAll(`.article h2[id]`);if(n.length===0){t.style.display=`none`;return}n.forEach(function(t){var n=document.createElement(`li`),r=document.createElement(`a`);r.href=`#`+t.id,r.textContent=t.textContent,n.appendChild(r),e.appendChild(n)});var r=e.querySelectorAll(`a`),i=new IntersectionObserver(function(t){t.forEach(function(t){if(t.isIntersecting){r.forEach(function(e){e.classList.remove(`active`)});var n=e.querySelector(`a[href="#`+t.target.id+`"]`);n&&n.classList.add(`active`)}})},{rootMargin:`0px 0px -70% 0px`,threshold:0});n.forEach(function(e){i.observe(e)})}})(),(function(){function e(e){return e.split(`
+`).map(function(e){return e.replace(/^(\s*)\$\s(?=\S)/,`$1`)}).join(`
+`).trim()}document.querySelectorAll(`.article pre`).forEach(function(t){var n=document.createElement(`button`);n.className=`copy-btn`,n.type=`button`,n.setAttribute(`aria-label`,`Copy code`),n.textContent=`Copy`,n.addEventListener(`click`,function(){var r=t.querySelector(`code`),i;if(r)i=r.textContent;else{var a=t.cloneNode(!0),o=a.querySelector(`.copy-btn`);o&&o.remove(),i=a.textContent}var s=e(i);navigator.clipboard.writeText(s).then(function(){n.textContent=`Copied`,n.setAttribute(`aria-label`,`Copied`),setTimeout(function(){n.textContent=`Copy`,n.setAttribute(`aria-label`,`Copy code`)},2e3)}).catch(function(){n.textContent=`Copy failed`,n.setAttribute(`aria-label`,`Copy failed`),setTimeout(function(){n.textContent=`Copy`,n.setAttribute(`aria-label`,`Copy code`)},2e3)})}),t.appendChild(n)})})(),(function(){var e=document.querySelectorAll(`.article h2, .article blockquote, .article .callout, .related-card, .blog-nav-link`);if(e.length){var t=new IntersectionObserver(function(e){e.forEach(function(e){e.isIntersecting&&(e.target.classList.add(`visible`),t.unobserve(e.target))})},{threshold:.1});e.forEach(function(e){e.classList.add(`reveal`),t.observe(e)})}})();</script></body></html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-4ee7rn3o><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Encryption protocols for secure AI systems: A practical guide</title><meta name="description" content="Discover essential encryption protocols in AI systems to secure your decentralized projects. Learn how to implement them effectively today!"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="author" content="Pilot Protocol"><link rel="canonical" href="https://pilotprotocol.network/blog/encryption-protocols-for-secure-ai-systems-a-practical-guide"><meta property="og:type" content="article"><meta property="og:title" content="Encryption protocols for secure AI systems: A practical guide"><meta property="og:description" content="Discover essential encryption protocols in AI systems to secure your decentralized projects. Learn how to implement them effectively today!"><meta property="og:url" content="https://pilotprotocol.network/blog/encryption-protocols-for-secure-ai-systems-a-practical-guide"><meta property="og:image" content="https://pilotprotocol.network/blog/banners/optimized/encryption-protocols-for-secure-ai-systems-a-practical-guide-1200.webp"><meta property="og:image:alt" content="Pilot Protocol"><meta property="og:site_name" content="Pilot Protocol"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@pilotprotocol_"><meta name="twitter:title" content="Encryption protocols for secure AI systems: A practical guide"><meta name="twitter:description" content="Discover essential encryption protocols in AI systems to secure your decentralized projects. Learn how to implement them effectively today!"><meta name="twitter:image" content="https://pilotprotocol.network/blog/banners/optimized/encryption-protocols-for-secure-ai-systems-a-practical-guide-1200.webp"><meta name="twitter:image:alt" content="Pilot Protocol"><meta name="theme-color" content="#0b0b0a" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)"><meta name="color-scheme" content="dark light"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://pilotprotocol.network/#organization","name":"Pilot Protocol","legalName":"Vulture Labs, Inc.","url":"https://pilotprotocol.network/","logo":{"@type":"ImageObject","url":"https://pilotprotocol.network/img/pilot-180.png","width":180,"height":180},"sameAs":["https://github.com/pilot-protocol/pilotprotocol","https://x.com/pilotprotocol_","https://www.linkedin.com/company/112569955/"],"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"founders@pilotprotocol.network","url":"https://pilotprotocol.network/contact"}]},{"@type":"WebSite","@id":"https://pilotprotocol.network/#website","url":"https://pilotprotocol.network/","name":"Pilot Protocol","publisher":{"@id":"https://pilotprotocol.network/#organization"},"inLanguage":"en-US"}]}</script><!-- PILOT-175: fonts self-hosted under /fonts/*. Removed the Google Fonts
+     preconnect + stylesheet links so the browser never contacts
+     fonts.googleapis.com / fonts.gstatic.com (GDPR: avoids passing
+     visitor IPs to Google). The self-hosted bundle covers the same
+     three families (Inter Tight, JetBrains Mono, Instrument Serif)
+     with identical subsets + unicode-range gating, so per-page font
+     bytes are unchanged. --><link rel="stylesheet" href="/website/fonts/fonts.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="/website/fonts/fonts.css"></noscript><link rel="preload" href="/website/fonts/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2" as="font" type="font/woff2" crossorigin="anonymous"><!-- PILOT-27: consent-check shared module is imported by analytics.ts below. --><link rel="icon" href="/website/img/pilot-48.png" type="image/png" sizes="48x48"><link rel="apple-touch-icon" href="/website/img/pilot-180.png" sizes="180x180"><!-- PILOT-27: Consent banner injected at the end of <body> from <head> --><script>
+  (function() {
+    var bannerHTML = '<div id="pilot-consent-banner" class="consent-banner consent-banner--bottom" role="dialog" aria-label="Cookie consent" style="display:none">' +
+      '<div class="consent-banner__inner">' +
+        '<div class="consent-banner__text">' +
+          '<p>We use analytics cookies, plus heatmaps and session replay with all form inputs masked, to understand how our site is used. We do not build a profile of you. <a href="/cookies">Cookie policy</a>.</p>' +
+        '</div>' +
+        '<div class="consent-banner__actions">' +
+          '<button id="pilot-consent-accept" class="btn primary consent-btn" data-consent="accepted">Accept</button>' +
+          '<button id="pilot-consent-reject" class="btn consent-btn" data-consent="rejected">Reject</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    // Wait for DOM to be ready
+    function injectBanner() {
+      if (document.body) {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = bannerHTML;
+        document.body.appendChild(wrapper.firstElementChild);
+
+        var KEY = 'pilot_consent';
+        var banner = document.getElementById('pilot-consent-banner');
+        if (!banner) return;
+
+        function getConsent() {
+          try { return localStorage.getItem(KEY); } catch { return null; }
+        }
+
+        function setConsent(value) {
+          try {
+            localStorage.setItem(KEY, value);
+            window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: value }));
+          } catch {}
+        }
+
+        document.getElementById('pilot-consent-accept').addEventListener('click', function() {
+          setConsent('accepted');
+          banner.style.display = 'none';
+        });
+
+        document.getElementById('pilot-consent-reject').addEventListener('click', function() {
+          setConsent('rejected');
+          banner.style.display = 'none';
+        });
+
+        var existing = getConsent();
+        if (existing) {
+          banner.style.display = 'none';
+          window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: existing }));
+        } else {
+          banner.style.display = 'flex';
+        }
+
+        window.__showConsentBanner = function() {
+          if (banner) banner.style.display = 'flex';
+        };
+      } else {
+        setTimeout(injectBanner, 50);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectBanner);
+    } else {
+      injectBanner();
+    }
+  })();
+</script><link rel="alternate" type="application/rss+xml" title="Pilot Protocol Journal" href="/website/blog/feed.xml"><script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('pilot-theme');
+      var prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      var theme = stored || prefers;
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script><!-- PILOT-27: GA4 loads only after user accepts cookies. --><script>
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadGA4() {
+      if (document.querySelector('script[src*="gtag/js?id=G-EEWEKT0GW5"]')) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EEWEKT0GW5';
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-EEWEKT0GW5');
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadGA4();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadGA4();
+      });
+    }
+    // If consent === 'rejected', never load GA4.
+  })();
+</script><!-- X (Twitter) Ads universal website tag — conversion tracking for our X ad
+     campaigns. Same consent gate as GA4 above: loads only after the visitor
+     accepts cookies, never on reject. Disclosed in /cookies and /privacy. --><script>(function(){const twitterPixelId = "re3tv";
+
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadTwitterPixel() {
+      if (!twitterPixelId || window.twq) return;
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+      },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+      a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+      window.twq('config', twitterPixelId);
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadTwitterPixel();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadTwitterPixel();
+      });
+    }
+    // If consent === 'rejected', never load the X pixel.
+  })();
+})();</script><script type="module" src="/website/_astro/BaseHead.astro_astro_type_script_index_0_lang.DTqJW7IP.js"></script><link rel="preload" as="image" href="/website/blog/banners/optimized/encryption-protocols-for-secure-ai-systems-a-practical-guide-1200.webp" imagesrcset="/website/blog/banners/optimized/encryption-protocols-for-secure-ai-systems-a-practical-guide-720.webp 720w, /website/blog/banners/optimized/encryption-protocols-for-secure-ai-systems-a-practical-guide-1200.webp 1200w" imagesizes="(max-width: 760px) calc(100vw - 40px), 720px" fetchpriority="high"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Encryption protocols for secure AI systems: A practical guide","description":"Discover essential encryption protocols in AI systems to secure your decentralized projects. Learn how to implement them effectively today!","image":"https://pilotprotocol.network/blog/banners/optimized/encryption-protocols-for-secure-ai-systems-a-practical-guide-1200.webp","author":{"@type":"Organization","name":"Pilot Protocol editorial team","url":"https://pilotprotocol.network/about#publishing"},"publisher":{"@id":"https://pilotprotocol.network/#organization"},"datePublished":"2026-05-09","dateModified":"2026-05-09","mainEntityOfPage":"https://pilotprotocol.network/blog/encryption-protocols-for-secure-ai-systems-a-practical-guide"}</script><link rel="stylesheet" href="/website/_astro/system.DXXNXJyX.css"><link rel="stylesheet" href="/website/_astro/Footer.G2DNlaPt.css"><style>.article-next-step[data-astro-cid-4ee7rn3o]{border:1px solid color-mix(in srgb, var(--accent) 38%, var(--line));background:color-mix(in srgb, var(--accent) 6%, var(--bg));grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:1rem 2rem;margin:3rem 0 2rem;padding:clamp(1.25rem,3vw,2rem);display:grid}.article-next-step[data-astro-cid-4ee7rn3o]>span[data-astro-cid-4ee7rn3o]{color:var(--accent-text);font:600 .68rem/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;grid-column:1/-1}.article-next-step[data-astro-cid-4ee7rn3o] h2[data-astro-cid-4ee7rn3o]{margin:0 0 .55rem;font-size:clamp(1.35rem,3vw,1.9rem);line-height:1.08}.article-next-step[data-astro-cid-4ee7rn3o] p[data-astro-cid-4ee7rn3o]{color:var(--ink-dim);margin:0}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]{border:1px solid var(--ink);min-height:44px;color:var(--ink);font:600 .72rem/1.2 var(--mono);white-space:nowrap;justify-content:center;align-items:center;gap:.6rem;padding:.75rem 1rem;text-decoration:none;display:inline-flex}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]:hover{background:var(--ink);color:var(--bg)}@media (width<=640px){.article-next-step[data-astro-cid-4ee7rn3o]{grid-template-columns:1fr;align-items:start}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]{white-space:normal;width:100%}}.article-faq[data-astro-cid-4ee7rn3o]{max-width:760px;margin:0 auto;padding:3rem 1.5rem 1rem}.article-faq[data-astro-cid-4ee7rn3o] h2[data-astro-cid-4ee7rn3o]{margin-bottom:1.5rem;font-size:1.6rem}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o]{border-top:1px solid var(--line,#1d1d1b);padding:1.25rem 0}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o] h3[data-astro-cid-4ee7rn3o]{margin:0 0 .5rem;font-size:1.05rem}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o] p[data-astro-cid-4ee7rn3o]{color:var(--ink-dim,#5a5a54);margin:0;line-height:1.6}
+</style></head><body data-astro-cid-4ee7rn3o><div class="progress-bar" id="progress-bar" data-astro-cid-4ee7rn3o></div><a class="skip-link" href="#page-content">Skip to content</a><nav class="nav-top" aria-label="Primary"><div class="wrap"><div class="nav-row"><a href="/" class="brand" data-track="nav_click" data-track-target="home"><span class="brand-mark"><img src="/website/img/pilot-48.webp" alt="" class="logo" width="40" height="40" decoding="async"></span><span class="brand-text"><strong>Pilot</strong><span>Protocol</span></span><span class="sr-only"> home</span></a><div class="nav-links" id="nav-links"><div class="nav-dropdown" data-nav-group="product"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Product</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">The platform</span><strong>One network layer for agents.</strong><p>Identity, encrypted connectivity, trust, and installable capabilities in one system.</p></div><div class="nav-menu-links"><a href="/" data-track="nav_click" data-track-target="product-network-os"><span class="dd-kicker">Platform</span><span class="dd-label">Network OS</span><span class="dd-desc">The complete Pilot architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/trust" data-track="nav_click" data-track-target="product-trust-center"><span class="dd-kicker">Security</span><span class="dd-label">Trust Center</span><span class="dd-desc">Controls, boundaries, and evidence</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/governance" data-track="nav_click" data-track-target="product-control-model"><span class="dd-kicker">Governance</span><span class="dd-label">Control model</span><span class="dd-desc">Authority, policy, lifecycle, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/app-store" data-track="nav_click" data-track-target="product-app-store"><span class="dd-kicker">Ecosystem</span><span class="dd-label">App Store</span><span class="dd-desc">Capabilities built for agents</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/plans" data-track="nav_click" data-track-target="product-plans"><span class="dd-kicker">Commercial</span><span class="dd-label">Plans</span><span class="dd-desc">Open network and enterprise paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/docs/getting-started"><span>Explore the product</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="solutions"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Solutions</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Built for real systems</span><strong>Connect agents across every boundary.</strong><p>Start with one deployment pattern, then expand without replacing the underlying network.</p></div><div class="nav-menu-links"><a href="/website/for/p2p" data-track="nav_click" data-track-target="solutions-direct-p2p"><span class="dd-kicker">Connectivity</span><span class="dd-label">Direct P2P</span><span class="dd-desc">Private agent-to-agent paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/mcp" data-track="nav_click" data-track-target="solutions-mcp-+-pilot"><span class="dd-kicker">Integration</span><span class="dd-label">MCP + Pilot</span><span class="dd-desc">Give MCP servers a network</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/networks" data-track="nav_click" data-track-target="solutions-managed-networks"><span class="dd-kicker">Organization</span><span class="dd-label">Managed networks</span><span class="dd-desc">Shared domains and membership</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/enterprise" data-track="nav_click" data-track-target="solutions-enterprise-controls"><span class="dd-kicker">Enterprise</span><span class="dd-label">Enterprise controls</span><span class="dd-desc">Identity, policy, roles, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/setups"><span>Browse deployment setups</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="developers"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Developers</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Build on Pilot</span><strong>From first connection to production.</strong><p>Documentation and tooling for connecting, shipping, and operating agent-native software.</p></div><div class="nav-menu-links"><a href="/website/docs/getting-started" data-track="nav_click" data-track-target="developers-quickstart"><span class="dd-kicker">Start</span><span class="dd-label">Quickstart</span><span class="dd-desc">Install and connect in minutes</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/" data-track="nav_click" data-track-target="developers-documentation"><span class="dd-kicker">Reference</span><span class="dd-label">Documentation</span><span class="dd-desc">Concepts, CLI, SDKs, and operations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/integration" data-track="nav_click" data-track-target="developers-sdks-&amp;-integration"><span class="dd-kicker">Build</span><span class="dd-label">SDKs &amp; integration</span><span class="dd-desc">Embed Pilot in your stack</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/compatibility" data-track="nav_click" data-track-target="developers-compatibility"><span class="dd-kicker">Deploy</span><span class="dd-label">Compatibility</span><span class="dd-desc">Choose the right environment mode</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/skills"><span>Explore agent skills</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown active" data-nav-group="resources"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Resources</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Learn and evaluate</span><strong>Technical depth without the guesswork.</strong><p>Architecture, field notes, evaluator material, and a machine-readable version of the site.</p></div><div class="nav-menu-links"><a href="/website/learn/" data-track="nav_click" data-track-target="resources-learning-center"><span class="dd-kicker">Learn</span><span class="dd-label">Learning center</span><span class="dd-desc">Foundations, transport, and security</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/blog/" data-track="nav_click" data-track-target="resources-field-notes"><span class="dd-kicker">Journal</span><span class="dd-label">Field notes</span><span class="dd-desc">Technical guides and architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/research" data-track="nav_click" data-track-target="resources-technical-papers"><span class="dd-kicker">Research</span><span class="dd-label">Technical papers</span><span class="dd-desc">Specifications and evaluations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/pilot-native-use-cases.pdf" data-track="nav_click" data-track-target="resources-deployment-patterns"><span class="dd-kicker">Use cases</span><span class="dd-label">Deployment patterns</span><span class="dd-desc">What the combined Pilot surface enables</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/press" data-track="nav_click" data-track-target="resources-press-kit"><span class="dd-kicker">Media</span><span class="dd-label">Press kit</span><span class="dd-desc">Company and brand resources</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/plain/" data-track="nav_click" data-track-target="resources-machine-readable-site"><span class="dd-kicker">Agents</span><span class="dd-label">Machine-readable site</span><span class="dd-desc">The plain-text agent interface</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/enterprise-readiness-report.pdf"><span>Read the readiness report</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="company"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Company</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Pilot Protocol</span><strong>Building the network for agents.</strong><p>Learn about the company, follow our progress, or speak directly with the team.</p></div><div class="nav-menu-links"><a href="/about" data-track="nav_click" data-track-target="company-about-pilot"><span class="dd-kicker">About</span><span class="dd-label">About Pilot</span><span class="dd-desc">Company, people, and publishing standards</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/roadmap" data-track="nav_click" data-track-target="company-product-roadmap"><span class="dd-kicker">Direction</span><span class="dd-label">Product roadmap</span><span class="dd-desc">What we are strengthening next</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/news/" data-track="nav_click" data-track-target="company-company-news"><span class="dd-kicker">Newsroom</span><span class="dd-label">Company news</span><span class="dd-desc">Announcements and company updates</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/contact" data-track="nav_click" data-track-target="company-talk-to-the-team"><span class="dd-kicker">Contact</span><span class="dd-label">Talk to the team</span><span class="dd-desc">Enterprise, partnerships, and press</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/contact"><span>Contact Pilot Protocol</span><span aria-hidden="true">→</span></a></div></div><div class="nav-mobile-actions"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a></div></div><div class="nav-right"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme" type="button"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button><button id="nav-hamburger" class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button></div></div></div></nav><span id="page-content" class="skip-target" tabindex="-1"></span><script>
+  (function () {
+    var nav = document.querySelector('.nav-top');
+    var themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function () {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isLight) {
+          document.documentElement.removeAttribute('data-theme');
+          try { localStorage.setItem('pilot-theme', 'dark'); } catch (e) {}
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          try { localStorage.setItem('pilot-theme', 'light'); } catch (e) {}
+        }
+      });
+    }
+
+    function closeDropdowns(except) {
+      document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+        if (dd === except) return;
+        dd.classList.remove('open');
+        var trigger = dd.querySelector('.nav-dropdown-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function closeMobileMenu() {
+      if (!links || !links.classList.contains('mobile-open')) return;
+      links.classList.remove('mobile-open');
+      if (hamb) {
+        hamb.classList.remove('is-open');
+        hamb.setAttribute('aria-expanded', 'false');
+        hamb.setAttribute('aria-label', 'Open menu');
+      }
+      document.body.classList.remove('nav-mobile-open');
+      closeDropdowns();
+    }
+
+    // Hamburger (mobile)
+    var hamb = document.getElementById('nav-hamburger');
+    var links = document.getElementById('nav-links');
+    if (hamb && links) {
+      hamb.setAttribute('aria-label', 'Open menu');
+      hamb.addEventListener('click', function () {
+        var open = links.classList.toggle('mobile-open');
+        hamb.classList.toggle('is-open', open);
+        hamb.setAttribute('aria-expanded', open ? 'true' : 'false');
+        hamb.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        document.body.classList.toggle('nav-mobile-open', open);
+        if (!open) closeDropdowns();
+      });
+      links.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    }
+
+    // Dropdown: click to toggle, click-outside to close
+    document.querySelectorAll('.nav-dropdown').forEach(function (dd) {
+      var trigger = dd.querySelector('.nav-dropdown-trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var wasOpen = dd.classList.contains('open');
+        closeDropdowns(dd);
+        dd.classList.toggle('open', !wasOpen);
+        var isOpen = !wasOpen;
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest || !e.target.closest('.nav-dropdown')) closeDropdowns();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+          dd.classList.remove('open');
+          var trig = dd.querySelector('.nav-dropdown-trigger');
+          if (trig) { trig.setAttribute('aria-expanded', 'false'); trig.focus(); }
+        });
+        closeMobileMenu();
+      }
+    });
+
+    // A restrained shadow gives the persistent shell a clear edge once content scrolls beneath it.
+    if (nav) {
+      var syncNavEdge = function () { nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+      syncNavEdge();
+      window.addEventListener('scroll', syncNavEdge, { passive: true });
+    }
+  })();
+</script><main class="article-layout" data-astro-cid-4ee7rn3o><article class="article" data-track-read="encryption-protocols-for-secure-ai-systems-a-practical-guide" data-astro-cid-4ee7rn3o><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://artemiia.github.io/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://artemiia.github.io/blog/"},{"@type":"ListItem","position":3,"name":"Encryption protocols for secure AI systems: A practical guide","item":"https://artemiia.github.io/website/blog/encryption-protocols-for-secure-ai-systems-a-practical-guide/"}]}</script><nav class="site-breadcrumbs is-compact" aria-label="Breadcrumb" data-astro-cid-vx4iavld><ol data-astro-cid-vx4iavld><li data-astro-cid-vx4iavld><a href="/" data-astro-cid-vx4iavld>Home</a></li><li data-astro-cid-vx4iavld><a href="/website/blog/" data-astro-cid-vx4iavld>Blog</a></li><li data-astro-cid-vx4iavld><span aria-current="page" data-astro-cid-vx4iavld>Encryption protocols for secure AI systems: A practical guide</span></li></ol></nav><img class="article-banner" src="/website/blog/banners/optimized/encryption-protocols-for-secure-ai-systems-a-practical-guide-1200.webp" srcset="/website/blog/banners/optimized/encryption-protocols-for-secure-ai-systems-a-practical-guide-720.webp 720w, /website/blog/banners/optimized/encryption-protocols-for-secure-ai-systems-a-practical-guide-1200.webp 1200w" sizes="(max-width: 760px) calc(100vw - 40px), 720px" alt="Encryption protocols for secure AI systems: A practical guide" width="1200" height="669" loading="eager" decoding="sync" fetchpriority="high" data-astro-cid-4ee7rn3o><h1 data-astro-cid-4ee7rn3o>Encryption protocols for secure AI systems: A practical guide</h1><div class="article-meta" data-astro-cid-4ee7rn3o><a href="https://pilotprotocol.network/about#publishing" data-astro-cid-4ee7rn3o>By Pilot Protocol editorial team</a><time datetime="2026-05-09" data-astro-cid-4ee7rn3o>May 9, 2026</time><span class="reading-time" id="reading-time" data-astro-cid-4ee7rn3o></span><span class="tag" data-astro-cid-4ee7rn3o>blog</span></div>
+    
+<p><img src="/website/blog/media/149142bbdf83c402-1200.webp" alt="Engineer sketching encryption protocol diagram" srcset="/website/blog/media/149142bbdf83c402-720.webp 720w, /website/blog/media/149142bbdf83c402-1200.webp 1200w" sizes="(max-width: 760px) calc(100vw - 40px), 720px" width="1200" height="669" decoding="async" loading="lazy" fetchpriority="low"></p>
+<hr>
+<blockquote>
+<p><strong>TL;DR:</strong></p>
+<ul>
+<li>Standard TLS and AES prevent data interception during transit and at rest, but they do not secure active AI computations across distributed nodes. Homomorphic encryption, zero-knowledge proofs, TEEs, and post-quantum cryptography address compute-in-use threats, each protecting different data states and surfaces within decentralized AI systems. Effective security requires layered protocols tailored to specific risks, continuous threat modeling, and avoiding architectural oversights that compromise overall system integrity.</li>
+</ul>
+</blockquote>
+<hr>
+<p>Standard TLS and AES encryption will protect data in transit and at rest, but they do not address what happens when your AI agents are actively computing across distributed nodes, cloud boundaries, and untrusted peers. <a href="https://cloudsecurityalliance.org/artifacts/data-security-within-ai-environments" rel="nofollow noopener noreferrer" target="_blank">Homomorphic encryption and ZKPs</a> are now required for compute-in-use scenarios in decentralized AI, where traditional approaches simply cannot reach. If you are building or operating distributed AI systems that span multiple clouds or orchestrate autonomous agent fleets, this guide breaks down exactly which encryption protocols apply to which threat surfaces, how they perform under real workloads, and how to implement them correctly.</p>
+<h2 id="table-of-contents" tabindex="-1">Table of Contents</h2>
+<ul>
+<li><a href="#key-challenges-in-encrypting-decentralized-ai-systems">Key challenges in encrypting decentralized AI systems</a></li>
+<li><a href="#protocol-overview-advanced-encryption-technologies-for-ai-systems">Protocol overview: Advanced encryption technologies for AI systems</a></li>
+<li><a href="#implementation-and-performance-benchmarks">Implementation and performance benchmarks</a></li>
+<li><a href="#best-practices-and-pitfalls-for-secure-ai-networking">Best practices and pitfalls for secure AI networking</a></li>
+<li><a href="#perspective-why-most-encryption-strategies-for-ai-fall-short-and-how-to-improve-them">Perspective: Why most encryption strategies for AI fall short (and how to improve them)</a></li>
+<li><a href="#ready-to-implement-secure-encryption-in-your-ai-agents">Ready to implement secure encryption in your AI agents?</a></li>
+<li><a href="#frequently-asked-questions">Frequently asked questions</a></li>
+</ul>
+<h2 id="key-takeaways" tabindex="-1">Key Takeaways</h2>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Beyond basic encryption</td>
+<td>Decentralized AI security demands protocols that protect data during computation as well as in transit and at rest.</td>
+</tr>
+<tr>
+<td>Protocol agility is critical</td>
+<td>Regularly update and audit PQC-readiness and encryption libraries to stay secure against evolving threats.</td>
+</tr>
+<tr>
+<td>Benchmark and optimize</td>
+<td>Test protocol and hardware combinations to balance performance with security in distributed AI workloads.</td>
+</tr>
+<tr>
+<td>System-wide integration</td>
+<td>Encryption must be matched to the overall system architecture for real protection, not just layered on top.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="key-challenges-in-encrypting-decentralized-ai-systems" tabindex="-1">Key challenges in encrypting decentralized AI systems</h2>
+<p>Building on the need for stronger security, it is essential to understand what makes decentralized AI different from conventional scenarios. In a centralized system, you control the perimeter. In a decentralized network, your attack surface expands with every node, region, and cloud provider you add.</p>
+<p>The threat model shifts fundamentally. You are no longer just protecting packets moving between two endpoints. You are protecting:</p>
+<ul>
+<li><strong>Data in use</strong>: Gradients, activations, and intermediate model states that exist only during computation</li>
+<li><strong>Model integrity</strong>: Ensuring that aggregated updates from distributed clients are not poisoned or tampered with</li>
+<li><strong>Multi-cloud exposure</strong>: Data moving between AWS, GCP, and Azure may cross jurisdictions and untrusted network segments</li>
+<li><strong>Agent identity</strong>: Verifying that the agent sending a gradient update is the agent it claims to be</li>
+</ul>
+<p>Byzantine faults add another layer of difficulty. These occur when nodes behave arbitrarily or maliciously rather than simply failing. Robust aggregation methods like coordinate-wise median and <a href="https://openreview.net/pdf/14ca2368ecfcb4d2e7f791d187667171aa926fde.pdf" rel="nofollow noopener noreferrer" target="_blank">threshold decryption schemes</a> address client dropouts and Byzantine behaviors in federated learning environments. Without these mechanisms, a small number of compromised nodes can corrupt the entire training process.</p>
+<p>Understanding <a href="https://pilotprotocol.network/blog/decentralized-communication-protocols-ai-developers">decentralized communication protocols</a> helps clarify why these fault types matter so much. Federated learning and <a href="https://pilotprotocol.network/blog/cloud-networking-secure-peer-to-peer-distributed-ai">secure P2P for distributed AI</a> introduce collusion risks, where multiple coordinated nodes attempt to reconstruct private data from partial updates.</p>
+<p>Pro Tip: Map your threat model to your data states before choosing a protocol. If you are only encrypting transit, you are leaving compute-in-use completely unprotected in distributed training runs.</p>
+<h2 id="protocol-overview-advanced-encryption-technologies-for-ai-systems" tabindex="-1">Protocol overview: Advanced encryption technologies for AI systems</h2>
+<p>With these risks in mind, let’s break down the specific encryption techniques leading-edge AI systems employ. Each protocol targets a different vulnerability surface, and selecting the right combination requires knowing what each one actually does under the hood.</p>
+<p><strong>Homomorphic encryption (HE)</strong> allows computation directly on ciphertext. The result, when decrypted, matches what you would get from running the same computation on plaintext. For federated learning, this means gradient updates never need to be decrypted on the aggregation server. ChainML uses HE and zk-SNARKs for privacy-preserving gradient verification and Byzantine-resilient aggregation in decentralized AI training, demonstrating that these are production-viable techniques, not just academic proposals.</p>
+<p><strong>Zero-knowledge proofs (ZKPs)</strong> let one party prove knowledge of a value without revealing the value itself. In AI contexts, ZKPs verify model integrity, prove that a gradient update was computed honestly, or confirm that a client’s local dataset meets certain properties without exposing the data. This is critical when you need to audit distributed computation without centralizing sensitive information.</p>
+<p><strong>Confidential computing</strong> uses trusted execution environments (TEEs) such as Intel SGX, AMD SEV-SNP, and Intel TDX to create hardware-enforced enclaves. Code and data inside an enclave are protected even from the host OS and hypervisor. This directly addresses cloud provider trust assumptions that most teams quietly ignore.</p>
+<p><strong>Post-quantum cryptography (PQC)</strong> prepares your protocols for the eventual capability of quantum computers to break current asymmetric schemes. <a href="https://securityboulevard.com/2026/04/post-quantum-cryptographic-agility-in-model-context-protocol-proxies/" rel="nofollow noopener noreferrer" target="_blank">NIST ML-KEM standards</a> are now available and should be integrated with cryptographic agility in mind, meaning your system can swap algorithms without full protocol rewrites.</p>
+<p>Here is a comparison of these four approaches:</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Protects</th>
+<th>Overhead</th>
+<th>Best for AI use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Homomorphic encryption</td>
+<td>Data in use</td>
+<td>High (10x to 1000x)</td>
+<td>Federated learning gradients</td>
+</tr>
+<tr>
+<td>Zero-knowledge proofs</td>
+<td>Computation integrity</td>
+<td>Medium (prover-heavy)</td>
+<td>Model verification, auditing</td>
+</tr>
+<tr>
+<td>Confidential computing (TEEs)</td>
+<td>Runtime environment</td>
+<td>Low (3 to 7%)</td>
+<td>Inference, multi-party compute</td>
+</tr>
+<tr>
+<td>Post-quantum cryptography</td>
+<td>Key exchange, signatures</td>
+<td>Low to medium</td>
+<td>Long-lived key infrastructure</td>
+</tr>
+</tbody>
+</table>
+<p><img src="/website/blog/media/e5dab42cfb615e5e-1080.webp" alt="Infographic comparing encryption protocols for AI" srcset="/website/blog/media/e5dab42cfb615e5e-720.webp 720w, /website/blog/media/e5dab42cfb615e5e-1080.webp 1080w" sizes="(max-width: 760px) calc(100vw - 40px), 720px" width="1080" height="720" decoding="async" loading="lazy" fetchpriority="low"></p>
+<p>You can explore <a href="https://pilotprotocol.network/blog/secure-communication-protocols-distributed-ai-systems">secure communication protocols for distributed AI</a> to see how these map to real networking layers. For a broader view of <a href="https://pilotprotocol.network/blog/ai-networking-best-practices-secure-scalable-systems">AI networking best practices</a> including key rotation and trust establishment, additional context is available from resources covering <a href="https://blog.skypher.co/blog/cyber-security-artificial-intelligence" target="_blank" rel="noopener">cybersecurity in AI risk management</a>.</p>
+<p>The key insight is that no single protocol covers all surfaces. You need HE or ZKPs for compute-in-use, TEEs for runtime protection, PQC for key infrastructure, and TLS for transit. Skipping any layer creates exploitable gaps.</p>
+<h2 id="implementation-and-performance-benchmarks" tabindex="-1">Implementation and performance benchmarks</h2>
+<p>Knowing the cryptographic options, the next step is understanding how they perform in real deployments and what to expect in real-world workflows. Performance data drives architectural decisions at scale, and the numbers here may surprise you.</p>
+<p>HE for federated learning preserves privacy during model updates but introduces significant computation costs. The overhead varies dramatically by scheme and implementation. Partially homomorphic schemes are much faster but support only one operation type. Fully homomorphic schemes are slower but support arbitrary computation.</p>
+<p><img src="/website/blog/media/d9cda989a04373e6-1200.webp" alt="Developer coding cryptography benchmark" srcset="/website/blog/media/d9cda989a04373e6-720.webp 720w, /website/blog/media/d9cda989a04373e6-1200.webp 1200w" sizes="(max-width: 760px) calc(100vw - 40px), 720px" width="1200" height="669" decoding="async" loading="lazy" fetchpriority="low"></p>
+<p>Library selection matters significantly. <a href="https://eprint.iacr.org/2025/473.pdf" rel="nofollow noopener noreferrer" target="_blank">OpenFHE outperforms Microsoft SEAL</a> in execution time and memory usage for BGV and CKKS schemes in empirical testing. If you are starting a new HE integration, benchmark both libraries against your specific gradient dimensions and batch sizes before committing.</p>
+<p><a href="https://computerfraudsecurity.com/index.php/journal/article/view/1024" rel="nofollow noopener noreferrer" target="_blank">TEEs with Intel TDX, SGX, and AMD SEV-SNP</a> show a 3 to 7% latency overhead in AI inference workloads. That is an acceptable trade-off for most production systems and dramatically better than software-only alternatives. TEEs are currently the most practical path to confidential inference at scale.</p>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Latency overhead</th>
+<th>Memory impact</th>
+<th>Hardware acceleration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BGV/CKKS (HE)</td>
+<td>10x to 100x</td>
+<td>High</td>
+<td>GPU/FPGA viable</td>
+</tr>
+<tr>
+<td>zk-SNARKs (ZKPs)</td>
+<td>5x to 50x (prover)</td>
+<td>Medium</td>
+<td>ASIC accelerators emerging</td>
+</tr>
+<tr>
+<td>TEE (Intel TDX)</td>
+<td>3 to 7%</td>
+<td>Low</td>
+<td>Native CPU support</td>
+</tr>
+<tr>
+<td>PQC (ML-KEM)</td>
+<td>Under 5%</td>
+<td>Very low</td>
+<td>Software sufficient</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>“Encryption adds 5 to 10% latency in <a href="https://dev.to/voltagegpu/intel-tdx-for-ai-workloads-i-benchmarked-encrypted-vs-regular-inference-2k8m" rel="nofollow noopener noreferrer" target="_blank">real benchmarks of encrypted inference</a>; FHE remains viable for small models with hardware acceleration, and confidential AI workloads are production-ready today.”</p>
+</blockquote>
+<p>Understanding <a href="https://pilotprotocol.network/blog/encrypted-tunnel-advantages-peer-to-peer-ai-networks">encrypted tunnels in AI networks</a> helps contextualize where these overheads appear in the overall system. For a checklist-based approach to securing your entire stack, the <a href="https://pilotprotocol.network/blog/network-security-for-multi-agent-systems-key-strategies">AI network security checklist</a> covers both protocol selection and operational concerns.</p>
+<p>Pro Tip: Use CKKS for approximate arithmetic on real-valued data like gradients. It trades exact precision for significantly faster performance, which is acceptable in most ML training contexts where gradient noise is already present.</p>
+<p>The engineering decision framework comes down to this: start with TEEs for runtime protection because the overhead is minimal and the security gain is immediate. Add HE or ZKPs selectively for specific high-risk computations. Build PQC into your key exchange layer now, before migration becomes urgent.</p>
+<h2 id="best-practices-and-pitfalls-for-secure-ai-networking" tabindex="-1">Best practices and pitfalls for secure AI networking</h2>
+<p>To go from theory to robust deployment, it is critical to follow proven best practices and avoid the traps that often stymie even experienced engineers. The most common failure is not picking the wrong algorithm. It is applying the right algorithm in the wrong place.</p>
+<p>Here are the core practices to follow:</p>
+<ol>
+<li>
+<p><strong>Layer your encryption by data state.</strong> In-transit encryption (TLS 1.3), at-rest encryption (AES-256), and in-use encryption (HE/TEEs) must all be active simultaneously. Each layer addresses a distinct attack vector. Leaving any layer out creates a gap that adversaries will find.</p>
+</li>
+<li>
+<p><strong>Audit PQC readiness on a fixed schedule.</strong> Cryptographic agility means your system can rotate algorithms without full rewrites. <a href="https://pilotprotocol.network/blog/securing-ai-agent-networks-multi-cloud-environments">Securing multi-cloud AI networks</a> requires planning for algorithm rotation across AWS KMS, Azure Key Vault, and GCP Cloud KMS simultaneously. Put this on a quarterly review cycle.</p>
+</li>
+<li>
+<p><strong>Benchmark before you scale.</strong> Overhead numbers change significantly based on your specific hardware, batch sizes, and network topology. Run your own benchmarks against your actual model dimensions before committing to a library or approach. The 5 to 10% latency range cited in literature is a baseline, not a guarantee.</p>
+</li>
+<li>
+<p><strong>Automate key rotation and revocation.</strong> Manual key management breaks down at scale. Build key rotation into your CI/CD pipeline and treat key expiry events like deployment events. Expired or reused keys are among the most common real-world failures in distributed AI security.</p>
+</li>
+<li>
+<p><strong>Validate agent identity at the protocol level.</strong> Do not rely only on API keys or IP allowlists. Use mutual TLS (mTLS) and cryptographic identity proofs so that each agent in your fleet is verifiable by other agents, not just by a central server. <a href="https://pilotprotocol.network/blog/network-tunnels-ai-secure-communication-autonomous-agents">AI communication tunnels</a> built on overlay networks provide persistent, verifiable addresses that simplify this considerably.</p>
+</li>
+<li>
+<p><strong>Threat model continuously, not once.</strong> Your threat model from six months ago is outdated. New agents, new cloud integrations, and new attack techniques emerge constantly. Treat threat modeling as an ongoing engineering activity, not a one-time architecture review.</p>
+</li>
+</ol>
+<p>Pro Tip: When integrating <a href="https://pilotprotocol.network/blog/why-direct-p2p-connections-power-secure-ai-networking">secure P2P for AI agents</a>, verify that your NAT traversal and hole-punching mechanisms do not inadvertently expose plaintext metadata like agent identifiers or route paths. Even encrypted payloads can leak operational data through traffic analysis.</p>
+<p>The most overlooked pitfall is key sprawl in multi-cloud deployments. Each provider uses different key management abstractions, and teams often end up with inconsistent rotation schedules across regions. Consolidate key management into a single control plane and push provider-specific keys as derived keys from a central root.</p>
+<h2 id="perspective-why-most-encryption-strategies-for-ai-fall-short-and-how-to-improve-them" tabindex="-1">Perspective: Why most encryption strategies for AI fall short (and how to improve them)</h2>
+<p>Reflecting on these best practices and technical options, it is worth stepping back to consider why even well-resourced teams often come up short, and what actually makes a difference.</p>
+<p>The honest answer is that most encryption failures in AI systems are not cryptographic failures. They are architectural failures. Teams add HE to a federated learning pipeline but forget that the aggregation server still receives decrypted weights post-training. They implement TEEs for inference but leave the model loading step outside the enclave. They adopt PQC for key exchange but continue using RSA-2048 for signing certificates. The math is sound. The integration is not.</p>
+<p><a href="https://www.nature.com/articles/s42256-025-01107-6.pdf" rel="nofollow noopener noreferrer" target="_blank">Privacy technologies for AI</a> are computationally intensive in their raw forms, but optimized approaches using lazy relinearization and GPU acceleration make them practical. ZKPs are succinct for verifiers but remain prover-heavy. Knowing this, smart teams optimize the prover path aggressively and accept higher prover costs in exchange for fast verification at the aggregation layer. Most teams do not make this distinction explicitly, and they end up with systems that are either too slow to be useful or too permissive to be secure.</p>
+<p>The second major gap is treating encryption as a static checklist rather than a living capability. A cipher suite that was strong in 2023 may be deprecated by 2027. Protocol agility, the ability to swap algorithms without full rewrites, is not optional in long-lived AI systems. It is a first-class engineering requirement that needs to be built into your architecture from day one.</p>
+<p>The third gap is threat modeling that stops at the network boundary. <a href="https://pilotprotocol.network/blog/decentralized-networking-p2p-solutions-ai-architectures">P2P AI architectures</a> introduce trust relationships between agents that have no central authority to arbitrate disputes. If you do not model collusion risks, gradient poisoning, and identity spoofing at the agent level, your network-level encryption does not protect you where it matters most.</p>
+<p>The fix is straightforward in principle: start with a complete data-state inventory, assign the correct protocol to each state, build protocol agility into your key infrastructure from the beginning, and treat threat modeling as a recurring engineering event rather than a pre-launch ritual.</p>
+<h2 id="ready-to-implement-secure-encryption-in-your-ai-agents" tabindex="-1">Ready to implement secure encryption in your AI agents?</h2>
+<p>You now have a clear picture of which encryption protocols apply to which threat surfaces, how they perform, and where teams go wrong. Putting this into practice requires an infrastructure layer that supports encrypted, direct, and verifiable agent communication without adding unnecessary complexity to your architecture.</p>
+<p><img src="/website/blog/media/9b1bf3149d7e1e80-1200.webp" alt="https://pilotprotocol.network" srcset="/website/blog/media/9b1bf3149d7e1e80-720.webp 720w, /website/blog/media/9b1bf3149d7e1e80-1200.webp 1200w" sizes="(max-width: 760px) calc(100vw - 40px), 720px" width="1200" height="675" decoding="async" loading="lazy" fetchpriority="low"></p>
+<p><a href="https://pilotprotocol.network">Pilot Protocol</a> is built specifically for this use case. It provides encrypted tunnels, NAT traversal, mutual trust establishment, and persistent virtual addresses for AI agents and distributed systems communicating across multi-cloud and cross-region environments. You can wrap your existing HTTP, gRPC, and SSH protocols inside the Pilot Protocol overlay without rewriting your agents. Explore the <a href="https://pilotprotocol.network/research/WHITEPAPER.pdf">autonomous agent network infrastructure</a> that underpins the platform, or get started with <a href="https://pilotprotocol.network/for/p2p">direct P2P for AI agents</a> to see how encrypted peer-to-peer connectivity works in practice.</p>
+<h2 id="frequently-asked-questions" tabindex="-1">Frequently asked questions</h2>
+<h3 id="what-is-the-main-advantage-of-homomorphic-encryption-in-ai-systems" tabindex="-1">What is the main advantage of homomorphic encryption in AI systems?</h3>
+<p>Homomorphic encryption enables AI computations on encrypted data, so model updates and gradients remain private throughout federated learning without compromising accuracy.</p>
+<h3 id="how-do-tees-differ-from-software-based-encryption" tabindex="-1">How do TEEs differ from software-based encryption?</h3>
+<p>TEEs enforce hardware-level boundaries around AI workloads, protecting them from the host OS and hypervisor with only 3 to 7% latency overhead, far less than software-only alternatives.</p>
+<h3 id="is-post-quantum-cryptography-necessary-today-for-ai-protocols" tabindex="-1">Is post-quantum cryptography necessary today for AI protocols?</h3>
+<p>Yes. NIST ML-KEM and related standards are available now, and integrating PQC with cryptographic agility today avoids costly migrations as quantum threats mature.</p>
+<h3 id="how-much-latency-do-advanced-encryption-protocols-add-to-ai-workloads" tabindex="-1">How much latency do advanced encryption protocols add to AI workloads?</h3>
+<p>Encryption adds 3 to 10% latency for TEE-based approaches, while FHE can add much more depending on model size and hardware acceleration availability.</p>
+<h3 id="what-is-the-most-common-integration-mistake-with-ai-encryption" tabindex="-1">What is the most common integration mistake with AI encryption?</h3>
+<p>The most common mistake is adding new cipher suites without revisiting system architecture and threat modeling, which leaves critical gaps in data-in-use protection even when transit and rest encryption are correctly implemented.</p>
+<h2 id="recommended" tabindex="-1">Recommended</h2>
+<ul>
+<li><a href="https://pilotprotocol.network/blog/ai-networking-best-practices-secure-scalable-systems">AI networking best practices for secure, scalable systems</a></li>
+<li><a href="https://pilotprotocol.network/blog/secure-communication-protocols-distributed-ai-systems">Secure communication protocols for distributed AI systems</a></li>
+<li><a href="https://pilotprotocol.network/blog/encrypted-tunnel-advantages-peer-to-peer-ai-networks">Top encrypted tunnel advantages for P2P AI networks</a></li>
+<li><a href="https://pilotprotocol.network/blog/secure-network-infrastructure-ai-agents-practical-guide">Secure network infrastructure for AI agents: A practical guide</a></li>
+</ul><footer class="article-provenance" data-astro-cid-4ee7rn3o><strong data-astro-cid-4ee7rn3o>About this article</strong><p data-astro-cid-4ee7rn3o>Published by the Pilot Protocol team. Product claims are scoped to the availability labels and technical references linked in the article; deployment behavior can vary by version and environment.</p><p data-astro-cid-4ee7rn3o><a href="/about#publishing" data-astro-cid-4ee7rn3o>How we publish</a> · <a href="/contact?topic=correction" data-astro-cid-4ee7rn3o>Suggest a correction</a> · <a href="/website/docs/research" data-astro-cid-4ee7rn3o>Technical references</a></p></footer></article><aside class="article-toc" id="article-toc" data-astro-cid-4ee7rn3o><nav data-astro-cid-4ee7rn3o><p class="toc-title" data-astro-cid-4ee7rn3o>On this page</p><ul id="toc-list" data-astro-cid-4ee7rn3o></ul></nav></aside></main><section class="related-posts" data-astro-cid-4ee7rn3o><div class="related-inner" data-astro-cid-4ee7rn3o><h2 data-astro-cid-4ee7rn3o>Related Posts</h2><div class="related-grid" data-astro-cid-4ee7rn3o><a class="related-card" href="/website/blog/persistent-addresses-distributed-autonomous-systems" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/persistent-addresses-distributed-autonomous-systems-1200.webp" srcset="/website/blog/banners/optimized/persistent-addresses-distributed-autonomous-systems-720.webp 720w, /website/blog/banners/optimized/persistent-addresses-distributed-autonomous-systems-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Persistent Addresses for Distributed AI Agents" width="1200" height="686" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Persistent Addresses for Distributed AI Agents</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-08-27" data-astro-cid-4ee7rn3o>Aug 27, 2026</time> &middot; Blog</span></div></a><a class="related-card" href="/website/blog/ai-networking-best-practices-secure-scalable-systems" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/ai-networking-best-practices-secure-scalable-systems-1200.webp" srcset="/website/blog/banners/optimized/ai-networking-best-practices-secure-scalable-systems-720.webp 720w, /website/blog/banners/optimized/ai-networking-best-practices-secure-scalable-systems-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="AI networking best practices for secure, scalable systems" width="1200" height="669" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>AI networking best practices for secure, scalable systems</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-08-25" data-astro-cid-4ee7rn3o>Aug 25, 2026</time> &middot; Blog</span></div></a><a class="related-card" href="/website/blog/secure-ai-agent-networking-workflow-step-by-step" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/secure-ai-agent-networking-workflow-step-by-step-1200.webp" srcset="/website/blog/banners/optimized/secure-ai-agent-networking-workflow-step-by-step-720.webp 720w, /website/blog/banners/optimized/secure-ai-agent-networking-workflow-step-by-step-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Secure AI agent networking workflow: step-by-step guide" width="1200" height="669" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Secure AI agent networking workflow: step-by-step guide</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-08-23" data-astro-cid-4ee7rn3o>Aug 23, 2026</time> &middot; Blog</span></div></a></div></div></section><nav class="blog-nav" data-astro-cid-4ee7rn3o><div class="blog-nav-inner" data-astro-cid-4ee7rn3o><a class="blog-nav-link blog-nav-prev" href="/website/blog/how-mutual-trust-secures-decentralized-ai-agent-networks" data-astro-cid-4ee7rn3o><span class="blog-nav-label" data-astro-cid-4ee7rn3o>&larr; Previous</span><span class="blog-nav-title" data-astro-cid-4ee7rn3o>How mutual trust secures decentralized AI agent networks</span></a><a class="blog-nav-link blog-nav-next" href="/website/blog/why-direct-p2p-connections-power-secure-ai-networking" data-astro-cid-4ee7rn3o><span class="blog-nav-label" data-astro-cid-4ee7rn3o>Next &rarr;</span><span class="blog-nav-title" data-astro-cid-4ee7rn3o>Why Direct P2P Connections Power Secure AI Networking</span></a></div></nav><footer class="site-footer" data-astro-cid-jo6i4kqk><div class="wrap" data-astro-cid-jo6i4kqk><div class="foot-big" data-astro-cid-jo6i4kqk>The internet<br data-astro-cid-jo6i4kqk>for <span class="a" data-astro-cid-jo6i4kqk>agents.</span></div><div class="foot-cta" data-astro-cid-jo6i4kqk><a href="/website/docs/getting-started" class="btn primary" data-astro-cid-jo6i4kqk>Get started <span class="arr" data-astro-cid-jo6i4kqk>→</span></a><a href="/contact" class="btn" data-astro-cid-jo6i4kqk>Contact sales</a></div><div class="foot-grid" data-astro-cid-jo6i4kqk><div class="foot-about" data-astro-cid-jo6i4kqk><div class="foot-brand" data-astro-cid-jo6i4kqk><img src="/website/img/pilot-48.webp" alt="" class="foot-logo" width="28" height="28" loading="lazy" decoding="async" data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Pilot Protocol</p></div><p data-astro-cid-jo6i4kqk>Pilot. Where agents go.</p><div class="foot-social" data-astro-cid-jo6i4kqk><a href="https://x.com/pilotprotocol_" class="foot-social-link" target="_blank" rel="noopener" aria-label="Pilot Protocol on X" data-track="social_click" data-track-target="x" data-astro-cid-jo6i4kqk><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-jo6i4kqk><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="https://www.linkedin.com/company/112569955/" class="foot-social-link" target="_blank" rel="noopener" aria-label="Pilot Protocol on LinkedIn" data-track="social_click" data-track-target="linkedin" data-astro-cid-jo6i4kqk><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-jo6i4kqk><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Product</p><a href="/website/learn/what-is-pilot-protocol" data-astro-cid-jo6i4kqk>Network OS</a><a href="/trust" data-astro-cid-jo6i4kqk>Trust Center</a><a href="/governance" data-astro-cid-jo6i4kqk>Governance</a><a href="/app-store" data-astro-cid-jo6i4kqk>App Store</a><a href="/plans" data-astro-cid-jo6i4kqk>Plans</a><a href="/website/docs/enterprise" data-astro-cid-jo6i4kqk>Enterprise controls</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Developers</p><a href="/website/docs/" data-astro-cid-jo6i4kqk>Documentation</a><a href="/website/docs/getting-started" data-astro-cid-jo6i4kqk>Quickstart</a><a href="/website/docs/integration" data-astro-cid-jo6i4kqk>SDKs &amp; integration</a><a href="/website/research/WHITEPAPER.pdf" data-astro-cid-jo6i4kqk>Wire specification</a><a href="/website/pilot-native-use-cases.pdf" data-astro-cid-jo6i4kqk>Use-case brochure</a><a href="https://github.com/pilot-protocol/pilotprotocol" data-astro-cid-jo6i4kqk>GitHub</a><a href="/website/docs/research" data-astro-cid-jo6i4kqk>Research</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Company</p><a href="/about" data-astro-cid-jo6i4kqk>About</a><a href="/website/learn/" data-astro-cid-jo6i4kqk>Learning center</a><a href="/roadmap" data-astro-cid-jo6i4kqk>Roadmap</a><a href="/website/news/" data-astro-cid-jo6i4kqk>Company news</a><a href="/website/blog/" data-astro-cid-jo6i4kqk>Blog</a><a href="/press" data-astro-cid-jo6i4kqk>Press</a><a href="/website/enterprise-readiness-report.pdf" data-astro-cid-jo6i4kqk>Readiness report</a><a href="/contact" data-astro-cid-jo6i4kqk>Contact</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Legal</p><a href="/privacy" data-astro-cid-jo6i4kqk>Privacy Policy</a><a href="/cookies" data-astro-cid-jo6i4kqk>Cookie Policy</a><a href="/terms" data-astro-cid-jo6i4kqk>Terms of Service</a><a href="/aup" data-astro-cid-jo6i4kqk>Acceptable Use</a><a href="/publisher-agreement" data-astro-cid-jo6i4kqk>Publisher Agreement</a><a href="/website/security/disclosure" data-astro-cid-jo6i4kqk>Security disclosure</a><button type="button" id="cookie-preferences-link" data-astro-cid-jo6i4kqk>Cookie Preferences</button></div></div><a class="foot-plain-band" href="/website/plain/" data-astro-cid-jo6i4kqk><span class="fp-label" data-astro-cid-jo6i4kqk>Plain text for agents</span><span class="fp-path" data-astro-cid-jo6i4kqk>/plain</span><span class="fp-arrow" data-astro-cid-jo6i4kqk>→</span></a><div class="foot-bottom" data-astro-cid-jo6i4kqk><div data-astro-cid-jo6i4kqk>© 2026 Pilot Protocol · Built for agents</div><div class="foot-bottom-right" data-astro-cid-jo6i4kqk><span class="foot-status" data-astro-cid-jo6i4kqk>pilot://0x00000000 · backbone · up</span></div></div><nav class="foot-solutions" aria-label="Explore Pilot solutions" data-astro-cid-jo6i4kqk><div class="foot-solutions-intro" data-astro-cid-jo6i4kqk><span data-astro-cid-jo6i4kqk>Explore Pilot</span><span data-astro-cid-jo6i4kqk>Capabilities by workflow</span></div><div class="foot-solutions-grid" data-astro-cid-jo6i4kqk><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Connect</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/private-agent-network" data-track="footer_solution_click" data-track-target="private-agent-network" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Private agent networks</a><a href="/website/solutions/agent-integration" data-track="footer_solution_click" data-track-target="agent-integration" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Connect existing systems</a><a href="/website/solutions/agent-capability-store" data-track="footer_solution_click" data-track-target="agent-capability-store" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Agent capabilities</a><a href="/website/solutions/agent-ready-apis" data-track="footer_solution_click" data-track-target="agent-ready-apis" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Publish agent-ready APIs</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Build</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/secure-agent-runtime" data-track="footer_solution_click" data-track-target="secure-agent-runtime" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Secure agent runtime</a><a href="/website/solutions/grounded-agent-search" data-track="footer_solution_click" data-track-target="grounded-agent-search" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Grounded private search</a><a href="/website/solutions/web-access-for-agents" data-track="footer_solution_click" data-track-target="web-access-for-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Web access for agents</a><a href="/website/solutions/isolated-agent-compute" data-track="footer_solution_click" data-track-target="isolated-agent-compute" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Isolated agent compute</a><a href="/website/solutions/live-data-for-agents" data-track="footer_solution_click" data-track-target="live-data-for-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Live data for agents</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Operate</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/agent-email-phone" data-track="footer_solution_click" data-track-target="agent-email-phone" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Email, phone and SMS</a><a href="/website/solutions/sales-agent-stack" data-track="footer_solution_click" data-track-target="sales-agent-stack" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Sales agent stack</a><a href="/website/solutions/agent-commerce" data-track="footer_solution_click" data-track-target="agent-commerce" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Agent commerce</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Enterprise</p><div data-astro-cid-jo6i4kqk><a href="/website/enterprise/autonomous-ai-agents" data-track="footer_enterprise_click" data-track-target="autonomous-ai-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Autonomous agent control</a><a href="/website/enterprise/claude-code-management" data-track="footer_enterprise_click" data-track-target="claude-code-management" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Claude Code management</a></div></div></div></nav></div></footer><script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var link = document.getElementById('cookie-preferences-link');
+    if (link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (typeof window.__showConsentBanner === 'function') {
+          window.__showConsentBanner();
+        }
+      });
+    }
+  });
+</script><button class="scroll-top" id="scroll-top" aria-label="Scroll to top" data-astro-cid-4ee7rn3o><svg viewBox="0 0 24 24" data-astro-cid-4ee7rn3o><polyline points="18 15 12 9 6 15" data-astro-cid-4ee7rn3o></polyline></svg></button><script type="module">(function(){var e=document.getElementById(`progress-bar`),t=document.getElementById(`scroll-top`);window.addEventListener(`scroll`,function(){var n=document.documentElement.scrollHeight-window.innerHeight,r=n>0?window.scrollY/n*100:0;e&&(e.style.width=r+`%`),t&&(window.scrollY>400?t.classList.add(`visible`):t.classList.remove(`visible`))}),t&&t.addEventListener(`click`,function(){window.scrollTo({top:0,behavior:`smooth`})})})(),(function(){var e=document.getElementById(`reading-time`),t=document.querySelector(`.article`);if(!(!e||!t)){var n=(t.innerText||t.textContent||``).trim().split(/\s+/).length;e.textContent=Math.ceil(n/200)+` min read`}})(),(function(){var e=document.getElementById(`toc-list`),t=document.getElementById(`article-toc`);if(!(!e||!t)){var n=document.querySelectorAll(`.article h2[id]`);if(n.length===0){t.style.display=`none`;return}n.forEach(function(t){var n=document.createElement(`li`),r=document.createElement(`a`);r.href=`#`+t.id,r.textContent=t.textContent,n.appendChild(r),e.appendChild(n)});var r=e.querySelectorAll(`a`),i=new IntersectionObserver(function(t){t.forEach(function(t){if(t.isIntersecting){r.forEach(function(e){e.classList.remove(`active`)});var n=e.querySelector(`a[href="#`+t.target.id+`"]`);n&&n.classList.add(`active`)}})},{rootMargin:`0px 0px -70% 0px`,threshold:0});n.forEach(function(e){i.observe(e)})}})(),(function(){function e(e){return e.split(`
+`).map(function(e){return e.replace(/^(\s*)\$\s(?=\S)/,`$1`)}).join(`
+`).trim()}document.querySelectorAll(`.article pre`).forEach(function(t){var n=document.createElement(`button`);n.className=`copy-btn`,n.type=`button`,n.setAttribute(`aria-label`,`Copy code`),n.textContent=`Copy`,n.addEventListener(`click`,function(){var r=t.querySelector(`code`),i;if(r)i=r.textContent;else{var a=t.cloneNode(!0),o=a.querySelector(`.copy-btn`);o&&o.remove(),i=a.textContent}var s=e(i);navigator.clipboard.writeText(s).then(function(){n.textContent=`Copied`,n.setAttribute(`aria-label`,`Copied`),setTimeout(function(){n.textContent=`Copy`,n.setAttribute(`aria-label`,`Copy code`)},2e3)}).catch(function(){n.textContent=`Copy failed`,n.setAttribute(`aria-label`,`Copy failed`),setTimeout(function(){n.textContent=`Copy`,n.setAttribute(`aria-label`,`Copy code`)},2e3)})}),t.appendChild(n)})})(),(function(){var e=document.querySelectorAll(`.article h2, .article blockquote, .article .callout, .related-card, .blog-nav-link`);if(e.length){var t=new IntersectionObserver(function(e){e.forEach(function(e){e.isIntersecting&&(e.target.classList.add(`visible`),t.unobserve(e.target))})},{threshold:.1});e.forEach(function(e){e.classList.add(`reveal`),t.observe(e)})}})();</script></body></html>

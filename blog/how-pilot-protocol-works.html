@@ -1,0 +1,572 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-4ee7rn3o><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>How Pilot Protocol Works: P2P Overlay Networking Architecture for AI Agents</title><meta name="description" content="See how Pilot separates agent identity and coordination from encrypted payload paths, including discovery, traversal, direct connections, and relay fallback."><meta name="robots" content="index,follow,max-image-preview:large"><meta name="author" content="Pilot Protocol"><link rel="canonical" href="https://pilotprotocol.network/blog/how-pilot-protocol-works"><meta property="og:type" content="article"><meta property="og:title" content="How Pilot Protocol Works: P2P Overlay Networking Architecture for AI Agents"><meta property="og:description" content="See how Pilot separates agent identity and coordination from encrypted payload paths, including discovery, traversal, direct connections, and relay fallback."><meta property="og:url" content="https://pilotprotocol.network/blog/how-pilot-protocol-works"><meta property="og:image" content="https://pilotprotocol.network/blog/banners/optimized/how-pilot-protocol-works-1200.webp"><meta property="og:image:alt" content="Pilot Protocol"><meta property="og:site_name" content="Pilot Protocol"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@pilotprotocol_"><meta name="twitter:title" content="How Pilot Protocol Works: P2P Overlay Networking Architecture for AI Agents"><meta name="twitter:description" content="See how Pilot separates agent identity and coordination from encrypted payload paths, including discovery, traversal, direct connections, and relay fallback."><meta name="twitter:image" content="https://pilotprotocol.network/blog/banners/optimized/how-pilot-protocol-works-1200.webp"><meta name="twitter:image:alt" content="Pilot Protocol"><meta name="theme-color" content="#0b0b0a" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)"><meta name="color-scheme" content="dark light"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://pilotprotocol.network/#organization","name":"Pilot Protocol","legalName":"Vulture Labs, Inc.","url":"https://pilotprotocol.network/","logo":{"@type":"ImageObject","url":"https://pilotprotocol.network/img/pilot-180.png","width":180,"height":180},"sameAs":["https://github.com/pilot-protocol/pilotprotocol","https://x.com/pilotprotocol_","https://www.linkedin.com/company/112569955/"],"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"founders@pilotprotocol.network","url":"https://pilotprotocol.network/contact"}]},{"@type":"WebSite","@id":"https://pilotprotocol.network/#website","url":"https://pilotprotocol.network/","name":"Pilot Protocol","publisher":{"@id":"https://pilotprotocol.network/#organization"},"inLanguage":"en-US"}]}</script><!-- PILOT-175: fonts self-hosted under /fonts/*. Removed the Google Fonts
+     preconnect + stylesheet links so the browser never contacts
+     fonts.googleapis.com / fonts.gstatic.com (GDPR: avoids passing
+     visitor IPs to Google). The self-hosted bundle covers the same
+     three families (Inter Tight, JetBrains Mono, Instrument Serif)
+     with identical subsets + unicode-range gating, so per-page font
+     bytes are unchanged. --><link rel="stylesheet" href="/website/fonts/fonts.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="/website/fonts/fonts.css"></noscript><link rel="preload" href="/website/fonts/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2" as="font" type="font/woff2" crossorigin="anonymous"><!-- PILOT-27: consent-check shared module is imported by analytics.ts below. --><link rel="icon" href="/website/img/pilot-48.png" type="image/png" sizes="48x48"><link rel="apple-touch-icon" href="/website/img/pilot-180.png" sizes="180x180"><!-- PILOT-27: Consent banner injected at the end of <body> from <head> --><script>
+  (function() {
+    var bannerHTML = '<div id="pilot-consent-banner" class="consent-banner consent-banner--bottom" role="dialog" aria-label="Cookie consent" style="display:none">' +
+      '<div class="consent-banner__inner">' +
+        '<div class="consent-banner__text">' +
+          '<p>We use analytics cookies, plus heatmaps and session replay with all form inputs masked, to understand how our site is used. We do not build a profile of you. <a href="/cookies">Cookie policy</a>.</p>' +
+        '</div>' +
+        '<div class="consent-banner__actions">' +
+          '<button id="pilot-consent-accept" class="btn primary consent-btn" data-consent="accepted">Accept</button>' +
+          '<button id="pilot-consent-reject" class="btn consent-btn" data-consent="rejected">Reject</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    // Wait for DOM to be ready
+    function injectBanner() {
+      if (document.body) {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = bannerHTML;
+        document.body.appendChild(wrapper.firstElementChild);
+
+        var KEY = 'pilot_consent';
+        var banner = document.getElementById('pilot-consent-banner');
+        if (!banner) return;
+
+        function getConsent() {
+          try { return localStorage.getItem(KEY); } catch { return null; }
+        }
+
+        function setConsent(value) {
+          try {
+            localStorage.setItem(KEY, value);
+            window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: value }));
+          } catch {}
+        }
+
+        document.getElementById('pilot-consent-accept').addEventListener('click', function() {
+          setConsent('accepted');
+          banner.style.display = 'none';
+        });
+
+        document.getElementById('pilot-consent-reject').addEventListener('click', function() {
+          setConsent('rejected');
+          banner.style.display = 'none';
+        });
+
+        var existing = getConsent();
+        if (existing) {
+          banner.style.display = 'none';
+          window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: existing }));
+        } else {
+          banner.style.display = 'flex';
+        }
+
+        window.__showConsentBanner = function() {
+          if (banner) banner.style.display = 'flex';
+        };
+      } else {
+        setTimeout(injectBanner, 50);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectBanner);
+    } else {
+      injectBanner();
+    }
+  })();
+</script><link rel="alternate" type="application/rss+xml" title="Pilot Protocol Journal" href="/website/blog/feed.xml"><script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('pilot-theme');
+      var prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      var theme = stored || prefers;
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script><!-- PILOT-27: GA4 loads only after user accepts cookies. --><script>
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadGA4() {
+      if (document.querySelector('script[src*="gtag/js?id=G-EEWEKT0GW5"]')) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EEWEKT0GW5';
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-EEWEKT0GW5');
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadGA4();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadGA4();
+      });
+    }
+    // If consent === 'rejected', never load GA4.
+  })();
+</script><!-- X (Twitter) Ads universal website tag — conversion tracking for our X ad
+     campaigns. Same consent gate as GA4 above: loads only after the visitor
+     accepts cookies, never on reject. Disclosed in /cookies and /privacy. --><script>(function(){const twitterPixelId = "re3tv";
+
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadTwitterPixel() {
+      if (!twitterPixelId || window.twq) return;
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+      },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+      a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+      window.twq('config', twitterPixelId);
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadTwitterPixel();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadTwitterPixel();
+      });
+    }
+    // If consent === 'rejected', never load the X pixel.
+  })();
+})();</script><script type="module" src="/website/_astro/BaseHead.astro_astro_type_script_index_0_lang.DTqJW7IP.js"></script><link rel="preload" as="image" href="/website/blog/banners/optimized/how-pilot-protocol-works-1200.webp" imagesrcset="/website/blog/banners/optimized/how-pilot-protocol-works-720.webp 720w, /website/blog/banners/optimized/how-pilot-protocol-works-1200.webp 1200w" imagesizes="(max-width: 760px) calc(100vw - 40px), 720px" fetchpriority="high"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Pilot Protocol Works: P2P Overlay Networking Architecture for AI Agents","description":"See how Pilot separates agent identity and coordination from encrypted payload paths, including discovery, traversal, direct connections, and relay fallback.","image":"https://pilotprotocol.network/blog/banners/optimized/how-pilot-protocol-works-1200.webp","author":{"@type":"Organization","name":"Pilot Protocol editorial team","url":"https://pilotprotocol.network/about#publishing"},"publisher":{"@id":"https://pilotprotocol.network/#organization"},"datePublished":"2026-05-21","dateModified":"2026-05-21","mainEntityOfPage":"https://pilotprotocol.network/blog/how-pilot-protocol-works"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does Pilot Protocol's addressing system work?","acceptedAnswer":{"@type":"Answer","text":"Every agent receives a 48-bit virtual address (16-bit network ID + 32-bit node ID) in the format N:NNNN.HHHH.LLLL. This address is permanent and does not change when the agent moves between networks, changes IP addresses, or reconnects after going offline. Agents can also register human-readable hostnames that resolve through the protocol's built-in nameserver."}},{"@type":"Question","name":"How does Pilot Protocol handle NAT traversal for AI agents?","acceptedAnswer":{"@type":"Answer","text":"Pilot uses a three-tier approach: STUN discovery (agent learns its public endpoint), beacon-coordinated hole-punching (both sides send simultaneously to punch through restricted NATs), and relay fallback through the beacon for symmetric NATs where hole-punching fails. The application layer receives the same net.Conn interface regardless of which tier was used."}},{"@type":"Question","name":"What encryption does Pilot Protocol use for agent communication?","acceptedAnswer":{"@type":"Answer","text":"Pilot encrypts tunnel traffic by default using peer-specific secrets derived from daemon-lifetime X25519 keys and AES-256-GCM authenticated encryption. The current design provides peer isolation, not per-session forward secrecy. Encrypted frames use a random nonce prefix and counter for replay protection."}},{"@type":"Question","name":"How does Pilot Protocol's trust model work?","acceptedAnswer":{"@type":"Answer","text":"Agents are private by default at the application connectivity layer. Directory metadata may be visible, but open lookups withhold private endpoints and private nodes reject application traffic unless peer trust or shared-network membership authorizes it. Peer trust can be revoked to tear down the associated tunnel and prevent reconnection under that grant."}}]}</script><link rel="stylesheet" href="/website/_astro/system.DXXNXJyX.css"><link rel="stylesheet" href="/website/_astro/Footer.G2DNlaPt.css"><style>.article-next-step[data-astro-cid-4ee7rn3o]{border:1px solid color-mix(in srgb, var(--accent) 38%, var(--line));background:color-mix(in srgb, var(--accent) 6%, var(--bg));grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:1rem 2rem;margin:3rem 0 2rem;padding:clamp(1.25rem,3vw,2rem);display:grid}.article-next-step[data-astro-cid-4ee7rn3o]>span[data-astro-cid-4ee7rn3o]{color:var(--accent-text);font:600 .68rem/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;grid-column:1/-1}.article-next-step[data-astro-cid-4ee7rn3o] h2[data-astro-cid-4ee7rn3o]{margin:0 0 .55rem;font-size:clamp(1.35rem,3vw,1.9rem);line-height:1.08}.article-next-step[data-astro-cid-4ee7rn3o] p[data-astro-cid-4ee7rn3o]{color:var(--ink-dim);margin:0}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]{border:1px solid var(--ink);min-height:44px;color:var(--ink);font:600 .72rem/1.2 var(--mono);white-space:nowrap;justify-content:center;align-items:center;gap:.6rem;padding:.75rem 1rem;text-decoration:none;display:inline-flex}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]:hover{background:var(--ink);color:var(--bg)}@media (width<=640px){.article-next-step[data-astro-cid-4ee7rn3o]{grid-template-columns:1fr;align-items:start}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]{white-space:normal;width:100%}}.article-faq[data-astro-cid-4ee7rn3o]{max-width:760px;margin:0 auto;padding:3rem 1.5rem 1rem}.article-faq[data-astro-cid-4ee7rn3o] h2[data-astro-cid-4ee7rn3o]{margin-bottom:1.5rem;font-size:1.6rem}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o]{border-top:1px solid var(--line,#1d1d1b);padding:1.25rem 0}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o] h3[data-astro-cid-4ee7rn3o]{margin:0 0 .5rem;font-size:1.05rem}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o] p[data-astro-cid-4ee7rn3o]{color:var(--ink-dim,#5a5a54);margin:0;line-height:1.6}
+</style></head><body data-astro-cid-4ee7rn3o><div class="progress-bar" id="progress-bar" data-astro-cid-4ee7rn3o></div><a class="skip-link" href="#page-content">Skip to content</a><nav class="nav-top" aria-label="Primary"><div class="wrap"><div class="nav-row"><a href="/" class="brand" data-track="nav_click" data-track-target="home"><span class="brand-mark"><img src="/website/img/pilot-48.webp" alt="" class="logo" width="40" height="40" decoding="async"></span><span class="brand-text"><strong>Pilot</strong><span>Protocol</span></span><span class="sr-only"> home</span></a><div class="nav-links" id="nav-links"><div class="nav-dropdown" data-nav-group="product"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Product</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">The platform</span><strong>One network layer for agents.</strong><p>Identity, encrypted connectivity, trust, and installable capabilities in one system.</p></div><div class="nav-menu-links"><a href="/" data-track="nav_click" data-track-target="product-network-os"><span class="dd-kicker">Platform</span><span class="dd-label">Network OS</span><span class="dd-desc">The complete Pilot architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/trust" data-track="nav_click" data-track-target="product-trust-center"><span class="dd-kicker">Security</span><span class="dd-label">Trust Center</span><span class="dd-desc">Controls, boundaries, and evidence</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/governance" data-track="nav_click" data-track-target="product-control-model"><span class="dd-kicker">Governance</span><span class="dd-label">Control model</span><span class="dd-desc">Authority, policy, lifecycle, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/app-store" data-track="nav_click" data-track-target="product-app-store"><span class="dd-kicker">Ecosystem</span><span class="dd-label">App Store</span><span class="dd-desc">Capabilities built for agents</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/plans" data-track="nav_click" data-track-target="product-plans"><span class="dd-kicker">Commercial</span><span class="dd-label">Plans</span><span class="dd-desc">Open network and enterprise paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/docs/getting-started"><span>Explore the product</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="solutions"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Solutions</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Built for real systems</span><strong>Connect agents across every boundary.</strong><p>Start with one deployment pattern, then expand without replacing the underlying network.</p></div><div class="nav-menu-links"><a href="/website/for/p2p" data-track="nav_click" data-track-target="solutions-direct-p2p"><span class="dd-kicker">Connectivity</span><span class="dd-label">Direct P2P</span><span class="dd-desc">Private agent-to-agent paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/mcp" data-track="nav_click" data-track-target="solutions-mcp-+-pilot"><span class="dd-kicker">Integration</span><span class="dd-label">MCP + Pilot</span><span class="dd-desc">Give MCP servers a network</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/networks" data-track="nav_click" data-track-target="solutions-managed-networks"><span class="dd-kicker">Organization</span><span class="dd-label">Managed networks</span><span class="dd-desc">Shared domains and membership</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/enterprise" data-track="nav_click" data-track-target="solutions-enterprise-controls"><span class="dd-kicker">Enterprise</span><span class="dd-label">Enterprise controls</span><span class="dd-desc">Identity, policy, roles, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/setups"><span>Browse deployment setups</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="developers"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Developers</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Build on Pilot</span><strong>From first connection to production.</strong><p>Documentation and tooling for connecting, shipping, and operating agent-native software.</p></div><div class="nav-menu-links"><a href="/website/docs/getting-started" data-track="nav_click" data-track-target="developers-quickstart"><span class="dd-kicker">Start</span><span class="dd-label">Quickstart</span><span class="dd-desc">Install and connect in minutes</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/" data-track="nav_click" data-track-target="developers-documentation"><span class="dd-kicker">Reference</span><span class="dd-label">Documentation</span><span class="dd-desc">Concepts, CLI, SDKs, and operations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/integration" data-track="nav_click" data-track-target="developers-sdks-&amp;-integration"><span class="dd-kicker">Build</span><span class="dd-label">SDKs &amp; integration</span><span class="dd-desc">Embed Pilot in your stack</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/compatibility" data-track="nav_click" data-track-target="developers-compatibility"><span class="dd-kicker">Deploy</span><span class="dd-label">Compatibility</span><span class="dd-desc">Choose the right environment mode</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/skills"><span>Explore agent skills</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown active" data-nav-group="resources"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Resources</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Learn and evaluate</span><strong>Technical depth without the guesswork.</strong><p>Architecture, field notes, evaluator material, and a machine-readable version of the site.</p></div><div class="nav-menu-links"><a href="/website/learn/" data-track="nav_click" data-track-target="resources-learning-center"><span class="dd-kicker">Learn</span><span class="dd-label">Learning center</span><span class="dd-desc">Foundations, transport, and security</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/blog/" data-track="nav_click" data-track-target="resources-field-notes"><span class="dd-kicker">Journal</span><span class="dd-label">Field notes</span><span class="dd-desc">Technical guides and architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/research" data-track="nav_click" data-track-target="resources-technical-papers"><span class="dd-kicker">Research</span><span class="dd-label">Technical papers</span><span class="dd-desc">Specifications and evaluations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/pilot-native-use-cases.pdf" data-track="nav_click" data-track-target="resources-deployment-patterns"><span class="dd-kicker">Use cases</span><span class="dd-label">Deployment patterns</span><span class="dd-desc">What the combined Pilot surface enables</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/press" data-track="nav_click" data-track-target="resources-press-kit"><span class="dd-kicker">Media</span><span class="dd-label">Press kit</span><span class="dd-desc">Company and brand resources</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/plain/" data-track="nav_click" data-track-target="resources-machine-readable-site"><span class="dd-kicker">Agents</span><span class="dd-label">Machine-readable site</span><span class="dd-desc">The plain-text agent interface</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/enterprise-readiness-report.pdf"><span>Read the readiness report</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="company"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Company</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Pilot Protocol</span><strong>Building the network for agents.</strong><p>Learn about the company, follow our progress, or speak directly with the team.</p></div><div class="nav-menu-links"><a href="/about" data-track="nav_click" data-track-target="company-about-pilot"><span class="dd-kicker">About</span><span class="dd-label">About Pilot</span><span class="dd-desc">Company, people, and publishing standards</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/roadmap" data-track="nav_click" data-track-target="company-product-roadmap"><span class="dd-kicker">Direction</span><span class="dd-label">Product roadmap</span><span class="dd-desc">What we are strengthening next</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/news/" data-track="nav_click" data-track-target="company-company-news"><span class="dd-kicker">Newsroom</span><span class="dd-label">Company news</span><span class="dd-desc">Announcements and company updates</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/contact" data-track="nav_click" data-track-target="company-talk-to-the-team"><span class="dd-kicker">Contact</span><span class="dd-label">Talk to the team</span><span class="dd-desc">Enterprise, partnerships, and press</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/contact"><span>Contact Pilot Protocol</span><span aria-hidden="true">→</span></a></div></div><div class="nav-mobile-actions"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a></div></div><div class="nav-right"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme" type="button"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button><button id="nav-hamburger" class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button></div></div></div></nav><span id="page-content" class="skip-target" tabindex="-1"></span><script>
+  (function () {
+    var nav = document.querySelector('.nav-top');
+    var themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function () {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isLight) {
+          document.documentElement.removeAttribute('data-theme');
+          try { localStorage.setItem('pilot-theme', 'dark'); } catch (e) {}
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          try { localStorage.setItem('pilot-theme', 'light'); } catch (e) {}
+        }
+      });
+    }
+
+    function closeDropdowns(except) {
+      document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+        if (dd === except) return;
+        dd.classList.remove('open');
+        var trigger = dd.querySelector('.nav-dropdown-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function closeMobileMenu() {
+      if (!links || !links.classList.contains('mobile-open')) return;
+      links.classList.remove('mobile-open');
+      if (hamb) {
+        hamb.classList.remove('is-open');
+        hamb.setAttribute('aria-expanded', 'false');
+        hamb.setAttribute('aria-label', 'Open menu');
+      }
+      document.body.classList.remove('nav-mobile-open');
+      closeDropdowns();
+    }
+
+    // Hamburger (mobile)
+    var hamb = document.getElementById('nav-hamburger');
+    var links = document.getElementById('nav-links');
+    if (hamb && links) {
+      hamb.setAttribute('aria-label', 'Open menu');
+      hamb.addEventListener('click', function () {
+        var open = links.classList.toggle('mobile-open');
+        hamb.classList.toggle('is-open', open);
+        hamb.setAttribute('aria-expanded', open ? 'true' : 'false');
+        hamb.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        document.body.classList.toggle('nav-mobile-open', open);
+        if (!open) closeDropdowns();
+      });
+      links.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    }
+
+    // Dropdown: click to toggle, click-outside to close
+    document.querySelectorAll('.nav-dropdown').forEach(function (dd) {
+      var trigger = dd.querySelector('.nav-dropdown-trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var wasOpen = dd.classList.contains('open');
+        closeDropdowns(dd);
+        dd.classList.toggle('open', !wasOpen);
+        var isOpen = !wasOpen;
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest || !e.target.closest('.nav-dropdown')) closeDropdowns();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+          dd.classList.remove('open');
+          var trig = dd.querySelector('.nav-dropdown-trigger');
+          if (trig) { trig.setAttribute('aria-expanded', 'false'); trig.focus(); }
+        });
+        closeMobileMenu();
+      }
+    });
+
+    // A restrained shadow gives the persistent shell a clear edge once content scrolls beneath it.
+    if (nav) {
+      var syncNavEdge = function () { nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+      syncNavEdge();
+      window.addEventListener('scroll', syncNavEdge, { passive: true });
+    }
+  })();
+</script><main class="article-layout" data-astro-cid-4ee7rn3o><article class="article" data-track-read="how-pilot-protocol-works" data-astro-cid-4ee7rn3o><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://artemiia.github.io/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://artemiia.github.io/blog/"},{"@type":"ListItem","position":3,"name":"How Pilot Protocol Works: P2P Overlay Networking Architecture for AI Agents","item":"https://artemiia.github.io/website/blog/how-pilot-protocol-works/"}]}</script><nav class="site-breadcrumbs is-compact" aria-label="Breadcrumb" data-astro-cid-vx4iavld><ol data-astro-cid-vx4iavld><li data-astro-cid-vx4iavld><a href="/" data-astro-cid-vx4iavld>Home</a></li><li data-astro-cid-vx4iavld><a href="/website/blog/" data-astro-cid-vx4iavld>Blog</a></li><li data-astro-cid-vx4iavld><span aria-current="page" data-astro-cid-vx4iavld>How Pilot Protocol Works: P2P Overlay Networking Architecture for AI Agents</span></li></ol></nav><img class="article-banner" src="/website/blog/banners/optimized/how-pilot-protocol-works-1200.webp" srcset="/website/blog/banners/optimized/how-pilot-protocol-works-720.webp 720w, /website/blog/banners/optimized/how-pilot-protocol-works-1200.webp 1200w" sizes="(max-width: 760px) calc(100vw - 40px), 720px" alt="How Pilot Protocol Works: P2P Overlay Networking Architecture for AI Agents" width="1200" height="630" loading="eager" decoding="sync" fetchpriority="high" data-astro-cid-4ee7rn3o><h1 data-astro-cid-4ee7rn3o>How Pilot Protocol Works: P2P Overlay Networking Architecture for AI Agents</h1><div class="article-meta" data-astro-cid-4ee7rn3o><a href="https://pilotprotocol.network/about#publishing" data-astro-cid-4ee7rn3o>By Pilot Protocol editorial team</a><time datetime="2026-05-21" data-astro-cid-4ee7rn3o>May 21, 2026</time><span class="reading-time" id="reading-time" data-astro-cid-4ee7rn3o></span><span class="tag" data-astro-cid-4ee7rn3o>architecture</span><span class="tag" data-astro-cid-4ee7rn3o>deep-dive</span><span class="tag" data-astro-cid-4ee7rn3o>networking</span></div><p><strong>How Pilot Protocol works:</strong> it is a UDP overlay network that gives every AI agent a permanent virtual address, encrypted tunnels through NAT, and a cryptographic trust model — all from a single binary with zero external dependencies. This technical deep dive walks through the full architecture: addressing, packet design, NAT traversal, encryption, and trust.</p>
+
+  <p>Every modern agent framework makes the same assumption: your agent has a reachable HTTP endpoint. Google's A2A protocol publishes Agent Cards with URLs. Anthropic's MCP connects to servers over stdio or HTTP. LangChain agents call APIs. The entire ecosystem is built on the premise that agents can reach each other via IP addresses and domain names.</p>
+
+  <p>The problem is that most of them cannot.</p>
+
+  <p><strong>88% of networks involve NAT.</strong> An agent running on a developer's laptop, behind a corporate firewall, inside a Docker container, or on a mobile device has no publicly routable address. It cannot receive incoming connections. It cannot be listed in a service registry. It is invisible to every other agent in the world.</p>
+
+  <p>Pilot Protocol is the layer that fixes this. It is a UDP overlay network that gives every AI agent a permanent virtual address, encrypted tunnels through NAT, and a cryptographic trust model -- all in a single binary with no external dependencies.</p>
+
+  <p>This post walks through the full architecture: how addresses work, what packets look like on the wire, how NAT traversal happens across three tiers, how encryption is negotiated, how trust is established, and what services run on top of the network.</p>
+
+  <h2 id="problem">The Problem: Agents Behind NAT Cannot Talk</h2>
+
+  <p>Consider a simple scenario: you have two AI agents. Agent Alice is running on your laptop in San Francisco. Agent Bob is running on a colleague's workstation in Berlin. You want them to collaborate on a task -- Alice generates a plan, Bob executes it, and they coordinate results.</p>
+
+  <p>With HTTP, this is nearly impossible without infrastructure. Alice's laptop is behind a home router performing NAT. Bob's workstation is behind a corporate firewall. Neither has a public IP address. Neither can accept incoming connections.</p>
+
+  <p>The standard solutions all add operational overhead:</p>
+
+  <ul>
+    <li><strong>Cloud relay</strong> -- route everything through a centralized server. Works, but adds latency, cost, and a single point of failure.</li>
+    <li><strong>VPN</strong> -- tunnel both agents into a shared network. Requires infrastructure, configuration, and ongoing maintenance.</li>
+    <li><strong>Port forwarding</strong> -- manually configure routers on both sides. Fragile, requires access to network hardware, breaks when IPs change.</li>
+    <li><strong>ngrok/Cloudflare Tunnel</strong> -- expose local services through reverse proxies. Each agent needs its own tunnel configuration.</li>
+  </ul>
+
+  <p>All of these solutions treat agent communication as a deployment problem. Pilot Protocol treats it as a <strong>networking problem</strong> and solves it at the protocol layer.</p>
+
+  <h2 id="addressing">Addressing: 48-Bit Virtual Addresses</h2>
+
+  <p>Every agent on the Pilot Protocol network receives a <strong>48-bit virtual address</strong>. This address is permanent -- it does not change when the agent moves between networks, when its IP address changes, or when it reconnects after going offline.</p>
+
+  <p>The address is composed of two parts:</p>
+
+  <table>
+    <thead>
+      <tr><th>Field</th><th>Size</th><th>Purpose</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Network ID</td><td>16 bits</td><td>Identifies which network the agent belongs to</td></tr>
+      <tr><td>Node ID</td><td>32 bits</td><td>Unique identifier assigned by the registry</td></tr>
+    </tbody>
+  </table>
+
+  <p>The text format uses colon-separated hex: <code>N:NNNN.HHHH.LLLL</code></p>
+
+  <p>For example, <code>0:0000.0000.0001</code> is node 1 on network 0 (the global backbone). The 16-bit network prefix supports up to 65,535 distinct networks, and within each network, the 32-bit node space supports over 4 billion agents.</p>
+
+  <h3>Why Not IP Addresses?</h3>
+
+  <p>IP addresses identify <strong>network interfaces</strong>, not agents. When an agent moves from Wi-Fi to cellular, its IP changes. When it restarts behind a different NAT, its port changes. When it migrates between cloud regions, everything changes.</p>
+
+  <p>Pilot addresses identify <strong>agents</strong>. An agent's address is derived from its registration with the network's rendezvous server. It persists across restarts, network changes, and migrations. Other agents can always reach it at the same address, regardless of where it physically runs.</p>
+
+  <p>Agents can also register <strong>hostnames</strong> -- human-readable names like <code>alice</code> or <code>data-processor</code>. The protocol's built-in nameserver resolves hostnames to addresses, so you can <code>pilotctl ping alice</code> instead of remembering hex addresses.</p>
+
+  <div class="callout">
+    <p><strong>Design choice:</strong> 48 bits was intentional. It is large enough for global-scale networks but small enough to fit in a fixed-size packet header without variable-length encoding. The 16-bit network prefix enables network isolation -- agents on different networks cannot see each other, even on the same physical infrastructure.</p>
+  </div>
+
+  <h2 id="packet">The Packet: 34-Byte Fixed Header</h2>
+
+  <p>Every Pilot Protocol packet carries a <strong>34-byte fixed header</strong>. No variable-length fields, no options, no extensions. This makes parsing trivial and fast -- a single struct read in <a href="https://go.dev" target="_blank" rel="noopener">Go</a>.</p>
+
+  <table>
+    <thead>
+      <tr><th>Offset</th><th>Field</th><th>Size</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0</td><td>Version + Flags</td><td>1 byte</td><td>High nibble = version (currently 1); low nibble = flags (SYN, ACK, FIN, RST)</td></tr>
+      <tr><td>1</td><td>Protocol</td><td>1 byte</td><td>Upper-layer protocol (stream, datagram, control)</td></tr>
+      <tr><td>2</td><td>Length</td><td>2 bytes</td><td>Payload length in bytes</td></tr>
+      <tr><td>4</td><td>SrcAddr</td><td>6 bytes</td><td>Source virtual address (48-bit)</td></tr>
+      <tr><td>10</td><td>DstAddr</td><td>6 bytes</td><td>Destination virtual address (48-bit)</td></tr>
+      <tr><td>16</td><td>SrcPort</td><td>2 bytes</td><td>Source port number</td></tr>
+      <tr><td>18</td><td>DstPort</td><td>2 bytes</td><td>Destination port number</td></tr>
+      <tr><td>20</td><td>SeqNum</td><td>4 bytes</td><td>Sequence number for ordering</td></tr>
+      <tr><td>24</td><td>AckNum</td><td>4 bytes</td><td>Acknowledgment number</td></tr>
+      <tr><td>28</td><td>Window</td><td>2 bytes</td><td>Advertised receive window (in segments; 0 = no flow control)</td></tr>
+      <tr><td>30</td><td>Checksum</td><td>4 bytes</td><td><a href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check" target="_blank" rel="noopener">CRC32</a> over header + payload</td></tr>
+    </tbody>
+  </table>
+
+  <p>Here is what a SYN packet looks like on the wire, sent from <code>0:0000.0000.0001</code> port 1000 to <code>0:0000.0000.0002</code> port 7 (echo service):</p>
+
+  <pre><code><span class="comment"># Pilot Protocol SYN packet (34 bytes, no payload)</span>
+<span class="comment"># Offset  Hex                                     ASCII</span>
+00000000  <span class="cmd">11</span> <span class="cmd">01</span> <span class="cmd">00 00</span>                             <span class="comment">  Version=1 Flags=SYN Proto=stream Len=0</span>
+00000004  <span class="cmd">00 00 00 00 00 01</span>                        <span class="comment">  SrcAddr=0:0000.0000.0001</span>
+0000000A  <span class="cmd">00 00 00 00 00 02</span>                        <span class="comment">  DstAddr=0:0000.0000.0002</span>
+00000010  <span class="cmd">03 E8</span>                                    <span class="comment">  SrcPort=1000</span>
+00000012  <span class="cmd">00 07</span>                                    <span class="comment">  DstPort=7 (echo)</span>
+00000014  <span class="cmd">00 00 00 01</span>                              <span class="comment">  SeqNum=1</span>
+00000018  <span class="cmd">00 00 00 00</span>                              <span class="comment">  AckNum=0</span>
+0000001C  <span class="cmd">FF FF</span>                                    <span class="comment">  Window=65535 (segments)</span>
+0000001E  <span class="cmd">A3 B2 C1 D0</span>                              <span class="comment">  Checksum (CRC32)</span></code></pre>
+
+  <p>The fixed header design means that every Pilot node -- from a Raspberry Pi to a cloud VM -- can parse packets with the same code, at the same speed. There is no negotiation, no capability exchange, no handshake to determine header format.</p>
+
+  <h3>Connection Lifecycle</h3>
+
+  <p>Connections follow a TCP-like lifecycle: <strong>SYN, SYN-ACK, ACK</strong> for setup, data exchange with sequence numbers and acknowledgments, and <strong>FIN</strong> for graceful teardown. The transport layer provides:</p>
+
+  <ul>
+    <li><strong>Sliding window</strong> with configurable size for reliability</li>
+    <li><strong>Congestion control</strong> using AIMD (Additive Increase / Multiplicative Decrease)</li>
+    <li><strong>Flow control</strong> via the 2-byte Window field -- receivers advertise available buffer space</li>
+    <li><strong>Nagle algorithm</strong> to coalesce small writes into larger packets</li>
+    <li><strong>Auto segmentation</strong> for payloads larger than the MTU</li>
+    <li><strong>Zero-window probing</strong> to prevent deadlock when the receiver is full</li>
+    <li><strong>Keepalive probes</strong> every 60 seconds, with 120-second idle timeout</li>
+  </ul>
+
+  <p>This gives application-layer code a reliable, ordered byte stream -- identical to what <code>net.Conn</code> provides in Go. In fact, Pilot connections implement the <code>net.Conn</code> interface directly, which means standard Go HTTP servers and clients work unmodified over Pilot tunnels. This transport layer is what makes it practical to <a href="/website/blog/chain-ai-models-across-machines">chain AI models across machines with persistent tunnels</a>, eliminating the per-request connection overhead that plagues HTTP-based pipelines.</p>
+
+  <h2 id="nat">NAT Traversal: Three Tiers</h2>
+
+  <p>NAT traversal is the hardest part of any peer-to-peer system. Pilot Protocol solves it with a <strong>three-tier approach</strong> that handles every NAT type, from simple full-cone NATs to the most restrictive symmetric NATs.</p>
+
+  <p>The key component is the <strong>beacon</strong> -- a lightweight server that runs alongside the rendezvous registry on a public IP. The beacon serves three functions: <a href="https://www.rfc-editor.org/rfc/rfc5389.html" target="_blank" rel="noopener">STUN</a> discovery, hole-punch coordination, and relay fallback.</p>
+
+  <h3>Tier 1: STUN Discovery</h3>
+
+  <p>When an agent starts, the first thing it does is discover its own public endpoint. It sends a STUN-like request to the beacon, which reflects back the source IP and port as seen from the public internet.</p>
+
+  <pre><code><span class="comment"># Agent sends UDP packet to beacon</span>
+<span class="cmd">Agent</span> --[UDP]--> <span class="cmd">Beacon (public IP)</span>
+
+<span class="comment"># Beacon reads source address from UDP header</span>
+<span class="comment"># and sends it back as the response payload</span>
+<span class="cmd">Beacon</span> --[UDP]--> <span class="cmd">Agent: "your public endpoint is 203.0.113.42:54321"</span></code></pre>
+
+  <p>The agent now knows its public IP:port mapping. It registers this endpoint with the rendezvous server. Other agents can look up this endpoint and attempt direct connections.</p>
+
+  <p>If the agent is behind a <strong>full-cone NAT</strong>, this endpoint is valid for all peers. Direct UDP packets to this address will be forwarded to the agent. STUN discovery is all that is needed.</p>
+
+  <div class="callout">
+    <p><strong>Implementation detail:</strong> STUN discovery uses a temporary UDP socket, which is closed before the tunnel binds the same port. This avoids a race condition where the STUN response and tunnel data compete for the same socket.</p>
+  </div>
+
+  <h3>Tier 2: Hole-Punching</h3>
+
+  <p>For <strong>restricted-cone</strong> and <strong>port-restricted cone NATs</strong>, the STUN-discovered endpoint only works if the agent has already sent a packet to the connecting peer. The NAT will drop incoming packets from unknown sources.</p>
+
+  <p>Pilot solves this with <strong>beacon-coordinated hole-punching</strong>:</p>
+
+  <ol>
+    <li>Agent A wants to connect to Agent B</li>
+    <li>Agent A sends a <code>MsgPunchRequest</code> to the beacon, naming Agent B as the target</li>
+    <li>The beacon sends a <code>MsgPunchCommand</code> to <strong>both</strong> agents simultaneously</li>
+    <li>Both agents send UDP packets to each other's STUN-discovered endpoints at the same time</li>
+    <li>The outgoing packets "punch holes" in both NATs, and the incoming packets now have matching entries</li>
+    <li>Direct communication is established</li>
+  </ol>
+
+  <p>The timing is critical -- both sides must send nearly simultaneously for the holes to overlap. The beacon coordinates this by sending the punch commands in the same event loop iteration.</p>
+
+  <h3>Tier 3: Relay Fallback</h3>
+
+  <p><strong>Symmetric NATs</strong> assign a different external port for every destination. The STUN-discovered endpoint is only valid for the beacon, not for other peers. Hole-punching fails because each side sees a different port.</p>
+
+  <p>For these cases, Pilot falls back to <strong>relay mode</strong>. The beacon acts as a packet relay, wrapping and forwarding traffic between agents:</p>
+
+  <pre><code><span class="comment"># MsgRelay format: [0x05][senderNodeID(4)][destNodeID(4)][payload...]</span>
+<span class="cmd">Agent A</span> --[relay]--> <span class="cmd">Beacon</span> --[relay]--> <span class="cmd">Agent B</span></code></pre>
+
+  <p>Relay mode is selected automatically after direct attempts fail. The application receives the same <code>net.Conn</code>-style interface, while diagnostics can still show whether the active path is direct or relayed.</p>
+
+  <p>The tradeoff is an additional hop and reliance on relay availability. Relay fallback improves reachability when direct traversal fails, including many CGNAT environments, but deployment firewall policy can still block traffic. For a deeper treatment of the NAT traversal mechanics, see <a href="/website/blog/nat-traversal-ai-agents-deep-dive">NAT Traversal for AI Agents: A Technical Deep Dive</a>.</p>
+
+  <h2 id="tunnel">The Tunnel Layer</h2>
+
+  <p>All Pilot packets travel inside <strong>tunnel frames</strong>. A tunnel frame wraps a Pilot packet with metadata for the UDP transport layer:</p>
+
+  <pre><code><span class="comment"># Tunnel frame format</span>
+<span class="cmd">50 49 4C 54</span>    <span class="comment"># Magic bytes: "PILT" (Pilot Tunnel)</span>
+<span class="cmd">XX XX</span>          <span class="comment"># Frame length (2 bytes)</span>
+<span class="cmd">[pilot packet]</span> <span class="comment"># 34-byte header + payload</span></code></pre>
+
+  <p>The magic bytes identify the frame family so the receiver can reject unrelated or malformed datagrams early. Cryptographic authentication, rather than the marker itself, is what protects secure frames from undetected modification.</p>
+
+  <p>Each agent can use one UDP socket for multiple tunnel relationships. Multiplexing happens at the Pilot layer: virtual source and destination addresses in the packet header identify the relevant connection without assigning a public port per peer.</p>
+
+  <h2 id="encryption">Encryption: X25519 + AES-256-GCM</h2>
+
+  <p>Pilot Protocol encrypts tunnel traffic by default. A plaintext override exists for controlled testing; production deployments should leave encryption enabled. The encryption system uses <strong><a href="https://www.rfc-editor.org/rfc/rfc7748.html" target="_blank" rel="noopener">X25519</a> for key exchange</strong> and <strong><a href="https://www.rfc-editor.org/rfc/rfc5288.html" target="_blank" rel="noopener">AES-256-GCM</a> for packet encryption</strong>, implemented entirely with Go's standard library -- zero external dependencies.</p>
+
+  <h3>Key Exchange</h3>
+
+  <p>When two agents establish a tunnel, they perform an X25519 Diffie-Hellman key exchange:</p>
+
+  <ol>
+    <li>Each daemon uses its startup X25519 key pair to derive a peer-specific tunnel secret</li>
+    <li>Public keys are exchanged using <code>PILK</code> frames (magic bytes <code>0x50494C4B</code>)</li>
+    <li>Both sides compute the shared secret using their private key and the peer's public key</li>
+    <li>The shared secret is used to derive the AES-256-GCM encryption key</li>
+  </ol>
+
+  <pre><code><span class="comment"># Key exchange frame</span>
+<span class="cmd">50 49 4C 4B</span>    <span class="comment"># Magic bytes: "PILK" (Pilot Key exchange)</span>
+<span class="cmd">[32 bytes]</span>     <span class="comment"># X25519 public key</span></code></pre>
+
+  <h3>Packet Encryption</h3>
+
+  <p>Once the shared key is established, all subsequent tunnel frames use <code>PILS</code> framing (magic bytes <code>0x50494C53</code> -- "Pilot Secure") instead of plain <code>PILT</code>:</p>
+
+  <pre><code><span class="comment"># Encrypted frame</span>
+<span class="cmd">50 49 4C 53</span>    <span class="comment"># Magic bytes: "PILS" (Pilot Secure)</span>
+<span class="cmd">[12 bytes]</span>     <span class="comment"># Nonce (random prefix + counter)</span>
+<span class="cmd">[N bytes]</span>      <span class="comment"># AES-256-GCM ciphertext + 16-byte auth tag</span></code></pre>
+
+  <p>AES-256-GCM provides both <strong>confidentiality</strong> (encryption) and <strong>integrity</strong> (authentication). If a single bit is modified in transit, the GCM authentication tag will fail and the packet is discarded. For a detailed walkthrough of the implementation, see <a href="/website/blog/zero-dependency-encryption-x25519-aes-gcm">Zero-Dependency Encryption: X25519 + AES-GCM</a>.</p>
+
+  <h3>Replay Prevention</h3>
+
+  <p>Each secure connection uses a <strong>random nonce prefix</strong> with a counter: <code>[4-byte random prefix][8-byte counter]</code>. This construction is intended to keep AES-GCM nonces unique for a key. Replay resistance additionally depends on receiver-side validation of packet state; nonce uniqueness alone does not reject a previously captured valid ciphertext.</p>
+
+  <h3>Authentication Frames</h3>
+
+  <p>The fourth magic byte variant is <code>PILA</code> (<code>0x50494C41</code> -- "Pilot Authentication"), used during the initial handshake to verify agent identity using Ed25519 signatures before the encrypted channel is established.</p>
+
+  <h2 id="trust">Trust Model: Private by Default</h2>
+
+  <p>Most agent frameworks treat discovery as a solved problem. A2A publishes Agent Cards to well-known URLs. MCP servers are configured by the client. The assumption is that agents <strong>want</strong> to be found.</p>
+
+  <p>Pilot Protocol takes a more private approach: <strong>reachable endpoints are gated by default</strong>.</p>
+
+  <p>When a new agent joins the network, it is registered with the rendezvous server but marked as <strong>private</strong>. This means:</p>
+
+  <ul>
+    <li><strong>Lookup</strong> may return directory metadata according to registry and network configuration</li>
+    <li><strong>Resolve</strong> withholds the reachable endpoint unless mutual trust or shared-network membership grants connectivity</li>
+    <li><strong>Directory discovery</strong> is separate from endpoint access, so metadata visibility does not grant a connection</li>
+  </ul>
+
+  <h3>The Handshake</h3>
+
+  <p>To establish trust, agents perform a <strong>mutual handshake</strong> using Ed25519 digital signatures:</p>
+
+  <ol>
+    <li>Agent A initiates a handshake to Agent B, including a <strong>justification</strong> message (why they want to connect)</li>
+    <li>The handshake request is signed with Agent A's Ed25519 private key</li>
+    <li>The request is relayed through the rendezvous server (since B might not be directly reachable yet)</li>
+    <li>Agent B receives the request, verifies the signature, and decides whether to approve</li>
+    <li>If approved, Agent B signs an approval response and sends it back</li>
+    <li>Both agents now have a mutual trust pair -- they can resolve each other's endpoints and establish tunnels</li>
+  </ol>
+
+  <pre><code><span class="comment"># Initiate a handshake</span>
+<span class="cmd">$ pilotctl handshake bob "I need access to your data processing service"</span>
+
+<span class="comment"># On Bob's side: approve the request</span>
+<span class="cmd">$ pilotctl approve 0:0000.0000.0003</span></code></pre>
+
+  <p>Agents can also configure <strong>auto-approval rules</strong> -- for example, automatically trusting any agent that provides a specific justification pattern, or auto-approving all agents on the same network.</p>
+
+  <h3>Revocation</h3>
+
+  <p><code>pilotctl untrust</code> removes the local trust grant and tears down associated tunnels. Once revocation has propagated through the relevant state, the peer can no longer use that grant to resolve the endpoint or establish a new connection.</p>
+
+  <p>For a deeper exploration of the trust model, see <a href="trust-model-agents-invisible-by-default">Why Agents Should Be Invisible by Default</a>.</p>
+
+  <h2 id="services">What Runs on Top: Port-Based Services</h2>
+
+  <p>Like TCP/IP, Pilot Protocol uses <strong>port numbers</strong> to multiplex multiple services over a single agent address. Several well-known ports are defined:</p>
+
+  <table>
+    <thead>
+      <tr><th>Port</th><th>Service</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>7</td><td>Echo</td><td>Ping/pong for connectivity testing and latency measurement</td></tr>
+      <tr><td>53</td><td>DNS</td><td>Hostname resolution within the overlay network</td></tr>
+      <tr><td>80</td><td>HTTP</td><td>Standard HTTP services over Pilot tunnels</td></tr>
+      <tr><td>443</td><td>Secure service convention</td><td>Protected by the same X25519 + AES-256-GCM tunnel encryption as other ports today</td></tr>
+      <tr><td>1000</td><td>Stdio</td><td>Interactive terminal sessions between agents</td></tr>
+      <tr><td>1001</td><td>Data Exchange</td><td>Structured data and file transfer</td></tr>
+      <tr><td>1002</td><td>Event Stream</td><td>Pub/sub event distribution with topic routing</td></tr>
+    </tbody>
+  </table>
+
+  <p>The port system means agents can expose multiple services simultaneously. An agent might publish status updates on port 1002, exchange data on port 1001, and serve an HTTP API on port 80 -- all on the same virtual address. Beyond these built-in ports, agents can also extend their daemon with installable capability apps from the <a href="/app-store">Pilot Protocol app store</a> — signature-verified, typed JSON-in/JSON-out services auto-spawned on install.</p>
+
+  <h3>HTTP Over Pilot</h3>
+
+  <p>Because Pilot connections implement Go's <code>net.Conn</code> interface, standard HTTP servers work without modification:</p>
+
+  <pre><code><span class="comment">// Standard Go HTTP server running on a Pilot port</span>
+listener := pilot.Listen(daemon, 80)
+http.Serve(listener, myHandler)</code></pre>
+
+  <p>The <strong>gateway</strong> component bridges Pilot services to the local network. It assigns a loopback IP alias for each Pilot address and listens on common ports, proxying traffic between local HTTP clients and Pilot tunnels. This means existing tools -- curl, browsers, REST clients -- can interact with agents on the Pilot network without any modification. See the <a href="/website/docs/gateway">Gateway documentation</a> for details.</p>
+
+  <h3>Pub/Sub and Event Streams</h3>
+
+  <p>Port 1002 provides a built-in <strong>publish/subscribe</strong> system with topic routing and wildcard subscriptions. Agents can subscribe to event streams from trusted peers and publish events to subscribers without external message brokers. This pub/sub layer enables use cases like <a href="/website/blog/federated-learning-p2p-communication">peer-to-peer gradient exchange for federated learning</a> and <a href="/website/blog/distributed-rag-without-central-knowledge-base">distributed RAG pipelines where each agent owns its own corpus</a>. See <a href="/website/docs/pubsub">Pub/Sub documentation</a> for the full API.</p>
+
+  <h2 id="summary">Putting It All Together</h2>
+
+  <p>Here is the full flow when Agent Alice sends a message to Agent Bob:</p>
+
+  <ol>
+    <li><strong>Alice starts</strong> -- her daemon performs STUN discovery, registers with the rendezvous server, and gets virtual address <code>0:0000.0000.0003</code></li>
+    <li><strong>Trust</strong> -- Alice and Bob have already completed a mutual handshake (Ed25519 signed)</li>
+    <li><strong>Resolve</strong> -- Alice asks the rendezvous server for Bob's endpoint. Because they are trusted, the server returns Bob's public IP:port</li>
+    <li><strong>Tunnel</strong> -- Alice's daemon opens a UDP tunnel to Bob's endpoint. If NAT blocks direct connection, the beacon coordinates hole-punching or falls back to relay</li>
+    <li><strong>Encrypt</strong> -- X25519 key exchange produces a shared secret. All subsequent frames use AES-256-GCM with <code>PILS</code> framing</li>
+    <li><strong>Connect</strong> -- Alice opens a connection to Bob on port 1001 (Data Exchange). SYN/SYN-ACK/ACK over the encrypted tunnel</li>
+    <li><strong>Send</strong> -- The message is segmented if needed, transmitted with sequence numbers, acknowledged, and reassembled on Bob's side</li>
+    <li><strong>Receive</strong> -- Bob's application reads the message from the <code>net.Conn</code> interface, exactly as if it were a regular TCP connection</li>
+  </ol>
+
+  <p>The time required depends on registry latency, NAT behavior, trust state, and whether the path is already warm. The application uses familiar networking interfaces while the Pilot daemon handles address resolution, traversal attempts, encryption, flow control, and reliable delivery.</p>
+
+  <div class="callout">
+    <p>Automated tests cover the stack from packet serialization through NAT traversal. The core daemon is implemented in pure Go with no external runtime dependencies. See the <a href="/website/docs/concepts">Core Concepts documentation</a> for the technical reference.</p>
+  </div>
+
+  <div class="cta">
+    <h3>Try Pilot Protocol</h3>
+    <p>Use the single-command installer to set up a multi-agent network. The core daemon is a static Go binary with no external runtime dependencies.</p>
+    <a href="https://github.com/pilot-protocol/pilotprotocol">View on GitHub</a>
+  </div><aside class="article-next-step" aria-label="Recommended next step" data-track-cta="how-pilot-protocol-works:/solutions/private-agent-network" data-astro-cid-4ee7rn3o><span data-astro-cid-4ee7rn3o>For agent platform teams</span><div data-astro-cid-4ee7rn3o><h2 data-astro-cid-4ee7rn3o>Map the network your agents actually need</h2><p data-astro-cid-4ee7rn3o>Review addressing, private discovery, peer trust, direct paths, and encrypted relay fallback as one deployment model.</p></div><a href="/website/solutions/private-agent-network" data-astro-cid-4ee7rn3o>Explore private agent networks <i aria-hidden="true" data-astro-cid-4ee7rn3o>→</i></a></aside><footer class="article-provenance" data-astro-cid-4ee7rn3o><strong data-astro-cid-4ee7rn3o>About this article</strong><p data-astro-cid-4ee7rn3o>Published by the Pilot Protocol team. Product claims are scoped to the availability labels and technical references linked in the article; deployment behavior can vary by version and environment.</p><p data-astro-cid-4ee7rn3o><a href="/about#publishing" data-astro-cid-4ee7rn3o>How we publish</a> · <a href="/contact?topic=correction" data-astro-cid-4ee7rn3o>Suggest a correction</a> · <a href="/website/docs/research" data-astro-cid-4ee7rn3o>Technical references</a></p></footer></article><aside class="article-toc" id="article-toc" data-astro-cid-4ee7rn3o><nav data-astro-cid-4ee7rn3o><p class="toc-title" data-astro-cid-4ee7rn3o>On this page</p><ul id="toc-list" data-astro-cid-4ee7rn3o></ul></nav></aside></main><section id="frequently-asked-questions" class="article-faq" data-astro-cid-4ee7rn3o><div class="article-faq-inner" data-astro-cid-4ee7rn3o><h2 data-astro-cid-4ee7rn3o>Frequently asked questions</h2><div class="faq-item" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>How does Pilot Protocol&#39;s addressing system work?</h3><p data-astro-cid-4ee7rn3o>Every agent receives a 48-bit virtual address (16-bit network ID + 32-bit node ID) in the format N:NNNN.HHHH.LLLL. This address is permanent and does not change when the agent moves between networks, changes IP addresses, or reconnects after going offline. Agents can also register human-readable hostnames that resolve through the protocol's built-in nameserver.</p></div><div class="faq-item" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>How does Pilot Protocol handle NAT traversal for AI agents?</h3><p data-astro-cid-4ee7rn3o>Pilot uses a three-tier approach: STUN discovery (agent learns its public endpoint), beacon-coordinated hole-punching (both sides send simultaneously to punch through restricted NATs), and relay fallback through the beacon for symmetric NATs where hole-punching fails. The application layer receives the same net.Conn interface regardless of which tier was used.</p></div><div class="faq-item" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>What encryption does Pilot Protocol use for agent communication?</h3><p data-astro-cid-4ee7rn3o>Pilot encrypts tunnel traffic by default using peer-specific secrets derived from daemon-lifetime X25519 keys and AES-256-GCM authenticated encryption. The current design provides peer isolation, not per-session forward secrecy. Encrypted frames use a random nonce prefix and counter for replay protection.</p></div><div class="faq-item" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>How does Pilot Protocol&#39;s trust model work?</h3><p data-astro-cid-4ee7rn3o>Agents are private by default at the application connectivity layer. Directory metadata may be visible, but open lookups withhold private endpoints and private nodes reject application traffic unless peer trust or shared-network membership authorizes it. Peer trust can be revoked to tear down the associated tunnel and prevent reconnection under that grant.</p></div></div></section><section class="related-posts" data-astro-cid-4ee7rn3o><div class="related-inner" data-astro-cid-4ee7rn3o><h2 data-astro-cid-4ee7rn3o>Related Posts</h2><div class="related-grid" data-astro-cid-4ee7rn3o><a class="related-card" href="/website/blog/peer-to-peer-agent-communication-no-server" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/peer-to-peer-agent-communication-no-server-1200.webp" srcset="/website/blog/banners/optimized/peer-to-peer-agent-communication-no-server-720.webp 720w, /website/blog/banners/optimized/peer-to-peer-agent-communication-no-server-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Peer-to-Peer Agent Communication Without an Application Broker" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Peer-to-Peer Agent Communication Without an Application Broker</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-07-25" data-astro-cid-4ee7rn3o>Jul 25, 2026</time> &middot; Architecture</span></div></a><a class="related-card" href="/website/blog/overlay-network-ai-agents" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/overlay-network-ai-agents.svg" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Overlay Network for AI Agents: Architecture and Trust Model" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Overlay Network for AI Agents: Architecture and Trust Model</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-07-01" data-astro-cid-4ee7rn3o>Jul 1, 2026</time> &middot; Blog</span></div></a><a class="related-card" href="/website/blog/connecting-mcp-servers-across-agents" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/connecting-mcp-servers-across-agents-1200.webp" srcset="/website/blog/banners/optimized/connecting-mcp-servers-across-agents-720.webp 720w, /website/blog/banners/optimized/connecting-mcp-servers-across-agents-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Connecting MCP Servers to Agents Across Any Network" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Connecting MCP Servers to Agents Across Any Network</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-07-23" data-astro-cid-4ee7rn3o>Jul 23, 2026</time> &middot; Integration</span></div></a></div></div></section><nav class="blog-nav" data-astro-cid-4ee7rn3o><div class="blog-nav-inner" data-astro-cid-4ee7rn3o><a class="blog-nav-link blog-nav-prev" href="/website/blog/build-agent-swarm-self-organizes" data-astro-cid-4ee7rn3o><span class="blog-nav-label" data-astro-cid-4ee7rn3o>&larr; Previous</span><span class="blog-nav-title" data-astro-cid-4ee7rn3o>Build an Agent Swarm That Self-Organizes via Reputation</span></a><a class="blog-nav-link blog-nav-next" href="/website/blog/secure-data-exchange-for-multi-cloud-ai-systems" data-astro-cid-4ee7rn3o><span class="blog-nav-label" data-astro-cid-4ee7rn3o>Next &rarr;</span><span class="blog-nav-title" data-astro-cid-4ee7rn3o>Secure data exchange for multi-cloud AI systems</span></a></div></nav><footer class="site-footer" data-astro-cid-jo6i4kqk><div class="wrap" data-astro-cid-jo6i4kqk><div class="foot-big" data-astro-cid-jo6i4kqk>The internet<br data-astro-cid-jo6i4kqk>for <span class="a" data-astro-cid-jo6i4kqk>agents.</span></div><div class="foot-cta" data-astro-cid-jo6i4kqk><a href="/website/docs/getting-started" class="btn primary" data-astro-cid-jo6i4kqk>Get started <span class="arr" data-astro-cid-jo6i4kqk>→</span></a><a href="/contact" class="btn" data-astro-cid-jo6i4kqk>Contact sales</a></div><div class="foot-grid" data-astro-cid-jo6i4kqk><div class="foot-about" data-astro-cid-jo6i4kqk><div class="foot-brand" data-astro-cid-jo6i4kqk><img src="/website/img/pilot-48.webp" alt="" class="foot-logo" width="28" height="28" loading="lazy" decoding="async" data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Pilot Protocol</p></div><p data-astro-cid-jo6i4kqk>Pilot. Where agents go.</p><div class="foot-social" data-astro-cid-jo6i4kqk><a href="https://x.com/pilotprotocol_" class="foot-social-link" target="_blank" rel="noopener" aria-label="Pilot Protocol on X" data-track="social_click" data-track-target="x" data-astro-cid-jo6i4kqk><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-jo6i4kqk><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="https://www.linkedin.com/company/112569955/" class="foot-social-link" target="_blank" rel="noopener" aria-label="Pilot Protocol on LinkedIn" data-track="social_click" data-track-target="linkedin" data-astro-cid-jo6i4kqk><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-jo6i4kqk><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Product</p><a href="/website/learn/what-is-pilot-protocol" data-astro-cid-jo6i4kqk>Network OS</a><a href="/trust" data-astro-cid-jo6i4kqk>Trust Center</a><a href="/governance" data-astro-cid-jo6i4kqk>Governance</a><a href="/app-store" data-astro-cid-jo6i4kqk>App Store</a><a href="/plans" data-astro-cid-jo6i4kqk>Plans</a><a href="/website/docs/enterprise" data-astro-cid-jo6i4kqk>Enterprise controls</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Developers</p><a href="/website/docs/" data-astro-cid-jo6i4kqk>Documentation</a><a href="/website/docs/getting-started" data-astro-cid-jo6i4kqk>Quickstart</a><a href="/website/docs/integration" data-astro-cid-jo6i4kqk>SDKs &amp; integration</a><a href="/website/research/WHITEPAPER.pdf" data-astro-cid-jo6i4kqk>Wire specification</a><a href="/website/pilot-native-use-cases.pdf" data-astro-cid-jo6i4kqk>Use-case brochure</a><a href="https://github.com/pilot-protocol/pilotprotocol" data-astro-cid-jo6i4kqk>GitHub</a><a href="/website/docs/research" data-astro-cid-jo6i4kqk>Research</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Company</p><a href="/about" data-astro-cid-jo6i4kqk>About</a><a href="/website/learn/" data-astro-cid-jo6i4kqk>Learning center</a><a href="/roadmap" data-astro-cid-jo6i4kqk>Roadmap</a><a href="/website/news/" data-astro-cid-jo6i4kqk>Company news</a><a href="/website/blog/" data-astro-cid-jo6i4kqk>Blog</a><a href="/press" data-astro-cid-jo6i4kqk>Press</a><a href="/website/enterprise-readiness-report.pdf" data-astro-cid-jo6i4kqk>Readiness report</a><a href="/contact" data-astro-cid-jo6i4kqk>Contact</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Legal</p><a href="/privacy" data-astro-cid-jo6i4kqk>Privacy Policy</a><a href="/cookies" data-astro-cid-jo6i4kqk>Cookie Policy</a><a href="/terms" data-astro-cid-jo6i4kqk>Terms of Service</a><a href="/aup" data-astro-cid-jo6i4kqk>Acceptable Use</a><a href="/publisher-agreement" data-astro-cid-jo6i4kqk>Publisher Agreement</a><a href="/website/security/disclosure" data-astro-cid-jo6i4kqk>Security disclosure</a><button type="button" id="cookie-preferences-link" data-astro-cid-jo6i4kqk>Cookie Preferences</button></div></div><a class="foot-plain-band" href="/website/plain/" data-astro-cid-jo6i4kqk><span class="fp-label" data-astro-cid-jo6i4kqk>Plain text for agents</span><span class="fp-path" data-astro-cid-jo6i4kqk>/plain</span><span class="fp-arrow" data-astro-cid-jo6i4kqk>→</span></a><div class="foot-bottom" data-astro-cid-jo6i4kqk><div data-astro-cid-jo6i4kqk>© 2026 Pilot Protocol · Built for agents</div><div class="foot-bottom-right" data-astro-cid-jo6i4kqk><span class="foot-status" data-astro-cid-jo6i4kqk>pilot://0x00000000 · backbone · up</span></div></div><nav class="foot-solutions" aria-label="Explore Pilot solutions" data-astro-cid-jo6i4kqk><div class="foot-solutions-intro" data-astro-cid-jo6i4kqk><span data-astro-cid-jo6i4kqk>Explore Pilot</span><span data-astro-cid-jo6i4kqk>Capabilities by workflow</span></div><div class="foot-solutions-grid" data-astro-cid-jo6i4kqk><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Connect</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/private-agent-network" data-track="footer_solution_click" data-track-target="private-agent-network" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Private agent networks</a><a href="/website/solutions/agent-integration" data-track="footer_solution_click" data-track-target="agent-integration" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Connect existing systems</a><a href="/website/solutions/agent-capability-store" data-track="footer_solution_click" data-track-target="agent-capability-store" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Agent capabilities</a><a href="/website/solutions/agent-ready-apis" data-track="footer_solution_click" data-track-target="agent-ready-apis" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Publish agent-ready APIs</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Build</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/secure-agent-runtime" data-track="footer_solution_click" data-track-target="secure-agent-runtime" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Secure agent runtime</a><a href="/website/solutions/grounded-agent-search" data-track="footer_solution_click" data-track-target="grounded-agent-search" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Grounded private search</a><a href="/website/solutions/web-access-for-agents" data-track="footer_solution_click" data-track-target="web-access-for-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Web access for agents</a><a href="/website/solutions/isolated-agent-compute" data-track="footer_solution_click" data-track-target="isolated-agent-compute" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Isolated agent compute</a><a href="/website/solutions/live-data-for-agents" data-track="footer_solution_click" data-track-target="live-data-for-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Live data for agents</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Operate</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/agent-email-phone" data-track="footer_solution_click" data-track-target="agent-email-phone" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Email, phone and SMS</a><a href="/website/solutions/sales-agent-stack" data-track="footer_solution_click" data-track-target="sales-agent-stack" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Sales agent stack</a><a href="/website/solutions/agent-commerce" data-track="footer_solution_click" data-track-target="agent-commerce" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Agent commerce</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Enterprise</p><div data-astro-cid-jo6i4kqk><a href="/website/enterprise/autonomous-ai-agents" data-track="footer_enterprise_click" data-track-target="autonomous-ai-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Autonomous agent control</a><a href="/website/enterprise/claude-code-management" data-track="footer_enterprise_click" data-track-target="claude-code-management" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Claude Code management</a></div></div></div></nav></div></footer><script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var link = document.getElementById('cookie-preferences-link');
+    if (link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (typeof window.__showConsentBanner === 'function') {
+          window.__showConsentBanner();
+        }
+      });
+    }
+  });
+</script><button class="scroll-top" id="scroll-top" aria-label="Scroll to top" data-astro-cid-4ee7rn3o><svg viewBox="0 0 24 24" data-astro-cid-4ee7rn3o><polyline points="18 15 12 9 6 15" data-astro-cid-4ee7rn3o></polyline></svg></button><script type="module">(function(){var e=document.getElementById(`progress-bar`),t=document.getElementById(`scroll-top`);window.addEventListener(`scroll`,function(){var n=document.documentElement.scrollHeight-window.innerHeight,r=n>0?window.scrollY/n*100:0;e&&(e.style.width=r+`%`),t&&(window.scrollY>400?t.classList.add(`visible`):t.classList.remove(`visible`))}),t&&t.addEventListener(`click`,function(){window.scrollTo({top:0,behavior:`smooth`})})})(),(function(){var e=document.getElementById(`reading-time`),t=document.querySelector(`.article`);if(!(!e||!t)){var n=(t.innerText||t.textContent||``).trim().split(/\s+/).length;e.textContent=Math.ceil(n/200)+` min read`}})(),(function(){var e=document.getElementById(`toc-list`),t=document.getElementById(`article-toc`);if(!(!e||!t)){var n=document.querySelectorAll(`.article h2[id]`);if(n.length===0){t.style.display=`none`;return}n.forEach(function(t){var n=document.createElement(`li`),r=document.createElement(`a`);r.href=`#`+t.id,r.textContent=t.textContent,n.appendChild(r),e.appendChild(n)});var r=e.querySelectorAll(`a`),i=new IntersectionObserver(function(t){t.forEach(function(t){if(t.isIntersecting){r.forEach(function(e){e.classList.remove(`active`)});var n=e.querySelector(`a[href="#`+t.target.id+`"]`);n&&n.classList.add(`active`)}})},{rootMargin:`0px 0px -70% 0px`,threshold:0});n.forEach(function(e){i.observe(e)})}})(),(function(){function e(e){return e.split(`
+`).map(function(e){return e.replace(/^(\s*)\$\s(?=\S)/,`$1`)}).join(`
+`).trim()}document.querySelectorAll(`.article pre`).forEach(function(t){var n=document.createElement(`button`);n.className=`copy-btn`,n.type=`button`,n.setAttribute(`aria-label`,`Copy code`),n.textContent=`Copy`,n.addEventListener(`click`,function(){var r=t.querySelector(`code`),i;if(r)i=r.textContent;else{var a=t.cloneNode(!0),o=a.querySelector(`.copy-btn`);o&&o.remove(),i=a.textContent}var s=e(i);navigator.clipboard.writeText(s).then(function(){n.textContent=`Copied`,n.setAttribute(`aria-label`,`Copied`),setTimeout(function(){n.textContent=`Copy`,n.setAttribute(`aria-label`,`Copy code`)},2e3)}).catch(function(){n.textContent=`Copy failed`,n.setAttribute(`aria-label`,`Copy failed`),setTimeout(function(){n.textContent=`Copy`,n.setAttribute(`aria-label`,`Copy code`)},2e3)})}),t.appendChild(n)})})(),(function(){var e=document.querySelectorAll(`.article h2, .article blockquote, .article .callout, .related-card, .blog-nav-link`);if(e.length){var t=new IntersectionObserver(function(e){e.forEach(function(e){e.isIntersecting&&(e.target.classList.add(`visible`),t.unobserve(e.target))})},{threshold:.1});e.forEach(function(e){e.classList.add(`reveal`),t.observe(e)})}})();</script></body></html>

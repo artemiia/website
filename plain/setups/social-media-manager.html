@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Social Media Manager - Orgs - Pilot Protocol</title><meta name="description" content="Deploy a social media management system where a planner analyzes trends and audience data to build a"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Social Media Manager</h1><p><em>beginner &middot; 3 agents &middot; 8 skills</em></p><p>Deploy a social media management system where a planner analyzes trends and audience data to build a content calendar, a creator generates platform-specific posts from those briefs, and an analyst tracks engagement metrics and feeds performance insights back to the planner. The three agents form a continuous feedback loop that improves content strategy over time.</p><h2>Install</h2><pre><code>clawhub install pilot-social-media-manager-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-share"><code>pilot-share</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-receipt"><code>pilot-receipt</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-log"><code>pilot-event-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-planner</code> - <strong>Content Planner</strong><br>Analyzes trends, competitor activity, and audience engagement to plan a content calendar and optimal posting times.<br>Skills: <code>pilot-cron</code> , <code>pilot-stream-data</code> , <code>pilot-metrics</code></li><li><code>&lt;your-prefix&gt;-creator</code> - <strong>Content Creator</strong><br>Generates platform-specific posts (LinkedIn, X, Instagram) from the planner&#39;s brief in the brand voice.<br>Skills: <code>pilot-task-router</code> , <code>pilot-share</code> , <code>pilot-receipt</code></li><li><code>&lt;your-prefix&gt;-analyst</code> - <strong>Performance Analyst</strong><br>Tracks cross-platform engagement metrics, identifies top performers, and feeds insights back to the planner.<br>Skills: <code>pilot-metrics</code> , <code>pilot-event-log</code> , <code>pilot-alert</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-planner</code> &rarr; <code>&lt;your-prefix&gt;-creator</code>:<code>1002</code> - content-brief</li><li><code>&lt;your-prefix&gt;-creator</code> &rarr; <code>&lt;your-prefix&gt;-analyst</code>:<code>1002</code> - post-published</li><li><code>&lt;your-prefix&gt;-analyst</code> &rarr; <code>&lt;your-prefix&gt;-planner</code>:<code>1002</code> - performance-insight</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On server 1 (content planner)
+clawhub install pilot-cron pilot-stream-data pilot-metrics
+pilotctl set-hostname &lt;your-prefix&gt;-planner
+
+# On server 2 (content creator)
+clawhub install pilot-task-router pilot-share pilot-receipt
+pilotctl set-hostname &lt;your-prefix&gt;-creator
+
+# On server 3 (performance analyst)
+clawhub install pilot-metrics pilot-event-log pilot-alert
+pilotctl set-hostname &lt;your-prefix&gt;-analyst
+# planner &lt;-&gt; creator
+# On planner:
+pilotctl handshake &lt;your-prefix&gt;-creator &quot;setup: social-media-manager&quot;
+# On creator:
+pilotctl handshake &lt;your-prefix&gt;-planner &quot;setup: social-media-manager&quot;
+
+# creator &lt;-&gt; analyst
+# On creator:
+pilotctl handshake &lt;your-prefix&gt;-analyst &quot;setup: social-media-manager&quot;
+# On analyst:
+pilotctl handshake &lt;your-prefix&gt;-creator &quot;setup: social-media-manager&quot;
+
+# analyst &lt;-&gt; planner
+# On analyst:
+pilotctl handshake &lt;your-prefix&gt;-planner &quot;setup: social-media-manager&quot;
+# On planner:
+pilotctl handshake &lt;your-prefix&gt;-analyst &quot;setup: social-media-manager&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

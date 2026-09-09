@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Financial Trading Desk - Orgs - Pilot Protocol</title><meta name="description" content="A multi-agent trading desk that coordinates market analysis, sentiment scanning, risk management, an"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Financial Trading Desk</h1><p><em>advanced &middot; 4 agents &middot; 10 skills</em></p><p>A multi-agent trading desk that coordinates market analysis, sentiment scanning, risk management, and trade execution across four specialized agents. The analyst identifies trading opportunities from market data, the sentiment scanner provides supplementary signals from news and social media, the risk manager evaluates all proposed trades against portfolio constraints, and the executor handles order management and fill reporting.</p><h2>Install</h2><pre><code>clawhub install pilot-financial-trading-desk-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-archive"><code>pilot-archive</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-receipt"><code>pilot-receipt</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-analyst</code> - <strong>Market Analyst</strong><br>Trade signals with entry/exit levels&quot; }<br>Skills: <code>pilot-stream-data</code> , <code>pilot-metrics</code> , <code>pilot-cron</code> , <code>pilot-alert</code></li><li><code>&lt;your-prefix&gt;-sentiment</code> - <strong>Sentiment Scanner</strong><br>Sentiment scores with source attribution&quot; }<br>Skills: <code>pilot-stream-data</code> , <code>pilot-event-filter</code> , <code>pilot-archive</code></li><li><code>&lt;your-prefix&gt;-risk-mgr</code> - <strong>Risk Manager</strong><br>Trade signals from analyst&quot; },<br>Skills: <code>pilot-event-filter</code> , <code>pilot-audit-log</code> , <code>pilot-alert</code></li><li><code>&lt;your-prefix&gt;-executor</code> - <strong>Trade Executor</strong><br>Approved trades to execute&quot; },<br>Skills: <code>pilot-task-router</code> , <code>pilot-receipt</code> , <code>pilot-webhook-bridge</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-analyst</code> &rarr; <code>&lt;your-prefix&gt;-risk-mgr</code>:<code>1002</code> - trade signals with entry/exit levels and rationale</li><li><code>&lt;your-prefix&gt;-sentiment</code> &rarr; <code>&lt;your-prefix&gt;-risk-mgr</code>:<code>1002</code> - sentiment scores with source attribution</li><li><code>&lt;your-prefix&gt;-risk-mgr</code> &rarr; <code>&lt;your-prefix&gt;-executor</code>:<code>1002</code> - approved trades with position size and risk parameters</li><li><code>&lt;your-prefix&gt;-executor</code> &rarr; <code>&lt;your-prefix&gt;-risk-mgr</code>:<code>1002</code> - execution reports with fill price and slippage</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On market analysis server
+clawhub install pilot-stream-data pilot-metrics pilot-cron pilot-alert
+pilotctl set-hostname &lt;your-prefix&gt;-analyst
+
+# On sentiment scanning server
+clawhub install pilot-stream-data pilot-event-filter pilot-archive
+pilotctl set-hostname &lt;your-prefix&gt;-sentiment
+
+# On risk management server
+clawhub install pilot-event-filter pilot-audit-log pilot-alert
+pilotctl set-hostname &lt;your-prefix&gt;-risk-mgr
+
+# On execution server
+clawhub install pilot-task-router pilot-receipt pilot-webhook-bridge
+pilotctl set-hostname &lt;your-prefix&gt;-executor
+# analyst &lt;-&gt; risk-mgr (trade signals)
+# On analyst:
+pilotctl handshake &lt;your-prefix&gt;-risk-mgr &quot;setup: financial-trading-desk&quot;
+# On risk-mgr:
+pilotctl handshake &lt;your-prefix&gt;-analyst &quot;setup: financial-trading-desk&quot;
+
+# sentiment &lt;-&gt; risk-mgr (sentiment scores)
+# On sentiment:
+pilotctl handshake &lt;your-prefix&gt;-risk-mgr &quot;setup: financial-trading-desk&quot;
+# On risk-mgr:
+pilotctl handshake &lt;your-prefix&gt;-sentiment &quot;setup: financial-trading-desk&quot;
+
+# risk-mgr &lt;-&gt; executor (approved trades and execution reports)
+# On risk-mgr:
+pilotctl handshake &lt;your-prefix&gt;-executor &quot;setup: financial-trading-desk&quot;
+# On executor:
+pilotctl handshake &lt;your-prefix&gt;-risk-mgr &quot;setup: financial-trading-desk&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

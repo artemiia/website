@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Backup &amp; Disaster Recovery - Orgs - Pilot Protocol</title><meta name="description" content="Automated backup infrastructure across multiple sites."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Backup &amp; Disaster Recovery</h1><p><em>intermediate &middot; 4 agents &middot; 12 skills</em></p><p>Automated backup infrastructure across multiple sites. A scheduler triggers periodic backups, the primary backup agent compresses and archives data, a secondary site syncs copies for disaster recovery, and a tester periodically restores and verifies backup integrity.</p><h2>Install</h2><pre><code>clawhub install pilot-backup-disaster-recovery-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-chain"><code>pilot-task-chain</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-slack-bridge"><code>pilot-slack-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-backup"><code>pilot-backup</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-archive"><code>pilot-archive</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-compress"><code>pilot-compress</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-share"><code>pilot-share</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-sync"><code>pilot-sync</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-verify"><code>pilot-verify</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-health"><code>pilot-health</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-scheduler</code> - <strong>Backup Scheduler</strong><br>Trigger backup jobs&quot; },<br>Skills: <code>pilot-cron</code> , <code>pilot-task-chain</code> , <code>pilot-audit-log</code> , <code>pilot-slack-bridge</code></li><li><code>&lt;your-prefix&gt;-primary</code> - <strong>Primary Backup</strong><br>Backup triggers&quot; },<br>Skills: <code>pilot-backup</code> , <code>pilot-archive</code> , <code>pilot-compress</code> , <code>pilot-share</code></li><li><code>&lt;your-prefix&gt;-secondary</code> - <strong>Offsite Replica</strong><br>Compressed archives&quot; },<br>Skills: <code>pilot-sync</code> , <code>pilot-verify</code> , <code>pilot-health</code> , <code>pilot-share</code></li><li><code>&lt;your-prefix&gt;-tester</code> - <strong>Restore Tester</strong><br>Backups to test&quot; },<br>Skills: <code>pilot-backup</code> , <code>pilot-verify</code> , <code>pilot-health</code> , <code>pilot-alert</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-scheduler</code> &rarr; <code>&lt;your-prefix&gt;-primary</code>:<code>1002</code> - backup triggers</li><li><code>&lt;your-prefix&gt;-primary</code> &rarr; <code>&lt;your-prefix&gt;-secondary</code>:<code>1001</code> - compressed archives</li><li><code>&lt;your-prefix&gt;-secondary</code> &rarr; <code>&lt;your-prefix&gt;-tester</code>:<code>1001</code> - backups for testing</li><li><code>&lt;your-prefix&gt;-tester</code> &rarr; <code>&lt;your-prefix&gt;-scheduler</code>:<code>1002</code> - restore test results</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On scheduler node
+clawhub install pilot-cron pilot-task-chain pilot-audit-log pilot-slack-bridge
+pilotctl set-hostname &lt;your-prefix&gt;-backup-sched
+
+# On primary backup server
+clawhub install pilot-backup pilot-archive pilot-compress pilot-share
+pilotctl set-hostname &lt;your-prefix&gt;-backup-primary
+
+# On offsite secondary (different region/datacenter)
+clawhub install pilot-sync pilot-verify pilot-health pilot-share
+pilotctl set-hostname &lt;your-prefix&gt;-backup-secondary
+
+# On restore test server
+clawhub install pilot-backup pilot-verify pilot-health pilot-alert
+pilotctl set-hostname &lt;your-prefix&gt;-restore-tester
+# scheduler &lt;-&gt; primary
+# On backup-sched:
+pilotctl handshake &lt;your-prefix&gt;-backup-primary &quot;backup dr&quot;
+# On backup-primary:
+pilotctl handshake &lt;your-prefix&gt;-backup-sched &quot;backup dr&quot;
+
+# primary &lt;-&gt; secondary
+# On backup-primary:
+pilotctl handshake &lt;your-prefix&gt;-backup-secondary &quot;backup dr&quot;
+# On backup-secondary:
+pilotctl handshake &lt;your-prefix&gt;-backup-primary &quot;backup dr&quot;
+
+# secondary &lt;-&gt; tester
+# On backup-secondary:
+pilotctl handshake &lt;your-prefix&gt;-restore-tester &quot;backup dr&quot;
+# On restore-tester:
+pilotctl handshake &lt;your-prefix&gt;-backup-secondary &quot;backup dr&quot;
+
+# tester &lt;-&gt; scheduler
+# On restore-tester:
+pilotctl handshake &lt;your-prefix&gt;-backup-sched &quot;backup dr&quot;
+# On backup-sched:
+pilotctl handshake &lt;your-prefix&gt;-restore-tester &quot;backup dr&quot;
+
+# scheduler &lt;-&gt; secondary
+# On backup-sched:
+pilotctl handshake &lt;your-prefix&gt;-backup-secondary &quot;backup dr&quot;
+# On backup-secondary:
+pilotctl handshake &lt;your-prefix&gt;-backup-sched &quot;backup dr&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

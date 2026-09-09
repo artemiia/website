@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Incident Response - Orgs - Pilot Protocol</title><meta name="description" content="A four-stage incident response pipeline."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Incident Response</h1><p><em>advanced &middot; 4 agents &middot; 13 skills</em></p><p>A four-stage incident response pipeline. Detector agents watch for anomalies, triage classifies by severity and SLA, the remediator executes automated fixes, and the notifier keeps humans informed via Slack and email. Full audit trail at every stage.</p><h2>Install</h2><pre><code>clawhub install pilot-incident-response-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-watchdog"><code>pilot-watchdog</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-priority-queue"><code>pilot-priority-queue</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-sla"><code>pilot-sla</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-quarantine"><code>pilot-quarantine</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-slack-bridge"><code>pilot-slack-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-email-bridge"><code>pilot-email-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-detector</code> - <strong>Anomaly Detector</strong><br>Monitors for anomalies<br>Skills: <code>pilot-watchdog</code> , <code>pilot-alert</code> , <code>pilot-audit-log</code> , <code>pilot-metrics</code></li><li><code>&lt;your-prefix&gt;-triage</code> - <strong>Incident Triage</strong><br>Raw alerts&quot; },<br>Skills: <code>pilot-alert</code> , <code>pilot-event-filter</code> , <code>pilot-priority-queue</code> , <code>pilot-sla</code></li><li><code>&lt;your-prefix&gt;-remediator</code> - <strong>Auto-Remediator</strong><br>Actionable incidents&quot; },<br>Skills: <code>pilot-task-router</code> , <code>pilot-cron</code> , <code>pilot-audit-log</code> , <code>pilot-quarantine</code></li><li><code>&lt;your-prefix&gt;-notifier</code> - <strong>Human Notifier</strong><br>Classified incidents&quot; },<br>Skills: <code>pilot-slack-bridge</code> , <code>pilot-email-bridge</code> , <code>pilot-webhook-bridge</code> , <code>pilot-audit-log</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-detector</code> &rarr; <code>&lt;your-prefix&gt;-triage</code>:<code>1002</code> - raw anomaly alerts</li><li><code>&lt;your-prefix&gt;-triage</code> &rarr; <code>&lt;your-prefix&gt;-remediator</code>:<code>1002</code> - actionable incidents</li><li><code>&lt;your-prefix&gt;-triage</code> &rarr; <code>&lt;your-prefix&gt;-notifier</code>:<code>1002</code> - classified incidents</li><li><code>&lt;your-prefix&gt;-remediator</code> &rarr; <code>&lt;your-prefix&gt;-notifier</code>:<code>1002</code> - remediation reports</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On monitored infrastructure
+clawhub install pilot-watchdog pilot-alert pilot-audit-log pilot-metrics
+pilotctl set-hostname &lt;your-prefix&gt;-detector
+
+# On triage server
+clawhub install pilot-alert pilot-event-filter pilot-priority-queue pilot-sla
+pilotctl set-hostname &lt;your-prefix&gt;-triage
+
+# On remediation server
+clawhub install pilot-task-router pilot-cron pilot-audit-log pilot-quarantine
+pilotctl set-hostname &lt;your-prefix&gt;-remediator
+
+# On notification server
+clawhub install pilot-slack-bridge pilot-email-bridge pilot-webhook-bridge pilot-audit-log
+pilotctl set-hostname &lt;your-prefix&gt;-notifier
+# On detector:
+pilotctl handshake &lt;your-prefix&gt;-triage &quot;setup: incident-response&quot;
+# On triage:
+pilotctl handshake &lt;your-prefix&gt;-detector &quot;setup: incident-response&quot;
+# On notifier:
+pilotctl handshake &lt;your-prefix&gt;-remediator &quot;setup: incident-response&quot;
+# On remediator:
+pilotctl handshake &lt;your-prefix&gt;-notifier &quot;setup: incident-response&quot;
+# On notifier:
+pilotctl handshake &lt;your-prefix&gt;-triage &quot;setup: incident-response&quot;
+# On triage:
+pilotctl handshake &lt;your-prefix&gt;-notifier &quot;setup: incident-response&quot;
+# On remediator:
+pilotctl handshake &lt;your-prefix&gt;-triage &quot;setup: incident-response&quot;
+# On triage:
+pilotctl handshake &lt;your-prefix&gt;-remediator &quot;setup: incident-response&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>App Store</title><meta name="description" content="Install and build agent apps for Pilot Protocol - typed IPC capabilities, one command to install, guided submission to publish."><meta name="robots" content="index,follow,max-image-preview:large"><meta name="author" content="Pilot Protocol"><link rel="canonical" href="https://pilotprotocol.network/docs/app-store"><meta property="og:type" content="website"><meta property="og:title" content="App Store"><meta property="og:description" content="Install and build agent apps for Pilot Protocol - typed IPC capabilities, one command to install, guided submission to publish."><meta property="og:url" content="https://pilotprotocol.network/docs/app-store"><meta property="og:image" content="https://pilotprotocol.network/og/docs.jpg"><meta property="og:image:alt" content="Pilot Protocol"><meta property="og:site_name" content="Pilot Protocol"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@pilotprotocol_"><meta name="twitter:title" content="App Store"><meta name="twitter:description" content="Install and build agent apps for Pilot Protocol - typed IPC capabilities, one command to install, guided submission to publish."><meta name="twitter:image" content="https://pilotprotocol.network/og/docs.jpg"><meta name="twitter:image:alt" content="Pilot Protocol"><meta name="theme-color" content="#0b0b0a" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)"><meta name="color-scheme" content="dark light"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://pilotprotocol.network/#organization","name":"Pilot Protocol","legalName":"Vulture Labs, Inc.","url":"https://pilotprotocol.network/","logo":{"@type":"ImageObject","url":"https://pilotprotocol.network/img/pilot-180.png","width":180,"height":180},"sameAs":["https://github.com/pilot-protocol/pilotprotocol","https://x.com/pilotprotocol_","https://www.linkedin.com/company/112569955/"],"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"founders@pilotprotocol.network","url":"https://pilotprotocol.network/contact"}]},{"@type":"WebSite","@id":"https://pilotprotocol.network/#website","url":"https://pilotprotocol.network/","name":"Pilot Protocol","publisher":{"@id":"https://pilotprotocol.network/#organization"},"inLanguage":"en-US"}]}</script><!-- PILOT-175: fonts self-hosted under /fonts/*. Removed the Google Fonts
+     preconnect + stylesheet links so the browser never contacts
+     fonts.googleapis.com / fonts.gstatic.com (GDPR: avoids passing
+     visitor IPs to Google). The self-hosted bundle covers the same
+     three families (Inter Tight, JetBrains Mono, Instrument Serif)
+     with identical subsets + unicode-range gating, so per-page font
+     bytes are unchanged. --><link rel="stylesheet" href="/website/fonts/fonts.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="/website/fonts/fonts.css"></noscript><link rel="preload" href="/website/fonts/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2" as="font" type="font/woff2" crossorigin="anonymous"><!-- PILOT-27: consent-check shared module is imported by analytics.ts below. --><link rel="icon" href="/website/img/pilot-48.png" type="image/png" sizes="48x48"><link rel="apple-touch-icon" href="/website/img/pilot-180.png" sizes="180x180"><!-- PILOT-27: Consent banner injected at the end of <body> from <head> --><script>
+  (function() {
+    var bannerHTML = '<div id="pilot-consent-banner" class="consent-banner consent-banner--bottom" role="dialog" aria-label="Cookie consent" style="display:none">' +
+      '<div class="consent-banner__inner">' +
+        '<div class="consent-banner__text">' +
+          '<p>We use analytics cookies, plus heatmaps and session replay with all form inputs masked, to understand how our site is used. We do not build a profile of you. <a href="/cookies">Cookie policy</a>.</p>' +
+        '</div>' +
+        '<div class="consent-banner__actions">' +
+          '<button id="pilot-consent-accept" class="btn primary consent-btn" data-consent="accepted">Accept</button>' +
+          '<button id="pilot-consent-reject" class="btn consent-btn" data-consent="rejected">Reject</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    // Wait for DOM to be ready
+    function injectBanner() {
+      if (document.body) {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = bannerHTML;
+        document.body.appendChild(wrapper.firstElementChild);
+
+        var KEY = 'pilot_consent';
+        var banner = document.getElementById('pilot-consent-banner');
+        if (!banner) return;
+
+        function getConsent() {
+          try { return localStorage.getItem(KEY); } catch { return null; }
+        }
+
+        function setConsent(value) {
+          try {
+            localStorage.setItem(KEY, value);
+            window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: value }));
+          } catch {}
+        }
+
+        document.getElementById('pilot-consent-accept').addEventListener('click', function() {
+          setConsent('accepted');
+          banner.style.display = 'none';
+        });
+
+        document.getElementById('pilot-consent-reject').addEventListener('click', function() {
+          setConsent('rejected');
+          banner.style.display = 'none';
+        });
+
+        var existing = getConsent();
+        if (existing) {
+          banner.style.display = 'none';
+          window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: existing }));
+        } else {
+          banner.style.display = 'flex';
+        }
+
+        window.__showConsentBanner = function() {
+          if (banner) banner.style.display = 'flex';
+        };
+      } else {
+        setTimeout(injectBanner, 50);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectBanner);
+    } else {
+      injectBanner();
+    }
+  })();
+</script><link rel="alternate" type="application/rss+xml" title="Pilot Protocol Journal" href="/website/blog/feed.xml"><script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('pilot-theme');
+      var prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      var theme = stored || prefers;
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script><!-- PILOT-27: GA4 loads only after user accepts cookies. --><script>
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadGA4() {
+      if (document.querySelector('script[src*="gtag/js?id=G-EEWEKT0GW5"]')) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EEWEKT0GW5';
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-EEWEKT0GW5');
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadGA4();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadGA4();
+      });
+    }
+    // If consent === 'rejected', never load GA4.
+  })();
+</script><!-- X (Twitter) Ads universal website tag — conversion tracking for our X ad
+     campaigns. Same consent gate as GA4 above: loads only after the visitor
+     accepts cookies, never on reject. Disclosed in /cookies and /privacy. --><script>(function(){const twitterPixelId = "re3tv";
+
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadTwitterPixel() {
+      if (!twitterPixelId || window.twq) return;
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+      },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+      a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+      window.twq('config', twitterPixelId);
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadTwitterPixel();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadTwitterPixel();
+      });
+    }
+    // If consent === 'rejected', never load the X pixel.
+  })();
+})();</script><script type="module" src="/website/_astro/BaseHead.astro_astro_type_script_index_0_lang.DTqJW7IP.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"App Store","description":"Install and build agent apps for Pilot Protocol - typed IPC capabilities, one command to install, guided submission to publish.","url":"https://pilotprotocol.network/docs/app-store","isPartOf":{"@type":"WebSite","name":"Pilot Protocol","url":"https://pilotprotocol.network/"},"author":{"@id":"https://pilotprotocol.network/#organization"},"publisher":{"@id":"https://pilotprotocol.network/#organization"}}</script><link rel="stylesheet" href="/website/_astro/system.DXXNXJyX.css"><link rel="stylesheet" href="/website/_astro/DocLayout.C-qhf5mz.css"></head><body><a class="skip-link" href="#page-content">Skip to content</a><nav class="nav-top" aria-label="Primary"><div class="wrap"><div class="nav-row"><a href="/" class="brand" data-track="nav_click" data-track-target="home"><span class="brand-mark"><img src="/website/img/pilot-48.webp" alt="" class="logo" width="40" height="40" decoding="async"></span><span class="brand-text"><strong>Pilot</strong><span>Protocol</span></span><span class="sr-only"> home</span></a><div class="nav-links" id="nav-links"><div class="nav-dropdown" data-nav-group="product"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Product</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">The platform</span><strong>One network layer for agents.</strong><p>Identity, encrypted connectivity, trust, and installable capabilities in one system.</p></div><div class="nav-menu-links"><a href="/" data-track="nav_click" data-track-target="product-network-os"><span class="dd-kicker">Platform</span><span class="dd-label">Network OS</span><span class="dd-desc">The complete Pilot architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/trust" data-track="nav_click" data-track-target="product-trust-center"><span class="dd-kicker">Security</span><span class="dd-label">Trust Center</span><span class="dd-desc">Controls, boundaries, and evidence</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/governance" data-track="nav_click" data-track-target="product-control-model"><span class="dd-kicker">Governance</span><span class="dd-label">Control model</span><span class="dd-desc">Authority, policy, lifecycle, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/app-store" data-track="nav_click" data-track-target="product-app-store"><span class="dd-kicker">Ecosystem</span><span class="dd-label">App Store</span><span class="dd-desc">Capabilities built for agents</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/plans" data-track="nav_click" data-track-target="product-plans"><span class="dd-kicker">Commercial</span><span class="dd-label">Plans</span><span class="dd-desc">Open network and enterprise paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/docs/getting-started"><span>Explore the product</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="solutions"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Solutions</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Built for real systems</span><strong>Connect agents across every boundary.</strong><p>Start with one deployment pattern, then expand without replacing the underlying network.</p></div><div class="nav-menu-links"><a href="/website/for/p2p" data-track="nav_click" data-track-target="solutions-direct-p2p"><span class="dd-kicker">Connectivity</span><span class="dd-label">Direct P2P</span><span class="dd-desc">Private agent-to-agent paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/mcp" data-track="nav_click" data-track-target="solutions-mcp-+-pilot"><span class="dd-kicker">Integration</span><span class="dd-label">MCP + Pilot</span><span class="dd-desc">Give MCP servers a network</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/networks" data-track="nav_click" data-track-target="solutions-managed-networks"><span class="dd-kicker">Organization</span><span class="dd-label">Managed networks</span><span class="dd-desc">Shared domains and membership</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/enterprise" data-track="nav_click" data-track-target="solutions-enterprise-controls"><span class="dd-kicker">Enterprise</span><span class="dd-label">Enterprise controls</span><span class="dd-desc">Identity, policy, roles, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/setups"><span>Browse deployment setups</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown active" data-nav-group="developers"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Developers</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Build on Pilot</span><strong>From first connection to production.</strong><p>Documentation and tooling for connecting, shipping, and operating agent-native software.</p></div><div class="nav-menu-links"><a href="/website/docs/getting-started" data-track="nav_click" data-track-target="developers-quickstart"><span class="dd-kicker">Start</span><span class="dd-label">Quickstart</span><span class="dd-desc">Install and connect in minutes</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/" data-track="nav_click" data-track-target="developers-documentation"><span class="dd-kicker">Reference</span><span class="dd-label">Documentation</span><span class="dd-desc">Concepts, CLI, SDKs, and operations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/integration" data-track="nav_click" data-track-target="developers-sdks-&amp;-integration"><span class="dd-kicker">Build</span><span class="dd-label">SDKs &amp; integration</span><span class="dd-desc">Embed Pilot in your stack</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/compatibility" data-track="nav_click" data-track-target="developers-compatibility"><span class="dd-kicker">Deploy</span><span class="dd-label">Compatibility</span><span class="dd-desc">Choose the right environment mode</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/skills"><span>Explore agent skills</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="resources"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Resources</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Learn and evaluate</span><strong>Technical depth without the guesswork.</strong><p>Architecture, field notes, evaluator material, and a machine-readable version of the site.</p></div><div class="nav-menu-links"><a href="/website/learn/" data-track="nav_click" data-track-target="resources-learning-center"><span class="dd-kicker">Learn</span><span class="dd-label">Learning center</span><span class="dd-desc">Foundations, transport, and security</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/blog/" data-track="nav_click" data-track-target="resources-field-notes"><span class="dd-kicker">Journal</span><span class="dd-label">Field notes</span><span class="dd-desc">Technical guides and architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/research" data-track="nav_click" data-track-target="resources-technical-papers"><span class="dd-kicker">Research</span><span class="dd-label">Technical papers</span><span class="dd-desc">Specifications and evaluations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/pilot-native-use-cases.pdf" data-track="nav_click" data-track-target="resources-deployment-patterns"><span class="dd-kicker">Use cases</span><span class="dd-label">Deployment patterns</span><span class="dd-desc">What the combined Pilot surface enables</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/press" data-track="nav_click" data-track-target="resources-press-kit"><span class="dd-kicker">Media</span><span class="dd-label">Press kit</span><span class="dd-desc">Company and brand resources</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/plain/" data-track="nav_click" data-track-target="resources-machine-readable-site"><span class="dd-kicker">Agents</span><span class="dd-label">Machine-readable site</span><span class="dd-desc">The plain-text agent interface</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/enterprise-readiness-report.pdf"><span>Read the readiness report</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="company"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Company</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Pilot Protocol</span><strong>Building the network for agents.</strong><p>Learn about the company, follow our progress, or speak directly with the team.</p></div><div class="nav-menu-links"><a href="/about" data-track="nav_click" data-track-target="company-about-pilot"><span class="dd-kicker">About</span><span class="dd-label">About Pilot</span><span class="dd-desc">Company, people, and publishing standards</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/roadmap" data-track="nav_click" data-track-target="company-product-roadmap"><span class="dd-kicker">Direction</span><span class="dd-label">Product roadmap</span><span class="dd-desc">What we are strengthening next</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/news/" data-track="nav_click" data-track-target="company-company-news"><span class="dd-kicker">Newsroom</span><span class="dd-label">Company news</span><span class="dd-desc">Announcements and company updates</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/contact" data-track="nav_click" data-track-target="company-talk-to-the-team"><span class="dd-kicker">Contact</span><span class="dd-label">Talk to the team</span><span class="dd-desc">Enterprise, partnerships, and press</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/contact"><span>Contact Pilot Protocol</span><span aria-hidden="true">→</span></a></div></div><div class="nav-mobile-actions"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a></div></div><div class="nav-right"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme" type="button"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button><button id="nav-hamburger" class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button></div></div></div></nav><span id="page-content" class="skip-target" tabindex="-1"></span><script>
+  (function () {
+    var nav = document.querySelector('.nav-top');
+    var themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function () {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isLight) {
+          document.documentElement.removeAttribute('data-theme');
+          try { localStorage.setItem('pilot-theme', 'dark'); } catch (e) {}
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          try { localStorage.setItem('pilot-theme', 'light'); } catch (e) {}
+        }
+      });
+    }
+
+    function closeDropdowns(except) {
+      document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+        if (dd === except) return;
+        dd.classList.remove('open');
+        var trigger = dd.querySelector('.nav-dropdown-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function closeMobileMenu() {
+      if (!links || !links.classList.contains('mobile-open')) return;
+      links.classList.remove('mobile-open');
+      if (hamb) {
+        hamb.classList.remove('is-open');
+        hamb.setAttribute('aria-expanded', 'false');
+        hamb.setAttribute('aria-label', 'Open menu');
+      }
+      document.body.classList.remove('nav-mobile-open');
+      closeDropdowns();
+    }
+
+    // Hamburger (mobile)
+    var hamb = document.getElementById('nav-hamburger');
+    var links = document.getElementById('nav-links');
+    if (hamb && links) {
+      hamb.setAttribute('aria-label', 'Open menu');
+      hamb.addEventListener('click', function () {
+        var open = links.classList.toggle('mobile-open');
+        hamb.classList.toggle('is-open', open);
+        hamb.setAttribute('aria-expanded', open ? 'true' : 'false');
+        hamb.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        document.body.classList.toggle('nav-mobile-open', open);
+        if (!open) closeDropdowns();
+      });
+      links.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    }
+
+    // Dropdown: click to toggle, click-outside to close
+    document.querySelectorAll('.nav-dropdown').forEach(function (dd) {
+      var trigger = dd.querySelector('.nav-dropdown-trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var wasOpen = dd.classList.contains('open');
+        closeDropdowns(dd);
+        dd.classList.toggle('open', !wasOpen);
+        var isOpen = !wasOpen;
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest || !e.target.closest('.nav-dropdown')) closeDropdowns();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+          dd.classList.remove('open');
+          var trig = dd.querySelector('.nav-dropdown-trigger');
+          if (trig) { trig.setAttribute('aria-expanded', 'false'); trig.focus(); }
+        });
+        closeMobileMenu();
+      }
+    });
+
+    // A restrained shadow gives the persistent shell a clear edge once content scrolls beneath it.
+    if (nav) {
+      var syncNavEdge = function () { nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+      syncNavEdge();
+      window.addEventListener('scroll', syncNavEdge, { passive: true });
+    }
+  })();
+</script><button class="docs-menu-toggle" id="docs-menu-toggle" type="button" aria-controls="docs-sidebar" aria-expanded="false"><span aria-hidden="true">☰</span> Documentation</button><aside class="sidebar" id="docs-sidebar" aria-label="Documentation"><div class="sidebar-head"><span>Documentation</span><button class="sidebar-close" id="docs-sidebar-close" type="button" aria-label="Close documentation menu">×</button></div><div class="nav-section">Documentation</div><a class href="/website/docs/"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Overview</a><a class href="/website/docs/getting-started"><svg class="nav-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Getting Started</a><a class href="/website/docs/concepts"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Core Concepts</a><a class href="/website/docs/cli-reference"><svg class="nav-icon" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>CLI Reference</a><a class href="/website/docs/go-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>Go SDK</a><a class href="/website/docs/python-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 4.69 2 8v2c0 3.31 4.48 6 10 6s10-2.69 10-6V8c0-3.31-4.48-6-10-6z"/><path d="M2 14v2c0 3.31 4.48 6 10 6s10-2.69 10-6v-2"/></svg>Python SDK</a><a class href="/website/docs/node-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12"/><path d="M3 7l9 5 9-5"/></svg>Node.js SDK</a><a class href="/website/docs/swift-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>Swift SDK</a><a class href="/website/docs/sdk-parity"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>SDK Parity</a><div class="nav-section">Features</div><a class href="/website/docs/messaging"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messaging</a><a class href="/website/docs/trust"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Trust &amp; Handshakes</a><a class href="/website/docs/networks"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><line x1="12" y1="8" x2="5" y2="16"/><line x1="12" y1="8" x2="19" y2="16"/><line x1="8" y1="19" x2="16" y2="19"/></svg>Networks</a><a class href="/website/docs/services"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>Built-in Services</a><a class href="/website/docs/pubsub"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/><circle cx="12" cy="12" r="11"/></svg>Pub/Sub</a><a class href="/website/docs/webhooks"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Webhooks</a><a class href="/website/docs/gateway"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/><line x1="12" y1="7" x2="12" y2="17"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Gateway</a><a class href="/website/docs/tags"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Tags</a><a class href="/website/docs/pilot-mom"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg>pilot-mom</a><a class href="/website/docs/service-agents"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/><path d="M12 12v9"/><path d="M9 18l3 3 3-3"/></svg>Service Agents</a><a class="active" href="/website/docs/app-store" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>App Store</a><a class href="/website/docs/mcp-setup"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/><path d="M15 21h4a2 2 0 0 0 2-2v-4"/><circle cx="12" cy="12" r="2"/></svg>MCP Setup</a><a class href="/website/docs/consent"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Consent &amp; Privacy</a><div class="nav-section">Hosted Control Plane</div><a class href="/website/docs/managed-control-plane"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h10M7 12h6M7 16h8"/></svg>Managed Overview</a><a class href="/website/docs/managed-accounts"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6M8 10h.01M12 10h.01M16 10h.01"/></svg>Accounts &amp; Organizations</a><a class href="/website/docs/managed-agent-adoption"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0M18 4l2 2 3-3"/></svg>Agent Adoption</a><a class href="/website/docs/managed-harnesses"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-8 8l-7 7a2.1 2.1 0 0 1-3-3l7-7a6 6 0 0 1 8-8z"/></svg>Harness Coverage</a><a class href="/website/docs/managed-policies"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>Policies &amp; Approvals</a><a class href="/website/docs/managed-fleet"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8l-7 8M12 8l7 8M8 19h8"/></svg>Fleet &amp; Evidence</a><a class href="/website/docs/managed-readiness"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12h4l2-7 4 14 2-7h6"/><circle cx="12" cy="12" r="10"/></svg>Availability &amp; Readiness</a><div class="nav-section">Enterprise</div><a class href="/website/docs/security"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Security</a><a class href="/website/docs/enterprise"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Enterprise Overview</a><a class href="/website/docs/enterprise-rbac"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>RBAC &amp; Access Control</a><a class href="/website/docs/enterprise-identity"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Identity &amp; SSO</a><a class href="/website/docs/enterprise-policies"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Network Policies</a><a class href="/website/docs/enterprise-audit"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>Audit &amp; Compliance</a><a class href="/website/docs/enterprise-blueprints"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Blueprints</a><div class="nav-section">Operations</div><a class href="/website/docs/firewalls"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Firewalls &amp; Compat Mode</a><a class href="/website/docs/diagnostics"><svg class="nav-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Diagnostics</a><a class href="/website/docs/configuration"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configuration</a><a class href="/website/docs/motd"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>Message of the Day</a><a class href="/website/docs/integration"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Integration</a><div class="nav-section">Reference</div><a class href="/website/docs/error-codes"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Error Codes</a><a class href="/website/docs/troubleshooting"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Troubleshooting</a><div class="nav-section">Compare</div><a class href="/website/docs/comparison"><svg class="nav-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>vs MCP / A2A / ACP</a><a class href="/website/docs/comparison-networking"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><line x1="12" y1="8" x2="5" y2="16"/><line x1="12" y1="8" x2="19" y2="16"/><line x1="5" y1="16" x2="19" y2="16"/></svg>vs Tailscale / ZeroTier / Nebula</a><div class="nav-section">Research</div><a class href="/website/docs/research"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Papers</a></aside><button class="docs-sidebar-backdrop" id="docs-sidebar-backdrop" type="button" aria-label="Close documentation menu" hidden></button><aside class="toc-sidebar" id="toc-sidebar"></aside><main class="content"><div class="content-body"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://artemiia.github.io/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://artemiia.github.io/docs/"},{"@type":"ListItem","position":3,"name":"App Store","item":"https://artemiia.github.io/website/docs/app-store/"}]}</script><nav class="site-breadcrumbs is-compact" aria-label="Breadcrumb" data-astro-cid-vx4iavld><ol data-astro-cid-vx4iavld><li data-astro-cid-vx4iavld><a href="/" data-astro-cid-vx4iavld>Home</a></li><li data-astro-cid-vx4iavld><a href="/website/docs/" data-astro-cid-vx4iavld>Documentation</a></li><li data-astro-cid-vx4iavld><span aria-current="page" data-astro-cid-vx4iavld>App Store</span></li></ol></nav><a class="back-overview" href="/website/docs/#flow"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>Flow</a><h1>App Store</h1>
+  <p class="subtitle">Installable agent apps that run locally on your daemon as typed IPC services - JSON in, JSON out, auto-spawned on install. Discover, install, call.</p>
+
+  <div class="toc">
+    <h4>On this page</h4>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#using">Using apps</a></li>
+      <li><a href="#discovery">Discovery &amp; the help convention</a></li>
+      <li><a href="#dynamic-context">Dynamic context on every call</a></li>
+      <li><a href="#lifecycle">Lifecycle</a></li>
+      <li><a href="#updating">Keeping apps current</a></li>
+      <li><a href="#app-update-opt-out">Opting out of app auto-updates</a></li>
+      <li><a href="#building">Building an app</a></li>
+      <li><a href="#publishing">Publishing an app</a></li>
+      <li><a href="#install-models">Catalogue vs sideload</a></li>
+      <li><a href="#security">Security model &amp; hardening</a></li>
+      <li><a href="#example">Worked example: io.pilot.cosift</a></li>
+    </ul>
+  </div>
+
+  <h2 id="overview">Overview</h2>
+
+  <p>Where <code>list-agents</code> is the phonebook for live <em>data</em> on the overlay, the App Store is for installable <em>capability apps</em>. An app is a small binary plus a signed <code>manifest.json</code>. <code>pilotctl</code> fetches the bundle from the catalogue, sha-checks and extracts it, and validates its signed manifest; the daemon then supervises it — spawning the binary, handing it a unix socket, and brokering IPC calls. Each app method is a typed call - JSON in, JSON out.</p>
+
+  <p>Apps are:</p>
+  <ul>
+    <li><strong>Local</strong> - they run on your own daemon, one process per host. The heavy lifting (an index, a chain, an LLM) lives wherever the app's backend is; the installed binary is a thin, stateless adapter.</li>
+    <li><strong>Typed</strong> - every method maps to a JSON request/response. No browser, no REST plumbing.</li>
+    <li><strong>Signature-verified</strong> - the manifest pins the binary's sha256 and carries an ed25519 signature. The daemon verifies the signature when it scans installed apps, and re-checks the binary's sha256 immediately before every spawn.</li>
+    <li><strong>Grant-scoped</strong> - the manifest declares exactly what the app may do (network, file I/O), and the daemon's broker enforces those grants at runtime. Installing an app accepts its declared grants. No ambient authority.</li>
+    <li><strong>Auto-spawned</strong> - once installed, the daemon's supervisor keeps the app running. No manual start.</li>
+  </ul>
+
+  <p>The whole loop an agent runs is: <strong>discover &rarr; install &rarr; call</strong>.</p>
+
+  <h2 id="using">Using apps</h2>
+
+  <p>Discovery and install go through the catalogue - a signed list the daemon fetches. Install verifies the bundle and the daemon auto-spawns it; <code>call</code> is then the workhorse.</p>
+
+  <pre><code><span class="comment"># 1. Discover what's installable</span>
+<span class="cmd">pilotctl</span> appstore catalogue
+
+<span class="comment"># 2. Inspect before committing - description, vendor, changelog, size, source, methods, permissions</span>
+<span class="cmd">pilotctl</span> appstore view io.pilot.cosift [--all-changelog]
+
+<span class="comment"># 3. Install by id - fetch + verify sha + install; the daemon auto-spawns it</span>
+<span class="cmd">pilotctl</span> appstore install io.pilot.cosift
+
+<span class="comment"># 4. Confirm it's ready (lists installed apps + the methods each exposes)</span>
+<span class="cmd">pilotctl</span> appstore list
+<span class="cmd">pilotctl</span> appstore status io.pilot.cosift
+
+<span class="comment"># 5. Call a method - JSON in, JSON out on stdout</span>
+<span class="cmd">pilotctl</span> appstore call io.pilot.cosift cosift.search '{"q":"raft consensus","k":"5"}'</code></pre>
+
+  <p><code>view &lt;id&gt;</code> is the app's detail page — it works whether or not the app is installed, so you can vet description, vendor, latest changelog (<code>--all-changelog</code> for full history), download/installed size, source URL, license, exposed methods, and the permissions it requests before installing.</p>
+
+  <div class="callout">
+    <p><strong>No config step.</strong> A well-built app ships with sane defaults, so <code>install</code> then <code>call</code> is all an agent needs. Apps may read an optional <code>config.json</code> next to their manifest for overrides (e.g. a self-hosted backend).</p>
+  </div>
+
+  <h2 id="discovery">Discovery &amp; the help convention</h2>
+
+  <p><code>pilotctl appstore list</code> and <code>status</code> surface a flat list of method <em>names</em> - enough to know what exists, not how to call it. The convention for richer discovery is a <strong><code>&lt;app&gt;.help</code></strong> method: a single local call (no backend round-trip) that returns every method with its parameters, a <code>kind</code> (utility / status / meta), and an expected-latency class.</p>
+
+  <pre><code><span class="cmd">pilotctl</span> appstore call io.pilot.cosift cosift.help '{}'</code></pre>
+
+  <p>The latency class lets an agent pick the cheapest method for its need before spending a slow one:</p>
+
+  <ul>
+    <li><strong>fast</strong> - under ~1s: status or cheap retrieval.</li>
+    <li><strong>med</strong> - ~1-5s: an LLM rerank or a single-pass synthesis.</li>
+    <li><strong>slow</strong> - ~5-30s: multi-step work (e.g. research that plans, retrieves, and synthesizes).</li>
+  </ul>
+
+  <p>Each method entry also carries a warm round-trip estimate the app publishes, so an agent can budget a call end-to-end (agent &rarr; daemon &rarr; app &rarr; backend &rarr; back).</p>
+
+  <h2 id="dynamic-context">Dynamic context on every call</h2>
+
+  <p>Two surfaces put the right next command in front of an agent at the two moments it is most likely to stall — right after install, and after every call. Both are authored once by the publisher and need no runtime code (see <a href="#authoring-context">Authoring dynamic context</a>).</p>
+
+  <h3 id="product-demo">Product demo at install</h3>
+
+  <p>When <code>pilotctl appstore install io.pilot.&lt;app&gt;</code> finishes, its last step is a compact, example-first <strong>&ldquo;Full usage demo&rdquo;</strong>: when to reach for the app, the one call to run first, and a handful of worked examples (with per-call cost for metered apps). It turns a bare install into a correct first call. The same demo renders as the <strong>Full usage demo</strong> section on the app's store page.</p>
+
+  <h3 id="next-steps">Next-steps after every call</h3>
+
+  <p>After every <code>pilotctl appstore call</code>, <code>pilotctl</code> prints a short <strong>next-steps</strong> block to <strong>stderr</strong> — the recommended commands for where the agent now stands, on success <em>and</em> on failure. <strong>stdout stays pure JSON</strong>, so an agent can still pipe the result into <code>jq</code>; the hints never touch it.</p>
+
+  <p>A missing param renders a corrected, runnable call; a needs-signup state names the signup command; a <code>402</code> points at the balance check. For example, a <code>sqlite.query</code> with no <code>database</code>:</p>
+
+  <pre><code><span class="comment"># stdout is the pure JSON result (here an error envelope) — the hints go to stderr:</span>
+<span class="cmd">pilotctl</span> appstore call io.pilot.sqlite sqlite.query '{"sql":"SELECT 42"}'
+<span class="comment">error: ipc: server error: backend: missing required param(s): database
+next:  sqlite needs an explicit database — there is no default
+  1. pilotctl appstore call io.pilot.sqlite sqlite.query '{"database":":memory:","sql":"SELECT 42 AS a"}'
+     why: pass database (:memory: for a scratch db) — fixes the error above</span></code></pre>
+
+  <p>Turn it off with <code>PILOT_NEXT_STEPS=off</code>. With <code>--json</code>, the hint arrives as a structured <code>next_steps</code> object instead of prose. A hint is never load-bearing: an absent, malformed, or unmatched graph prints nothing and leaves the call itself unchanged — no hint bug can ever turn a working call into a failed one.</p>
+
+  <h3 id="graph-refresh">Hints reach installed apps automatically</h3>
+
+  <p>The hints are driven by a small graph the app ships in the catalogue. Agents do <strong>not</strong> reinstall to get them: <code>pilotctl</code> lazily refreshes each app's cached graph from the catalogue in the background — a bounded check, at most about every 12 hours per app. So an app installed before its graph shipped starts showing hints on its next call, and a republished graph propagates within the day. No user action.</p>
+
+  <h2 id="lifecycle">Lifecycle</h2>
+
+  <pre><code><span class="cmd">pilotctl</span> appstore restart io.pilot.cosift    <span class="comment"># respawn (e.g. after writing a config.json)</span>
+<span class="cmd">pilotctl</span> appstore caps io.pilot.cosift       <span class="comment"># spend caps + current rolling-window usage</span>
+<span class="cmd">pilotctl</span> appstore audit io.pilot.cosift      <span class="comment"># supervisor log: spawn / exit / verify-fail</span>
+<span class="cmd">pilotctl</span> appstore actions                    <span class="comment"># pilotctl-side install/uninstall log (survives removal)</span>
+<span class="cmd">pilotctl</span> appstore install io.pilot.cosift --force  <span class="comment"># upgrade to a new version</span>
+<span class="cmd">pilotctl</span> appstore uninstall io.pilot.cosift --yes</code></pre>
+
+  <p><code>caps</code> reports the manifest's spend caps and how much of each rolling window the app has consumed; <code>audit</code> tails the supervisor lifecycle log for one app; <code>actions</code> is the pilotctl-side install/uninstall log, which persists even after an app is removed. Both <code>audit</code> and <code>actions</code> accept <code>--tail &lt;n&gt;</code> and <code>--event &lt;name&gt;</code> (and <code>audit</code> takes <code>--since &lt;dur&gt;</code>).</p>
+
+  <div class="callout">
+    <p><strong>Upgrades key on the version.</strong> The supervisor respawns an app when its <code>app_version</code> changes. Bump the version for every new build, or a re-release of the same version won't roll running nodes onto the new binary.</p>
+  </div>
+
+  <h2 id="updating">Keeping apps current</h2>
+
+  <p>Apps are versioned in the catalogue. Two commands find and apply new versions:</p>
+
+  <pre><code><span class="cmd">pilotctl</span> appstore outdated                    <span class="comment"># installed apps with a newer — or rebuilt — catalogue version</span>
+<span class="cmd">pilotctl</span> appstore upgrade io.pilot.cosift      <span class="comment"># re-install one app: verified, then respawned</span>
+<span class="cmd">pilotctl</span> appstore upgrade --all               <span class="comment"># bring every installed app up to date</span></code></pre>
+
+  <p><code>upgrade</code> re-runs the same verified install (catalogue signature &rarr; tarball sha256 &rarr; manifest signature &rarr; publisher trust anchor), then the supervisor applies the version change and restarts the app, refusing any downgrade. <code>outdated</code> flags an app not only on a version bump but also as <strong>rebuilt</strong> when a same-version bundle was republished — so a fix shipped without a version change is still surfaced.</p>
+
+  <div class="callout">
+    <p><strong>Auto-update.</strong> <code>pilotctl</code>'s own updater — <code>pilotctl update status|enable|disable</code> — keeps the CLI and daemon current (automatic updates are off by default). With auto-update enabled, the updater also keeps installed app adapters current automatically, so you won't need to run <code>upgrade</code> by hand. To keep apps pinned instead, see <a href="#app-update-opt-out">Opting out of app auto-updates</a> below.</p>
+  </div>
+
+  <h2 id="app-update-opt-out">Opting out of app auto-updates</h2>
+
+  <p>The updater service itself is off by default. Once you explicitly enable <code>pilotctl update</code>, app-adapter updates are included by default: <code>pilot-updater</code> periodically runs <code>appstore upgrade --all</code>. To keep adapters pinned on an updater-enabled host, set <code>PILOT_APP_UPDATE_OPT_OUT=true</code>.</p>
+
+  <p>Set it in the updater's service environment, then restart the updater so it takes effect:</p>
+
+  <pre><code><span class="comment"># Linux (systemd): set the env var on the pilot-updater service</span>
+<span class="cmd">sudo</span> systemctl edit pilot-updater
+<span class="comment">#   [Service]</span>
+<span class="comment">#   Environment=PILOT_APP_UPDATE_OPT_OUT=true</span>
+<span class="cmd">sudo</span> systemctl restart pilot-updater
+
+<span class="comment"># macOS (launchd): add PILOT_APP_UPDATE_OPT_OUT to the plist's EnvironmentVariables, then reload</span>
+<span class="cmd">launchctl</span> unload ~/Library/LaunchAgents/network.pilotprotocol.pilot-updater.plist
+<span class="cmd">launchctl</span> load   ~/Library/LaunchAgents/network.pilotprotocol.pilot-updater.plist</code></pre>
+
+  <p>With <code>PILOT_APP_UPDATE_OPT_OUT=true</code> the updater no longer checks for or installs app updates — your installed apps stay exactly where they are. Pilot's own daemon and CLI binaries keep updating as normal; this switch only affects app-store apps.</p>
+
+  <h3 id="app-update-opt-in">Switching app updates back on</h3>
+
+  <p>Opting back in is the reverse: remove <code>PILOT_APP_UPDATE_OPT_OUT</code> from the updater's environment (or set it to <code>false</code>, the default) and restart the updater. The next cycle resumes <code>appstore upgrade --all</code> and brings your apps current. You can always upgrade by hand with <code>pilotctl appstore upgrade &lt;id&gt;</code> or <code>upgrade --all</code>, regardless of the setting.</p>
+
+  <div class="callout">
+    <p><strong>Truthy values.</strong> <code>PILOT_APP_UPDATE_OPT_OUT</code> reads <code>1</code>, <code>true</code>, <code>yes</code>, or <code>on</code> (case-insensitive) as opted-out; anything else — including unset — means opted-in. The value is read when the updater starts, so restart it after a change. (The legacy <code>PILOT_UPDATER_NO_APP_UPGRADE</code> variable still works as an alias.)</p>
+  </div>
+
+  <h2 id="building">Building an app</h2>
+
+  <p>An app is a binary that listens on the socket the daemon hands it and speaks the app-store IPC protocol. The manifest declares its identity, the methods it exposes, the pinned binary, and the grants it needs.</p>
+
+  <pre><code>{
+  "id": "io.pilot.cosift",
+  "app_version": "0.1.2",
+  "manifest_version": 1,
+  "binary": { "runtime": "go", "path": "bin/cosift-app", "sha256": "&lt;pinned&gt;" },
+  "exposes": ["cosift.search", "cosift.answer", "cosift.research",
+              "cosift.stats", "cosift.health", "cosift.help"],
+  "grants": [
+    { "cap": "net.dial", "target": "cosift.pilotprotocol.network",
+      "if": { "kind": "rate", "params": { "per": "min", "limit": 120 } } },
+    { "cap": "fs.read",  "target": "$APP/config.json" },
+    { "cap": "audit.log", "target": "*" }
+  ],
+  "protection": "shareable",
+  "store": { "publisher": "ed25519:...", "signature": "..." }
+}</code></pre>
+
+  <p>The binary registers one handler per method and serves them over the socket. In Go, that's the <code>app-store/pkg/ipc</code> contract:</p>
+
+  <pre><code>d := ipc.NewDispatcher()
+d.Register("cosift.search", func(ctx, req) (json.RawMessage, error) { ... })
+// ... one Register per exposed method ...
+ipc.Serve(ctx, conn, d)   <span class="comment">// on the --socket the daemon supplies</span></code></pre>
+
+  <p>The daemon spawns the binary with a fixed set of lifecycle flags (<code>--socket</code>, <code>--manifest</code>, <code>--addr</code>, <code>--db</code>, <code>--identity</code>, <code>--cap-state</code>). An app must accept all of them (even if it ignores most) or it will fail to start. Method names in the code <strong>must</strong> match the manifest's <code>exposes</code> list, or the daemon won't broker them.</p>
+
+  <h2 id="publishing">Publishing an app</h2>
+
+  <p>Three steps: sign, release, and add one catalogue entry by PR.</p>
+
+  <pre><code><span class="comment"># 1. One-time: generate a publisher keypair (keep the private key safe)</span>
+<span class="cmd">pilotctl</span> appstore gen-key publisher.key
+
+<span class="comment"># 2. Sign the manifest (after pinning binary.sha256) and package the bundle</span>
+<span class="cmd">pilotctl</span> appstore sign --key publisher.key bundle/manifest.json
+<span class="cmd">tar</span> -czf io.pilot.cosift-0.1.2.tar.gz -C bundle .
+
+<span class="comment"># 3. Attach the tarball to a GitHub release</span>
+<span class="cmd">gh</span> release create cosift-v0.1.2 io.pilot.cosift-0.1.2.tar.gz</code></pre>
+
+  <p>Then add one entry to <code>catalogue.json</code> (pinning the tarball's sha256) and open a PR. Once merged, <code>pilotctl appstore install &lt;id&gt;</code> resolves it everywhere:</p>
+
+  <pre><code>{
+  "id": "io.pilot.cosift",
+  "version": "0.1.2",
+  "description": "cosift search / answer / research over the public web corpus.",
+  "bundle_url": "https://github.com/&lt;org&gt;/&lt;repo&gt;/releases/download/cosift-v0.1.2/io.pilot.cosift-0.1.2.tar.gz",
+  "bundle_sha256": "&lt;sha256 of the tarball&gt;"
+}</code></pre>
+
+  <p>The catalogue itself is signed. After editing <code>catalogue.json</code>, re-sign it so the daemon and <code>pilotctl</code> will trust it:</p>
+
+  <pre><code><span class="cmd">pilotctl</span> appstore sign-catalogue --key catalog-signing.key catalogue/catalogue.json</code></pre>
+
+  <p>This writes a detached <code>catalogue.json.sig</code> (commit both). <code>pilotctl</code> verifies it against the embedded catalogue key before trusting any entry - see <a href="#security">Security model</a>.</p>
+
+  <p>Three integrity layers protect every install: the <em>catalogue</em> carries a detached ed25519 signature (a substituted app list fails), the catalogue pins each <em>tarball</em> sha256 (a swapped CDN byte fails), and the manifest pins the <em>binary</em> sha256 under an ed25519 signature (verified at scan time). The binary sha256 is re-checked immediately before every spawn.</p>
+
+  <h3 id="authoring-context">Authoring dynamic context</h3>
+
+  <p>The two runtime surfaces from <a href="#dynamic-context">Dynamic context on every call</a> are authored once in your app's submission and validated at submit time — no runtime code, and both are carried verbatim into the catalogue.</p>
+
+  <p><strong>Product demo.</strong> A <code>product_demo</code> block is the example-first usage guide that renders both at install and as the store page's <em>Full usage demo</em>: a one-sentence <code>when_to_use</code>, a <code>quickstart</code> call, 2–6 worked <code>examples</code>, and — for metered apps — a cost table. It is what turns an install into a first successful call.</p>
+
+  <p><strong>Next-steps graph.</strong> A <code>next_steps</code> graph is a flat list of edges. Each edge answers one question — <em>the agent just ran <code>from</code> and it went <code>on</code>; what now?</em> — and names 1–3 <strong>recommended</strong> commands:</p>
+
+  <pre><code>{
+  "schema": 1,
+  "app": "io.pilot.example",
+  "edges": [
+    {
+      "from": "*",
+      "on": "err",
+      "code": 402,
+      "why": "budget exhausted",
+      "then": [
+        { "cmd": "pilotctl appstore call io.pilot.example example.balance '{}'",
+          "why": "check what's left before spending again",
+          "kind": "recovery" }
+      ]
+    }
+  ]
+}</code></pre>
+
+  <table>
+    <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td><code>from</code></td><td>the method just called, or <code>"*"</code> for any</td></tr>
+      <tr><td><code>on</code></td><td><code>"ok"</code> (exit 0) or <code>"err"</code> (exit 1)</td></tr>
+      <tr><td><code>match</code></td><td>regex over the outcome payload — the error text on <code>err</code>, the JSON result body on <code>ok</code></td></tr>
+      <tr><td><code>code</code></td><td>exact backend HTTP status; <code>err</code> edges only</td></tr>
+      <tr><td><code>why</code></td><td>one line of framing, printed above the steps</td></tr>
+      <tr><td><code>then</code></td><td>1–3 steps, each a full <code>pilotctl</code> command with its own <code>why</code> and an optional <code>kind</code> (<code>gateway</code> / <code>flow</code> / <code>recovery</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <p>The most important case is often <em>not</em> an error: an app with a mandatory signup soft-fails with exit 0 and a <code>"needs_signup": true</code> body, so its gateway edge matches on <code>on:"ok"</code>. The best-matching edge wins on specificity, not file order, and there is no session state — a recommendation is a pure function of <code>(method, outcome, payload)</code>, so the app's own response is the only signal.</p>
+
+  <p>The authoring rules keep a graph small and trustworthy:</p>
+  <ul>
+    <li><strong>Recommended, not exhaustive.</strong> A graph is not <code>&lt;app&gt;.help</code> — name the few commands that move an agent toward value, not every method.</li>
+    <li><strong>Every step needs a <code>why</code></strong> — it is what turns a bare command into a decision.</li>
+    <li><strong>Cover the failures that end sessions</strong> — needs-signup, <code>402</code> budget, <code>429</code> quota, missing/invalid param, server-not-started — each with a corrected, runnable command.</li>
+    <li><strong>Commands must actually run.</strong> Every <code>cmd</code> is copy-pasteable and complete; a recovery step that still fails is worse than silence.</li>
+    <li>If your app has a mandatory first method, a <code>from:"*"</code> edge must route a cold agent to it.</li>
+  </ul>
+
+  <p>Because the graph lives in the catalogue metadata rather than the bundle, rewording or extending it is a metadata republish — no app rebuild — and existing installs pick it up automatically (see <a href="#graph-refresh">above</a>).</p>
+
+  <h2 id="install-models">Catalogue vs sideload</h2>
+
+  <p>There are two install paths, with different trust:</p>
+
+  <ul>
+    <li><strong>Catalogue</strong> (<code>install &lt;id&gt;</code>) - the reviewed path. The bundle is signature-verified and installs with the grants its manifest declares, including <code>net.dial</code>. This is how any app that needs the network is distributed.</li>
+    <li><strong>Sideload</strong> (<code>install &lt;dir&gt; --local</code>) - for local development. The manifest is clamped to a small sandbox: <code>fs.read</code>/<code>fs.write</code> under <code>$APP</code> and <code>audit.log</code> only. <strong>No <code>net.dial</code></strong>, no inter-app calls, no hooks. A net-using app must go through the catalogue.</li>
+  </ul>
+
+  <div class="callout">
+    <p>To stage a release locally before publishing, point <code>$PILOT_APPSTORE_CATALOG_URL</code> at a <code>file://</code> catalogue and install by id - the same code path as production, with your own tarball.</p>
+  </div>
+
+  <p>To check a bundle without installing it, <code>pilotctl appstore verify &lt;bundle-dir&gt;</code> validates the manifest and sha256-checks the manifest-pinned binary against it, reporting any mismatch — a tampered or wrongly-built bundle fails here before it ever reaches the install root.</p>
+
+  <h2 id="security">Security model &amp; hardening</h2>
+
+  <p>The app store is deny-by-default at every layer. Trust flows from a signed catalogue, through a signed manifest, to a manifest-gated, resource-limited child process (rlimits + a syscall/IPC broker; OS-level sandboxing such as landlock/seccomp is not yet wired).</p>
+
+  <h3>Signed catalogue (fail-closed)</h3>
+
+  <p>The catalogue is signed with a dedicated ed25519 key whose public half is compiled into <code>pilotctl</code> and the daemon. <code>pilotctl</code> fetches both <code>catalogue.json</code> and a detached <code>catalogue.json.sig</code> and verifies the signature <strong>before trusting any entry</strong>. An unsigned, missing-signature, or tampered catalogue is refused - a compromised host or CDN cannot point installs at hostile bundle URLs without forging the signature. The signing key can be rotated at build time:</p>
+
+  <pre><code><span class="cmd">go</span> build -ldflags   "-X .../internal/catalogtrust.publicKeyB64=&lt;new-b64-pubkey&gt;"   ./cmd/pilotctl ./cmd/daemon</code></pre>
+
+  <h3>Broker authorization (exposes + grants)</h3>
+
+  <p>Apps never dial each other's sockets directly - every call goes through the daemon's broker, which enforces two gates before any dispatch:</p>
+  <ul>
+    <li><strong>Exposes gate</strong> - a method is dispatchable only if the target app lists it in its manifest <code>exposes</code> set. That list is the app's entire callable surface; anything else is refused, even for the daemon itself.</li>
+    <li><strong>Grant gate</strong> - when one app calls another, the caller must declare a matching <code>ipc.call</code> grant targeting <code>&lt;app&gt;.&lt;method&gt;</code> (exact, <code>&lt;app&gt;.*</code>, or <code>*</code>). No grant, no call.</li>
+  </ul>
+
+  <h3>Supervisor hardening</h3>
+
+  <p>The supervisor that spawns and watches each app applies defence-in-depth:</p>
+  <ul>
+    <li><strong>Launch-time re-verification (TOCTOU)</strong> - immediately before <code>exec</code>, the binary is re-checked: rejected if it became a symlink, and its sha256 must still match the pinned hash. A binary swapped between install-scan and launch is caught before it runs.</li>
+    <li><strong>Exponential backoff</strong> - a binary that fails verification is retried with capped exponential backoff (not a fixed interval), and a crash-looping app is suspended after too many failures in a window until an operator restarts it.</li>
+    <li><strong>Resource limits</strong> - on Linux each app is spawned with <code>RLIMIT_NOFILE</code> and an <code>RLIMIT_AS</code> address-space cap, bounding fd and memory abuse.</li>
+    <li><strong>Audit log rotation</strong> - every lifecycle event (spawn, exit, verify-fail, suspend, resume) is written to a per-app JSONL audit log that rotates across a bounded number of generations, so a crash-looping app can't fill the disk while recent forensics are retained.</li>
+  </ul>
+
+  <h3>Extension hooks</h3>
+
+  <p>Apps may register hooks on daemon primitives (declared in the manifest), but the hook surface is bounded: per-app rate limiting caps how often the daemon will dispatch into an app's hooks, and the number of dynamic hook registrations per app is capped - so a hostile hook can't become a DoS amplifier.</p>
+
+  <h2 id="example">Worked example: io.pilot.cosift</h2>
+
+  <p>The cosift app is a stateless adapter to a search / answer / research API over a multi-million-document web corpus. It exposes several utility methods (search, answer, research, and more) plus status/discovery ones:</p>
+
+  <pre><code><span class="comment"># Discover the surface + latencies</span>
+<span class="cmd">pilotctl</span> appstore call io.pilot.cosift cosift.help '{}'
+
+<span class="comment"># search (fast) - ranked URLs + excerpts</span>
+<span class="cmd">pilotctl</span> appstore call io.pilot.cosift cosift.search '{"q":"raft leader election","retriever":"hybrid","rerank":"true","k":"5"}'
+
+<span class="comment"># answer / chat (med) - grounded synthesis with citations</span>
+<span class="cmd">pilotctl</span> appstore call io.pilot.cosift cosift.answer '{"q":"What is HNSW?"}'
+
+<span class="comment"># research (slow) - plan -> multi-retrieval -> report</span>
+<span class="cmd">pilotctl</span> appstore call io.pilot.cosift cosift.research '{"q":"compare raft and paxos"}'</code></pre>
+
+  <p>The cosift backend is open source (<a href="https://github.com/pilot-protocol/cosift">pilot-protocol/cosift</a>); the app follows the same tiny-adapter + signed-manifest + publish flow shown above.</p>
+<div class="page-nav"><a href="/website/docs/service-agents">&larr; Service Agents</a><a class="next" href="/website/docs/mcp-setup">MCP Setup &rarr;</a></div></div></main><div class="doc-footer-wrap"><footer class="docs-footer" data-astro-cid-pnsvry7h><div class="df-row" data-astro-cid-pnsvry7h><div class="df-brand" data-astro-cid-pnsvry7h><img src="/website/img/pilot-96.png" alt="" class="df-logo" width="18" height="18" data-astro-cid-pnsvry7h><span data-astro-cid-pnsvry7h>Pilot Protocol Docs</span><span class="df-sep" data-astro-cid-pnsvry7h>·</span><span class="df-ver" data-astro-cid-pnsvry7h>v1.13.9</span></div><nav class="df-links" aria-label="Docs footer" data-astro-cid-pnsvry7h><a href="/website/docs/getting-started" data-astro-cid-pnsvry7h>Getting started</a><a href="/website/docs/cli-reference" data-astro-cid-pnsvry7h>CLI</a><a href="/website/docs/concepts" data-astro-cid-pnsvry7h>Concepts</a><a href="/website/docs/research" data-astro-cid-pnsvry7h>Research</a><a href="https://github.com/pilot-protocol/pilotprotocol" data-astro-cid-pnsvry7h>GitHub</a><a href="/website/blog/" data-astro-cid-pnsvry7h>Blog</a><a href="/" data-astro-cid-pnsvry7h>Home</a></nav></div><div class="df-bottom" data-astro-cid-pnsvry7h><span data-astro-cid-pnsvry7h>© 2026 Pilot Protocol</span><span class="df-sep" data-astro-cid-pnsvry7h>·</span><a href="https://github.com/pilot-protocol/pilotprotocol/issues/new" data-astro-cid-pnsvry7h>Report an issue</a></div></footer></div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script><script type="module">(function(){let e=document.getElementById(`docs-menu-toggle`),t=document.getElementById(`docs-sidebar-close`),n=document.getElementById(`docs-sidebar`),r=document.getElementById(`docs-sidebar-backdrop`),i=window.matchMedia(`(max-width: 768px)`);function a(a,o=!1){if(!e||!n||!r)return;let s=i.matches&&a;n.classList.toggle(`open`,s),e.setAttribute(`aria-expanded`,s?`true`:`false`),document.body.classList.toggle(`docs-sidebar-open`,s),r.hidden=!s,i.matches?(n.toggleAttribute(`inert`,!s),n.setAttribute(`aria-hidden`,s?`false`:`true`),s?(n.setAttribute(`role`,`dialog`),n.setAttribute(`aria-modal`,`true`)):(n.removeAttribute(`role`),n.removeAttribute(`aria-modal`))):(n.removeAttribute(`inert`),n.removeAttribute(`aria-hidden`),n.removeAttribute(`role`),n.removeAttribute(`aria-modal`)),s?t?.focus():o&&e.focus()}e?.addEventListener(`click`,()=>a(e.getAttribute(`aria-expanded`)!==`true`)),t?.addEventListener(`click`,()=>a(!1,!0)),r?.addEventListener(`click`,()=>a(!1,!0)),n?.querySelectorAll(`a`).forEach(e=>e.addEventListener(`click`,()=>a(!1))),document.addEventListener(`keydown`,t=>{let r=e?.getAttribute(`aria-expanded`)===`true`;if(t.key===`Escape`&&r&&a(!1,!0),t.key===`Tab`&&r&&n){let e=Array.from(n.querySelectorAll(`a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])`)).filter(e=>!e.hidden&&e.getClientRects().length>0);if(e.length===0){t.preventDefault();return}let r=e[0],i=e[e.length-1];n.contains(document.activeElement)?t.shiftKey&&document.activeElement===r?(t.preventDefault(),i.focus()):!t.shiftKey&&document.activeElement===i&&(t.preventDefault(),r.focus()):(t.preventDefault(),r.focus())}}),i.addEventListener(`change`,()=>a(!1)),a(!1);let o=document.getElementById(`toc-sidebar`);if(!o)return;let s=document.querySelector(`.content`);if(!s)return;let c=Array.from(s.querySelectorAll(`h2[id], h3[id]`));if(c.length===0)return;let l=document.createElement(`div`);l.className=`toc-title`,l.textContent=`On this page`,o.appendChild(l);let u=[];c.forEach(e=>{let t=document.createElement(`a`);t.href=`#`+e.id,t.textContent=e.textContent||``,e.tagName===`H3`&&t.classList.add(`toc-h3`),o.appendChild(t),u.push(t)});let d=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){u.forEach(e=>e.classList.remove(`active`));let t=u.find(t=>t.getAttribute(`href`)===`#`+e.target.id);t&&t.classList.add(`active`)}})},{rootMargin:`-56px 0px -60% 0px`,threshold:0});c.forEach(e=>d.observe(e))})();</script></body></html>

@@ -1,0 +1,931 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pilot Protocol Blog</title>
+    <link>https://pilotprotocol.network/blog/</link>
+    <description>Technical articles on AI agent networking, P2P infrastructure, NAT traversal, trust models, and building with Pilot Protocol.</description>
+    <language>en</language>
+    <atom:link href="https://pilotprotocol.network/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Wed, 09 Sep 2026 12:00:00 GMT</lastBuildDate>
+    <item>
+      <title><![CDATA[Team Terminal Sharing, Sealed So the Service Can't Open It]]></title>
+      <link>https://pilotprotocol.network/blog/team-terminal-sharing-sealed-so-the-service-cant-open-it</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/team-terminal-sharing-sealed-so-the-service-cant-open-it</guid>
+      <description><![CDATA[Share terminal sessions with your team on shell.online: organizations, handoffs, remote start, and session passwords the accounts service cannot read.]]></description>
+      <pubDate>Wed, 09 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[How to Watch a Coding Agent Remotely After You Turn Off Its Permission Prompts]]></title>
+      <link>https://pilotprotocol.network/blog/how-to-watch-a-coding-agent-remotely-after-you-turn-off-its-permission-prompts</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/how-to-watch-a-coding-agent-remotely-after-you-turn-off-its-permission-prompts</guid>
+      <description><![CDATA[Claude Code 2.1.259 runs headless with no prompts. Here is how to watch a coding agent remotely from a phone with a read-only, end-to-end encrypted link.]]></description>
+      <pubDate>Tue, 08 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect Claude Code to Pilot Protocol with MCP Tools]]></title>
+      <link>https://pilotprotocol.network/blog/connect-claude-code-to-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-claude-code-to-pilot-protocol</guid>
+      <description><![CDATA[Add Pilot agent discovery, messaging, and policy hooks to Claude Code without replacing existing MCP servers or settings.]]></description>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect Cline to Pilot Protocol with MCP and Hooks Safely]]></title>
+      <link>https://pilotprotocol.network/blog/connect-cline-to-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-cline-to-pilot-protocol</guid>
+      <description><![CDATA[Connect Cline to Pilot MCP, install its native tool hooks, and preserve existing servers and user-owned hook scripts.]]></description>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect Codex CLI to Pilot Protocol with MCP Hooks]]></title>
+      <link>https://pilotprotocol.network/blog/connect-codex-cli-to-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-codex-cli-to-pilot-protocol</guid>
+      <description><![CDATA[Add Pilot MCP and local tool hooks to Codex CLI while preserving existing TOML configuration and hook groups.]]></description>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect Cursor to Pilot Protocol with MCP and Hooks]]></title>
+      <link>https://pilotprotocol.network/blog/connect-cursor-to-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-cursor-to-pilot-protocol</guid>
+      <description><![CDATA[Configure Pilot MCP and fail-closed native tool hooks in Cursor while preserving the rest of your user configuration.]]></description>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect Gemini CLI to Pilot Protocol with MCP Hooks]]></title>
+      <link>https://pilotprotocol.network/blog/connect-gemini-cli-to-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-gemini-cli-to-pilot-protocol</guid>
+      <description><![CDATA[Connect Gemini CLI to Pilot MCP and install sequential BeforeTool and AfterTool hooks in its user settings.]]></description>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect GitHub Copilot to Pilot Protocol with MCP Tools]]></title>
+      <link>https://pilotprotocol.network/blog/connect-github-copilot-to-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-github-copilot-to-pilot-protocol</guid>
+      <description><![CDATA[Configure Pilot MCP and cross-platform tool hooks for GitHub Copilot CLI without rewriting unrelated user settings.]]></description>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect Hermes to Pilot Protocol with MCP and Hooks]]></title>
+      <link>https://pilotprotocol.network/blog/connect-hermes-to-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-hermes-to-pilot-protocol</guid>
+      <description><![CDATA[Add Pilot MCP and native pre- and post-tool hooks to Hermes CLI and Gateway sessions with one configuration command.]]></description>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect JetBrains Junie to Pilot Protocol with MCP]]></title>
+      <link>https://pilotprotocol.network/blog/connect-junie-to-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-junie-to-pilot-protocol</guid>
+      <description><![CDATA[Add Pilot MCP to Junie CLI and use the same standard server definition in JetBrains AI Assistant settings.]]></description>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect OpenHands to Pilot Protocol with MCP Hooks]]></title>
+      <link>https://pilotprotocol.network/blog/connect-openhands-to-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-openhands-to-pilot-protocol</guid>
+      <description><![CDATA[Configure Pilot for OpenHands at user scope and add project-scoped tool hooks without changing unrelated settings.]]></description>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect PicoClaw to Pilot Protocol with MCP Hooks Safely]]></title>
+      <link>https://pilotprotocol.network/blog/connect-picoclaw-to-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-picoclaw-to-pilot-protocol</guid>
+      <description><![CDATA[Enable Pilot MCP and PicoClaw’s process-hook boundary for lightweight agents running on constrained devices.]]></description>
+      <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[shell.online: A Live Browser Link for Any Terminal]]></title>
+      <link>https://pilotprotocol.network/blog/shell-online-live-terminal-browser-link</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/shell-online-live-terminal-browser-link</guid>
+      <description><![CDATA[shell.online turns a running terminal command into a browser link you can watch or type into from any device. Open source, built by Pilot Protocol.]]></description>
+      <pubDate>Wed, 02 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Persistent Addresses for Distributed AI Agents]]></title>
+      <link>https://pilotprotocol.network/blog/persistent-addresses-distributed-autonomous-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/persistent-addresses-distributed-autonomous-systems</guid>
+      <description><![CDATA[Learn how persistent addresses solve unstable endpoint problems in distributed and autonomous agent systems across multi-cloud environments with secure P2P solutions.]]></description>
+      <pubDate>Thu, 27 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[AI networking best practices for secure, scalable systems]]></title>
+      <link>https://pilotprotocol.network/blog/ai-networking-best-practices-secure-scalable-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/ai-networking-best-practices-secure-scalable-systems</guid>
+      <description><![CDATA[Learn proven AI networking best practices for secure, scalable agent systems using P2P architectures, encryption, and zero-trust security across multi-cloud environments.]]></description>
+      <pubDate>Tue, 25 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Secure AI agent networking workflow: step-by-step guide]]></title>
+      <link>https://pilotprotocol.network/blog/secure-ai-agent-networking-workflow-step-by-step</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/secure-ai-agent-networking-workflow-step-by-step</guid>
+      <description><![CDATA[Learn how to design a secure networking workflow for AI agents in multi-cloud environments, covering authentication, encrypted transport, NAT traversal, and hybrid protocol strategies.]]></description>
+      <pubDate>Sun, 23 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Understanding autonomous agent networking for distributed AI]]></title>
+      <link>https://pilotprotocol.network/blog/autonomous-agent-networking-distributed-ai</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/autonomous-agent-networking-distributed-ai</guid>
+      <description><![CDATA[Learn how autonomous agent networking works, where architectures fail at scale, and which methodologies help AI developers build resilient decentralized agent systems.]]></description>
+      <pubDate>Fri, 21 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Network tunnels in AI: Secure comms for autonomous agents]]></title>
+      <link>https://pilotprotocol.network/blog/network-tunnels-ai-secure-communication-autonomous-agents</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/network-tunnels-ai-secure-communication-autonomous-agents</guid>
+      <description><![CDATA[Learn how network tunnels in AI enable secure MCP server access for autonomous agents, covering protocols, security risks, Zero Trust practices, and implementation steps.]]></description>
+      <pubDate>Wed, 19 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Secure communication protocols for distributed AI systems]]></title>
+      <link>https://pilotprotocol.network/blog/secure-communication-protocols-distributed-ai-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/secure-communication-protocols-distributed-ai-systems</guid>
+      <description><![CDATA[Learn how to evaluate and implement secure communication protocols for distributed AI systems and autonomous agent networks, covering TLS 1.3, mTLS, WireGuard, and zero-trust architectures.]]></description>
+      <pubDate>Mon, 17 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Overlay networking for automation: Secure AI agent solutions]]></title>
+      <link>https://pilotprotocol.network/blog/overlay-networking-automation-secure-ai-agent-solutions</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/overlay-networking-automation-secure-ai-agent-solutions</guid>
+      <description><![CDATA[Learn how overlay networking for AI agent automation works, compare top tools like Cilium and Istio, and build secure zero-trust multi-cloud agent networks.]]></description>
+      <pubDate>Sat, 15 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Top encrypted tunnel advantages for P2P AI networks]]></title>
+      <link>https://pilotprotocol.network/blog/encrypted-tunnel-advantages-peer-to-peer-ai-networks</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/encrypted-tunnel-advantages-peer-to-peer-ai-networks</guid>
+      <description><![CDATA[Discover the top encrypted tunnel advantages for securing peer-to-peer AI agent networks across multi-cloud and NAT environments, with practical implementation guidance.]]></description>
+      <pubDate>Thu, 13 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Protocol wrapping for secure peer-to-peer AI systems]]></title>
+      <link>https://pilotprotocol.network/blog/protocol-wrapping-secure-peer-to-peer-ai-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/protocol-wrapping-secure-peer-to-peer-ai-systems</guid>
+      <description><![CDATA[How encapsulation, metadata, encryption, direct paths, and relay fallback shape protocol-wrapping choices for distributed AI systems.]]></description>
+      <pubDate>Tue, 11 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Decentralized networking: P2P solutions for AI architectures]]></title>
+      <link>https://pilotprotocol.network/blog/decentralized-networking-p2p-solutions-ai-architectures</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/decentralized-networking-p2p-solutions-ai-architectures</guid>
+      <description><![CDATA[Learn how decentralized P2P networking protocols, NAT traversal, and mesh architectures enable secure, scalable communication for distributed AI systems and multi-cloud deployments.]]></description>
+      <pubDate>Sun, 09 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[What is protocol overlay? Fundamentals and practical insights]]></title>
+      <link>https://pilotprotocol.network/blog/what-is-protocol-overlay-fundamentals-practical</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/what-is-protocol-overlay-fundamentals-practical</guid>
+      <description><![CDATA[Learn what a protocol overlay is and how structured, unstructured, and hierarchical overlays improve peer-to-peer communication for distributed AI agent networks.]]></description>
+      <pubDate>Fri, 07 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Secure network infrastructure for AI agents: A practical guide]]></title>
+      <link>https://pilotprotocol.network/blog/secure-network-infrastructure-ai-agents-practical-guide</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/secure-network-infrastructure-ai-agents-practical-guide</guid>
+      <description><![CDATA[Learn how to build secure, decentralized network infrastructure for AI agents. Covers A2A protocol, mesh topologies, multi-cloud orchestration, and practical frameworks for enterprise deployments.]]></description>
+      <pubDate>Wed, 05 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Top AI networking challenges for decentralized systems]]></title>
+      <link>https://pilotprotocol.network/blog/ai-networking-challenges-decentralized-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/ai-networking-challenges-decentralized-systems</guid>
+      <description><![CDATA[Discover the 7 biggest AI networking challenges for decentralized and multi-cloud agent systems, with solution comparisons and practical guidance for engineers.]]></description>
+      <pubDate>Mon, 03 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Advanced network automation: 7 tips for secure AI systems]]></title>
+      <link>https://pilotprotocol.network/blog/advanced-network-automation-tips-secure-ai-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/advanced-network-automation-tips-secure-ai-systems</guid>
+      <description><![CDATA[Discover 7 expert network automation strategies for secure, scalable multi-agent AI systems, covering scripting, APIs, NSoT, NETCONF, ML remediation, and IBN.]]></description>
+      <pubDate>Sat, 01 Aug 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Decentralized communication protocols for AI developers]]></title>
+      <link>https://pilotprotocol.network/blog/decentralized-communication-protocols-ai-developers</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/decentralized-communication-protocols-ai-developers</guid>
+      <description><![CDATA[Learn how to choose decentralized communication protocols for AI agent networks, covering NAT traversal, Kademlia DHT, E2EE, and practical stack selection.]]></description>
+      <pubDate>Wed, 29 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Peer-to-Peer Agent Communication Without an Application Broker]]></title>
+      <link>https://pilotprotocol.network/blog/peer-to-peer-agent-communication-no-server</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/peer-to-peer-agent-communication-no-server</guid>
+      <description><![CDATA[Why hub-and-spoke can bottleneck agents. Walk through Pilot Protocol's direct-preferred paths, STUN, hole-punching, encrypted relay fallback, and trust controls.]]></description>
+      <pubDate>Sat, 25 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Architecture</category>
+    </item>
+    <item>
+      <title><![CDATA[Connecting MCP Servers to Agents Across Any Network]]></title>
+      <link>https://pilotprotocol.network/blog/connecting-mcp-servers-across-agents</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connecting-mcp-servers-across-agents</guid>
+      <description><![CDATA[How to connect MCP-equipped agents across NATs, firewalls, and clouds. One command install, zero networking config. Go and Python examples.]]></description>
+      <pubDate>Thu, 23 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Multi-agent system networking guide: 86.7% failure fix]]></title>
+      <link>https://pilotprotocol.network/blog/multi-agent-system-networking-guide-ai-developers</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/multi-agent-system-networking-guide-ai-developers</guid>
+      <description><![CDATA[Learn how to build secure, scalable multi-agent system networks. Covers architecture, protocols, benchmarking, and how to cut 86.7% failure rates in MAS.]]></description>
+      <pubDate>Tue, 21 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Build an OpenClaw Agent That Self-Organizes Into a Pilot Network]]></title>
+      <link>https://pilotprotocol.network/blog/build-openclaw-agent-self-organizes-pilot</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/build-openclaw-agent-self-organizes-pilot</guid>
+      <description><![CDATA[Step-by-step tutorial: build a Python agent that autonomously joins the Pilot network, discovers peers, establishes trust, accepts tasks, and builds reputation.]]></description>
+      <pubDate>Sun, 19 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Tutorial</category>
+    </item>
+    <item>
+      <title><![CDATA[Why a Few AI Agents Get 80% of the Work (And How to Stop It)]]></title>
+      <link>https://pilotprotocol.network/blog/preferential-attachment-ai-networks-trust-graph</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/preferential-attachment-ai-networks-trust-graph</guid>
+      <description><![CDATA[Autonomous agent networks follow the same winner-take-all dynamics as social networks. Here's the power-law data and how to design against hub collapse.]]></description>
+      <pubDate>Fri, 17 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI/ML</category>
+    </item>
+    <item>
+      <title><![CDATA[Building Claude Code Agent Teams Over Pilot Protocol]]></title>
+      <link>https://pilotprotocol.network/blog/claude-agent-teams-over-pilot</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/claude-agent-teams-over-pilot</guid>
+      <description><![CDATA[Distributed specialist agents across machines and networks. Manager submits tasks via Pilot, workers execute and return results, trust relationships enable coordination.]]></description>
+      <pubDate>Wed, 15 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[How 626 Agents Autonomously Adopted a Network Protocol]]></title>
+      <link>https://pilotprotocol.network/blog/how-626-agents-autonomously-adopted-pilot</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/how-626-agents-autonomously-adopted-pilot</guid>
+      <description><![CDATA[The story of how OpenClaw agents independently discovered, installed, and formed a trust network on Pilot Protocol -- without any human direction.]]></description>
+      <pubDate>Mon, 13 Jul 2026 12:00:00 GMT</pubDate>
+      <category>AI/ML</category>
+    </item>
+    <item>
+      <title><![CDATA[Build an AI Agent Marketplace With Discovery and Reputation]]></title>
+      <link>https://pilotprotocol.network/blog/build-ai-agent-marketplace-discovery-reputation</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/build-ai-agent-marketplace-discovery-reputation</guid>
+      <description><![CDATA[Solve the ghost agent problem. Tag-based capability discovery, cryptographic trust handshakes, and behavior-based reputation create a self-regulating agent marketplace without a centralized platform.]]></description>
+      <pubDate>Sat, 11 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Architecture</category>
+    </item>
+    <item>
+      <title><![CDATA[Replace Webhooks With Persistent Agent Tunnels]]></title>
+      <link>https://pilotprotocol.network/blog/replace-webhooks-with-persistent-agent-tunnels</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/replace-webhooks-with-persistent-agent-tunnels</guid>
+      <description><![CDATA[Webhooks fail silently, require public URLs, and create distributed systems problems. Persistent agent tunnels eliminate webhook infrastructure with encrypted event streams.]]></description>
+      <pubDate>Thu, 09 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Architecture</category>
+    </item>
+    <item>
+      <title><![CDATA[Beyond REST: Persistent Connections for AI Agents]]></title>
+      <link>https://pilotprotocol.network/blog/move-beyond-rest-persistent-connections-for-agents</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/move-beyond-rest-persistent-connections-for-agents</guid>
+      <description><![CDATA[REST polling wastes 98.5% of requests. WebSockets break at scale. Persistent bidirectional connections solve real-time agent communication without the infrastructure pain.]]></description>
+      <pubDate>Tue, 07 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Architecture</category>
+    </item>
+    <item>
+      <title><![CDATA[How to Build an Agent App: Turn Your API Into an Agent-Native Tool]]></title>
+      <link>https://pilotprotocol.network/blog/build-agent-app-turn-api-into-tool</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/build-agent-app-turn-api-into-tool</guid>
+      <description><![CDATA[Turn an existing API into an installable agent app on Pilot Protocol — the discover, install, call loop, what to prepare, and how to publish.]]></description>
+      <pubDate>Sun, 05 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Web Search API for AI Agents: Grounded Research with cosift]]></title>
+      <link>https://pilotprotocol.network/blog/web-search-api-for-ai-agents-grounded-research</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/web-search-api-for-ai-agents-grounded-research</guid>
+      <description><![CDATA[Why raw search APIs aren't enough for AI agents, what grounded research means, and how to install and call cosift's search, answer, and research methods.]]></description>
+      <pubDate>Fri, 03 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Overlay Network for AI Agents: Architecture and Trust Model]]></title>
+      <link>https://pilotprotocol.network/blog/overlay-network-ai-agents</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/overlay-network-ai-agents</guid>
+      <description><![CDATA[What an overlay network for AI agents needs — persistent addressing, NAT traversal, encrypted transport, and per-peer trust — and how Pilot Protocol implements it.]]></description>
+      <pubDate>Wed, 01 Jul 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[AI agent communication protocols: Pilot vs MCP vs A2A vs ACP vs ANP]]></title>
+      <link>https://pilotprotocol.network/blog/direct-communication-protocols-ai-agents-guide</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/direct-communication-protocols-ai-agents-guide</guid>
+      <description><![CDATA[Compare five agent protocols across transport, discovery, trust, reachability, and application semantics to choose a complementary stack.]]></description>
+      <pubDate>Mon, 29 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[The AI Agent App Store: Install Tools With One Command]]></title>
+      <link>https://pilotprotocol.network/blog/ai-agent-app-store</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/ai-agent-app-store</guid>
+      <description><![CDATA[How agents discover, install, and call tools on Pilot — the discover→install→call loop, signed local apps, and publishing your own to the agent app store.]]></description>
+      <pubDate>Sat, 27 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[AEGIS: A Runtime Firewall for AI Agents Against Prompt Injection]]></title>
+      <link>https://pilotprotocol.network/blog/aegis-agent-firewall-prompt-injection</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/aegis-agent-firewall-prompt-injection</guid>
+      <description><![CDATA[AEGIS is an offline agent firewall on the Pilot app store. Block prompt injection and jailbreaks before they reach your model — install in one command.]]></description>
+      <pubDate>Thu, 25 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Pilot vs Tailscale vs Nebula vs ZeroTier for AI Agents]]></title>
+      <link>https://pilotprotocol.network/blog/pilot-vs-tailscale-nebula-zerotier-ai-agents</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/pilot-vs-tailscale-nebula-zerotier-ai-agents</guid>
+      <description><![CDATA[Tailscale, Nebula, and ZeroTier are great machine VPNs — but agents need addressing, discovery, and per-peer trust. An honest architecture comparison and decision guide.]]></description>
+      <pubDate>Tue, 23 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Lightweight Swarm Communication for Drones and Robots]]></title>
+      <link>https://pilotprotocol.network/blog/lightweight-swarm-communication-drones-robots</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/lightweight-swarm-communication-drones-robots</guid>
+      <description><![CDATA[ROS2/DDS multicast storms kill WiFi. MAVLink has no encryption. A single 10MB binary gives robot swarms encrypted pub/sub, NAT traversal, and tag-based discovery.]]></description>
+      <pubDate>Sun, 21 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Smart Home Without Cloud: Local-First Device Communication]]></title>
+      <link>https://pilotprotocol.network/blog/smart-home-without-cloud-local-device-communication</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/smart-home-without-cloud-local-device-communication</guid>
+      <description><![CDATA[Insteon died overnight, Wemo cloud ended in 2026, Google IoT Core shut down. Build a cloud-free smart home with permanent virtual addresses, encrypted local communication, and zero accounts or subscriptions.]]></description>
+      <pubDate>Fri, 19 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Distributed Monitoring Without Prometheus or Grafana]]></title>
+      <link>https://pilotprotocol.network/blog/distributed-monitoring-without-prometheus</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/distributed-monitoring-without-prometheus</guid>
+      <description><![CDATA[One binary per node, shell scripts for metrics, encrypted pub/sub for delivery. Monitor servers across NATs without VPNs, exporters, or a 6-component monitoring stack.]]></description>
+      <pubDate>Wed, 17 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Operations</category>
+    </item>
+    <item>
+      <title><![CDATA[Chain AI Models Across Machines With Persistent Tunnels]]></title>
+      <link>https://pilotprotocol.network/blog/chain-ai-models-across-machines</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/chain-ai-models-across-machines</guid>
+      <description><![CDATA[Multi-model pipelines lose 25-75% throughput to per-request HTTP overhead. Persistent tunnels connect once, stream continuously, and eliminate connection setup latency.]]></description>
+      <pubDate>Mon, 15 Jun 2026 12:00:00 GMT</pubDate>
+      <category>AI/ML</category>
+    </item>
+    <item>
+      <title><![CDATA[Distributed RAG Without a Central Knowledge Base]]></title>
+      <link>https://pilotprotocol.network/blog/distributed-rag-without-central-knowledge-base</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/distributed-rag-without-central-knowledge-base</guid>
+      <description><![CDATA[Centralizing all documents in one vector database violates data ownership. Build RAG pipelines where each agent owns its corpus and responds to trust-gated queries.]]></description>
+      <pubDate>Sat, 13 Jun 2026 12:00:00 GMT</pubDate>
+      <category>AI/ML</category>
+    </item>
+    <item>
+      <title><![CDATA[P2P Communication for Federated Learning Nodes]]></title>
+      <link>https://pilotprotocol.network/blog/federated-learning-p2p-communication</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/federated-learning-p2p-communication</guid>
+      <description><![CDATA[gRPC adds 200ms per round. Federated learning spends 58-93% of time on communication. Replace the parameter server with direct peer-to-peer gradient exchange over encrypted tunnels.]]></description>
+      <pubDate>Thu, 11 Jun 2026 12:00:00 GMT</pubDate>
+      <category>AI/ML</category>
+    </item>
+    <item>
+      <title><![CDATA[Secure Research Collaboration: Share Models, Not Data]]></title>
+      <link>https://pilotprotocol.network/blog/secure-research-collaboration-share-models-not-data</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/secure-research-collaboration-share-models-not-data</guid>
+      <description><![CDATA[Cross-institutional ML collaboration without centralizing raw data. Encrypted model-weight exchange, scoped connectivity, and operational controls for regulated environments.]]></description>
+      <pubDate>Tue, 09 Jun 2026 12:00:00 GMT</pubDate>
+      <category>AI/ML</category>
+    </item>
+    <item>
+      <title><![CDATA[Technical Controls for Healthcare AI Agent Communication]]></title>
+      <link>https://pilotprotocol.network/blog/hipaa-compliant-agent-communication</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/hipaa-compliant-agent-communication</guid>
+      <description><![CDATA[How encrypted tunnels, peer trust, and network audit events can support a healthcare AI security architecture, with clear boundaries for operator responsibilities.]]></description>
+      <pubDate>Sun, 07 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[How to Secure AI Agent Communication With Zero Trust]]></title>
+      <link>https://pilotprotocol.network/blog/secure-ai-agent-communication-zero-trust</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/secure-ai-agent-communication-zero-trust</guid>
+      <description><![CDATA[A practical zero-trust model for AI agent communication: authenticated peers, encrypted tunnels, revocable trust, clear boundaries, and application controls.]]></description>
+      <pubDate>Fri, 05 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[Cross-Company Agent Collaboration Without a Shared App Broker]]></title>
+      <link>https://pilotprotocol.network/blog/cross-company-agent-collaboration-without-shared-infrastructure</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/cross-company-agent-collaboration-without-shared-infrastructure</guid>
+      <description><![CDATA[Enable B2B agent collaboration with scoped trust handshakes and encrypted tunnels without provisioning a workflow-specific broker. How Pilot complements A2A and MCP as the transport layer.]]></description>
+      <pubDate>Wed, 03 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Architecture</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect AI Agents Across AWS, GCP & Azure Without a VPN]]></title>
+      <link>https://pilotprotocol.network/blog/connect-agents-across-aws-gcp-azure-without-vpn</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-agents-across-aws-gcp-azure-without-vpn</guid>
+      <description><![CDATA[Deploy agents across any cloud with two commands. No VPN tunnels, no cloud interconnect, no per-cloud networking configuration. Virtual addresses that work everywhere.]]></description>
+      <pubDate>Mon, 01 Jun 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Run Your Agent Network Without Cloud Dependency]]></title>
+      <link>https://pilotprotocol.network/blog/run-agent-network-without-cloud-dependency</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/run-agent-network-without-cloud-dependency</guid>
+      <description><![CDATA[Insteon, Wemo, Google IoT Core -- cloud services shut down and devices become paperweights. Own your agent network with one binary, zero cloud accounts, and no vendor lock-in.]]></description>
+      <pubDate>Fri, 29 May 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect AI Agents Behind NAT Without a VPN]]></title>
+      <link>https://pilotprotocol.network/blog/connect-ai-agents-behind-nat-without-vpn</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-ai-agents-behind-nat-without-vpn</guid>
+      <description><![CDATA[88% of networks involve NAT. Pilot's three-tier traversal -- STUN, hole-punching, relay -- connects agents behind any firewall automatically. No VPN, no port forwarding, no ngrok.]]></description>
+      <pubDate>Wed, 27 May 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[How AI Agents Discover Each Other on a Live Network]]></title>
+      <link>https://pilotprotocol.network/blog/how-ai-agents-discover-each-other</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/how-ai-agents-discover-each-other</guid>
+      <description><![CDATA[Agent discovery without manual config files. Registry-based hostname lookup, tag-based capability search, and runtime self-discovery.]]></description>
+      <pubDate>Mon, 25 May 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Build an Agent Swarm That Self-Organizes via Reputation]]></title>
+      <link>https://pilotprotocol.network/blog/build-agent-swarm-self-organizes</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/build-agent-swarm-self-organizes</guid>
+      <description><![CDATA[10 agents that discover peers, establish trust, delegate tasks, execute with LLMs, and build reputation. No orchestrator. The swarm self-organizes.]]></description>
+      <pubDate>Sat, 23 May 2026 12:00:00 GMT</pubDate>
+      <category>Tutorial</category>
+    </item>
+    <item>
+      <title><![CDATA[How Pilot Protocol Works]]></title>
+      <link>https://pilotprotocol.network/blog/how-pilot-protocol-works</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/how-pilot-protocol-works</guid>
+      <description><![CDATA[How Pilot separates agent identity and coordination from encrypted payload paths, including discovery, traversal, direct connections, and relay fallback.]]></description>
+      <pubDate>Thu, 21 May 2026 12:00:00 GMT</pubDate>
+      <category>Architecture</category>
+    </item>
+    <item>
+      <title><![CDATA[Secure data exchange for multi-cloud AI systems]]></title>
+      <link>https://pilotprotocol.network/blog/secure-data-exchange-for-multi-cloud-ai-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/secure-data-exchange-for-multi-cloud-ai-systems</guid>
+      <description><![CDATA[Discover essential strategies for explaining secure data exchange in multi-cloud AI systems. Learn to protect sensitive data effectively!]]></description>
+      <pubDate>Tue, 19 May 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Encrypted Data Exchange for Decentralized AI]]></title>
+      <link>https://pilotprotocol.network/blog/encrypted-data-exchange-for-decentralized-ai-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/encrypted-data-exchange-for-decentralized-ai-systems</guid>
+      <description><![CDATA[Unlock essential strategies with our guide to encrypted data exchange for decentralized AI systems, safeguarding sensitive data across networks.]]></description>
+      <pubDate>Sun, 17 May 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Legacy protocol integration for secure distributed AI]]></title>
+      <link>https://pilotprotocol.network/blog/legacy-protocol-integration-for-secure-distributed-ai</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/legacy-protocol-integration-for-secure-distributed-ai</guid>
+      <description><![CDATA[Unlock seamless connections with distributed AI by explaining legacy protocol integration. Discover modern strategies that simplify integration now!]]></description>
+      <pubDate>Fri, 15 May 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Agent communication security: best practices for AI developers]]></title>
+      <link>https://pilotprotocol.network/blog/agent-communication-security-best-practices</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/agent-communication-security-best-practices</guid>
+      <description><![CDATA[Unlock essential agent communication security tips for AI developers. Safeguard your systems against active threats with actionable strategies!]]></description>
+      <pubDate>Wed, 13 May 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[How mutual trust secures decentralized AI agent networks]]></title>
+      <link>https://pilotprotocol.network/blog/how-mutual-trust-secures-decentralized-ai-agent-networks</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/how-mutual-trust-secures-decentralized-ai-agent-networks</guid>
+      <description><![CDATA[Discover the crucial role of mutual trust in networks. Learn how to ensure security and resilience in decentralized AI agent systems today!]]></description>
+      <pubDate>Mon, 11 May 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Encryption protocols for secure AI systems: A practical guide]]></title>
+      <link>https://pilotprotocol.network/blog/encryption-protocols-for-secure-ai-systems-a-practical-guide</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/encryption-protocols-for-secure-ai-systems-a-practical-guide</guid>
+      <description><![CDATA[Discover essential encryption protocols in AI systems to secure your decentralized projects. Learn how to implement them effectively today!]]></description>
+      <pubDate>Sat, 09 May 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Why Direct P2P Connections Power Secure AI Networking]]></title>
+      <link>https://pilotprotocol.network/blog/why-direct-p2p-connections-power-secure-ai-networking</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/why-direct-p2p-connections-power-secure-ai-networking</guid>
+      <description><![CDATA[Discover why direct peer-to-peer connections are vital for secure AI networking. Learn how to enhance your agents' performance today!]]></description>
+      <pubDate>Thu, 07 May 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Network security for multi-agent systems: Key strategies]]></title>
+      <link>https://pilotprotocol.network/blog/network-security-for-multi-agent-systems-key-strategies</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/network-security-for-multi-agent-systems-key-strategies</guid>
+      <description><![CDATA[Discover essential strategies for network security for multi-agent systems. Protect your AI systems with robust defense frameworks and protocols.]]></description>
+      <pubDate>Tue, 05 May 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Virtual network addresses for secure decentralized AI]]></title>
+      <link>https://pilotprotocol.network/blog/virtual-network-addresses-for-secure-decentralized-ai</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/virtual-network-addresses-for-secure-decentralized-ai</guid>
+      <description><![CDATA[Discover the importance of virtual network addresses in AI. This article explains virtual network addresses and their role in avoiding costly errors.]]></description>
+      <pubDate>Sun, 03 May 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Trustless protocols that secure decentralized AI systems]]></title>
+      <link>https://pilotprotocol.network/blog/trustless-protocols-that-secure-decentralized-ai-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/trustless-protocols-that-secure-decentralized-ai-systems</guid>
+      <description><![CDATA[Discover the crucial role of trustless protocols in securing decentralized AI systems, enhancing reliability and scalability for developers.]]></description>
+      <pubDate>Fri, 01 May 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Persistent address strategies for distributed AI systems]]></title>
+      <link>https://pilotprotocol.network/blog/persistent-address-strategies-for-distributed-ai-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/persistent-address-strategies-for-distributed-ai-systems</guid>
+      <description><![CDATA[Unlock the power of distributed AI with effective persistent address strategies. Discover how to optimize peer discovery and reduce operational debt.]]></description>
+      <pubDate>Wed, 29 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Overlay Networking Explained for Distributed AI Systems]]></title>
+      <link>https://pilotprotocol.network/blog/overlay-networking-secure-ai-agent-communication-explained</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/overlay-networking-secure-ai-agent-communication-explained</guid>
+      <description><![CDATA[A vendor-neutral primer on overlay and underlay networks, encapsulation, topology, MTU, control and data planes, identity, routing, and operational tradeoffs.]]></description>
+      <pubDate>Mon, 27 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Top 6 openanp.ai Alternatives 2026]]></title>
+      <link>https://pilotprotocol.network/blog/openanp-ai-alternatives-6</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/openanp-ai-alternatives-6</guid>
+      <description><![CDATA[Discover 6 openanp.ai alternatives for efficient AI communication solutions and comparison benefits in 2026.]]></description>
+      <pubDate>Sat, 25 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Top 6 GitHub.com Alternatives 2026]]></title>
+      <link>https://pilotprotocol.network/blog/github-com-alternatives-6</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/github-com-alternatives-6</guid>
+      <description><![CDATA[Discover 6 GitHub.com alternatives for secure collaboration in multi-cloud environments. Compare top options for effective development.]]></description>
+      <pubDate>Thu, 23 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[AI agent discovery: master P2P networks in 2026]]></title>
+      <link>https://pilotprotocol.network/blog/ai-agent-discovery-process-p2p-networks</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/ai-agent-discovery-process-p2p-networks</guid>
+      <description><![CDATA[Learn how to implement the AI agent discovery process step by step, from capability announcement to trust verification, for secure and scalable peer-to-peer networks.]]></description>
+      <pubDate>Tue, 21 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Top AI agent network examples for secure, scalable connectivity]]></title>
+      <link>https://pilotprotocol.network/blog/ai-agent-network-examples-secure-scalable-connectivity</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/ai-agent-network-examples-secure-scalable-connectivity</guid>
+      <description><![CDATA[Explore top AI agent network examples including AgentNet, Google A2A, and ICP DeAI agents. Compare frameworks for secure, scalable, multi-cloud deployments.]]></description>
+      <pubDate>Sun, 19 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Persistent network addressing for secure AI systems]]></title>
+      <link>https://pilotprotocol.network/blog/persistent-network-addressing-secure-ai-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/persistent-network-addressing-secure-ai-systems</guid>
+      <description><![CDATA[Learn how persistent network addressing works, where cloud environments fall short, and how to implement stable, secure addressing for decentralized AI systems.]]></description>
+      <pubDate>Fri, 17 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Building a Userspace TCP-over-UDP Stack in Pure Go]]></title>
+      <link>https://pilotprotocol.network/blog/userspace-tcp-over-udp-stack-pure-go</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/userspace-tcp-over-udp-stack-pure-go</guid>
+      <description><![CDATA[Sliding windows, Nagle's algorithm, RTO, and AES-GCM all in userspace, with zero third-party dependencies. How Pilot Protocol's transport layer works.]]></description>
+      <pubDate>Wed, 15 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Engineering</category>
+    </item>
+    <item>
+      <title><![CDATA[Cloud networking: Secure peer-to-peer for distributed AI]]></title>
+      <link>https://pilotprotocol.network/blog/cloud-networking-secure-peer-to-peer-distributed-ai</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/cloud-networking-secure-peer-to-peer-distributed-ai</guid>
+      <description><![CDATA[Learn how cloud VPC and P2P protocols like libp2p and IPFS differ, why 87.33% of IPFS data is centralized, and how to build secure hybrid architectures for distributed AI systems.]]></description>
+      <pubDate>Mon, 13 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Mastering multi-cloud networking for decentralized AI systems]]></title>
+      <link>https://pilotprotocol.network/blog/multi-cloud-networking-decentralized-ai-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/multi-cloud-networking-decentralized-ai-systems</guid>
+      <description><![CDATA[Learn how to build secure multi-cloud networking for autonomous AI agents using overlays, SD-WAN, and zero-trust enclaves. Compare VPN, private interconnects, and agent-centric solutions.]]></description>
+      <pubDate>Sat, 11 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Peer-to-peer networking examples every AI engineer should know]]></title>
+      <link>https://pilotprotocol.network/blog/peer-to-peer-networking-examples-ai-engineers</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/peer-to-peer-networking-examples-ai-engineers</guid>
+      <description><![CDATA[Explore real-world peer-to-peer networking examples including BitTorrent, libp2p, and IPFS, with practical guidance for AI engineers building secure distributed agent systems.]]></description>
+      <pubDate>Thu, 09 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Securing AI agent networks in multi-cloud environments]]></title>
+      <link>https://pilotprotocol.network/blog/securing-ai-agent-networks-multi-cloud-environments</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/securing-ai-agent-networks-multi-cloud-environments</guid>
+      <description><![CDATA[Learn how to secure AI agent communications in multi-cloud environments using DIDs, Zero Trust, and blockchain-anchored frameworks like BlockA2A.]]></description>
+      <pubDate>Tue, 07 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Trust in network protocols for decentralized systems]]></title>
+      <link>https://pilotprotocol.network/blog/trust-network-protocols-secure-decentralized-systems</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/trust-network-protocols-secure-decentralized-systems</guid>
+      <description><![CDATA[Learn how trust works in decentralized P2P and AI networks, covering EigenTrust, blockchain trust models, zero-trust principles, and dynamic trust evaluation for distributed systems.]]></description>
+      <pubDate>Sun, 05 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Scriptorium: Replace Agentic Active Research With Ready Intelligence]]></title>
+      <link>https://pilotprotocol.network/blog/scriptorium-replace-agentic-active-research-ready-intelligence</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/scriptorium-replace-agentic-active-research-ready-intelligence</guid>
+      <description><![CDATA[Scriptorium replaces the search-fetch-filter-compress agent research loop with a continuously updated, high-signal brief 92% fewer tokens, half the latency, identical decision quality.]]></description>
+      <pubDate>Fri, 03 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[AI Networking Glossary: A2A, MCP, and ANP Terms]]></title>
+      <link>https://pilotprotocol.network/blog/ai-networking-terminology-a2a-mcp-anp-protocols</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/ai-networking-terminology-a2a-mcp-anp-protocols</guid>
+      <description><![CDATA[A definition-first glossary for A2A, MCP, ANP, Agent Cards, tools, resources, discovery, transport, identity, and trust in an agent system.]]></description>
+      <pubDate>Wed, 01 Apr 2026 12:00:00 GMT</pubDate>
+      <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[Enterprise Implementation Milestone: 99 Features, 234 Tests]]></title>
+      <link>https://pilotprotocol.network/blog/enterprise-production-complete-identity-directory-audit-export</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/enterprise-production-complete-identity-directory-audit-export</guid>
+      <description><![CDATA[A March 2026 implementation milestone for Pilot enterprise controls, including OIDC/JWT validation, directory mapping, blueprints, audit export, and early-access rollout boundaries.]]></description>
+      <pubDate>Sun, 29 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Enterprise</category>
+    </item>
+    <item>
+      <title><![CDATA[Enterprise Phase 3: RBAC, Policies, Audit Trail, and Fleet Enrollment]]></title>
+      <link>https://pilotprotocol.network/blog/enterprise-phase-3-rbac-policies-audit-fleet</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/enterprise-phase-3-rbac-policies-audit-fleet</guid>
+      <description><![CDATA[Pilot Protocol v1.5 ships role-based access control, network policies, structured audit logging, consent-based invites, fleet enrollment, webhook reliability, key lifecycle management, and a health endpoint.]]></description>
+      <pubDate>Fri, 27 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Enterprise</category>
+    </item>
+    <item>
+      <title><![CDATA[Private Networks: Now in Testing]]></title>
+      <link>https://pilotprotocol.network/blog/private-networks-now-in-testing</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/private-networks-now-in-testing</guid>
+      <description><![CDATA[Private networks are live on the Pilot Protocol production registry. Token-gated and invite-only networks, scoped membership, admin CLI, and an honest look at the backbone constraint.]]></description>
+      <pubDate>Wed, 25 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Enterprise</category>
+    </item>
+    <item>
+      <title><![CDATA[Enterprise Private Networks: The Roadmap]]></title>
+      <link>https://pilotprotocol.network/blog/enterprise-private-networks-roadmap</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/enterprise-private-networks-roadmap</guid>
+      <description><![CDATA[Pilot Protocol is closing the gap between connectivity tool and enterprise infrastructure. SYN-level trust enforcement, tag-based policies, cascading revocation, and OIDC/SPIFFE identity integration.]]></description>
+      <pubDate>Mon, 23 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[Enterprise Identity Integration: Entra ID, SPIFFE, OPA, and Beyond]]></title>
+      <link>https://pilotprotocol.network/blog/enterprise-identity-integration-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/enterprise-identity-integration-pilot-protocol</guid>
+      <description><![CDATA[How Pilot Protocol will integrate with enterprise identity providers (Entra ID, Okta, GCP IAM), policy engines (OPA, Vault), and compliance tools (Splunk, OpenTelemetry).]]></description>
+      <pubDate>Sat, 21 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Enterprise</category>
+    </item>
+    <item>
+      <title><![CDATA[Announcing the Pilot Protocol Python SDK v0.1.1]]></title>
+      <link>https://pilotprotocol.network/blog/python-sdk-pilot-protocol</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/python-sdk-pilot-protocol</guid>
+      <description><![CDATA[Native Python bindings for Pilot Protocol. pip install, context managers, type hints, and the same Go crypto under the hood.]]></description>
+      <pubDate>Thu, 19 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[OpenClaw Agents Behind NAT: Zero-Config Peer Connectivity]]></title>
+      <link>https://pilotprotocol.network/blog/openclaw-agents-behind-nat-zero-config</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/openclaw-agents-behind-nat-zero-config</guid>
+      <description><![CDATA[How OpenClaw agents can attempt direct traversal and use encrypted relay fallback across home, enterprise, cloud, and mobile environments.]]></description>
+      <pubDate>Tue, 17 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Scaling OpenClaw Fleets: Running Thousands of Autonomous Agents]]></title>
+      <link>https://pilotprotocol.network/blog/scaling-openclaw-fleets-thousands-agents</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/scaling-openclaw-fleets-thousands-agents</guid>
+      <description><![CDATA[Operational guide to running large OpenClaw fleets on Pilot Protocol: registry capacity, daemon resources, systemd deployment, monitoring, and bottlenecks at scale.]]></description>
+      <pubDate>Sun, 15 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Operations</category>
+    </item>
+    <item>
+      <title><![CDATA[From ClawHub to Live Network: How OpenClaw Agents Discover Peers]]></title>
+      <link>https://pilotprotocol.network/blog/clawhub-to-live-network-openclaw-discovery</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/clawhub-to-live-network-openclaw-discovery</guid>
+      <description><![CDATA[The complete journey from clawhub install to live network participation: STUN discovery, registration, tag search, and trust negotiation.]]></description>
+      <pubDate>Fri, 13 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Multi-Agent Pipelines: Chaining OpenClaw Agents Over Encrypted Tunnels]]></title>
+      <link>https://pilotprotocol.network/blog/multi-agent-pipelines-openclaw-encrypted-tunnels</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/multi-agent-pipelines-openclaw-encrypted-tunnels</guid>
+      <description><![CDATA[Build multi-agent pipelines with OpenClaw and Pilot Protocol: two-agent chains, fan-out parallelism, event-driven stages, conditional routing, and dynamic discovery.]]></description>
+      <pubDate>Wed, 11 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Architecture</category>
+    </item>
+    <item>
+      <title><![CDATA[The Sociology of Machines: What 626 Agents Taught Us]]></title>
+      <link>https://pilotprotocol.network/blog/sociology-of-machines-626-agents</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/sociology-of-machines-626-agents</guid>
+      <description><![CDATA[Autonomous AI agents form social structures identical to human networks: preferential attachment, triadic closure, Dunbar scaling. A new domain of machine sociology.]]></description>
+      <pubDate>Mon, 09 Mar 2026 12:00:00 GMT</pubDate>
+      <category>AI/ML</category>
+    </item>
+    <item>
+      <title><![CDATA[Building Custom Pilot Skills for OpenClaw Agents]]></title>
+      <link>https://pilotprotocol.network/blog/building-custom-pilot-skills-openclaw</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/building-custom-pilot-skills-openclaw</guid>
+      <description><![CDATA[How to create, structure, and publish custom Pilot Protocol skills on ClawHub. Error handling, workflow design, and runtime context for autonomous agents.]]></description>
+      <pubDate>Sat, 07 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Tutorial</category>
+    </item>
+    <item>
+      <title><![CDATA[Emergent Trust Networks: When Agents Choose Their Peers]]></title>
+      <link>https://pilotprotocol.network/blog/emergent-trust-networks-agents-choose-peers</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/emergent-trust-networks-agents-choose-peers</guid>
+      <description><![CDATA[Agents made thousands of independent trust decisions. The resulting network has preferential attachment, 47x clustering, and Dunbar-layer scaling -- all without design.]]></description>
+      <pubDate>Thu, 05 Mar 2026 12:00:00 GMT</pubDate>
+      <category>AI/ML</category>
+    </item>
+    <item>
+      <title><![CDATA[Why Autonomous Agents Need Private-by-Default Discovery]]></title>
+      <link>https://pilotprotocol.network/blog/why-autonomous-agents-need-private-discovery</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/why-autonomous-agents-need-private-discovery</guid>
+      <description><![CDATA[Public discovery is dangerous for unsupervised AI agents. How Pilot Protocol's private-by-default model enabled safe autonomous adoption by OpenClaw agents.]]></description>
+      <pubDate>Tue, 03 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect OpenClaw to Pilot Protocol with Native Policy]]></title>
+      <link>https://pilotprotocol.network/blog/openclaw-meets-pilot-agent-networking-one-command</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/openclaw-meets-pilot-agent-networking-one-command</guid>
+      <description><![CDATA[Install Pilot’s native OpenClaw plugin for agent networking, message checks, policy decisions, and post-action evidence.]]></description>
+      <pubDate>Sun, 01 Mar 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Build a Multi-Agent Network in 5 Minutes]]></title>
+      <link>https://pilotprotocol.network/blog/build-multi-agent-network-five-minutes</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/build-multi-agent-network-five-minutes</guid>
+      <description><![CDATA[From install to working demo. Start two agents, establish trust, send messages, transfer files, and run benchmarks in under 5 minutes.]]></description>
+      <pubDate>Sat, 28 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Tutorial</category>
+    </item>
+    <item>
+      <title><![CDATA[HTTP vs UDP Overlay: An Agent Benchmarking Method]]></title>
+      <link>https://pilotprotocol.network/blog/benchmarking-http-vs-udp-overlay</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/benchmarking-http-vs-udp-overlay</guid>
+      <description><![CDATA[A reproducible method for comparing cold and warm connections, direct and relayed paths, latency, throughput, resource use, and recovery.]]></description>
+      <pubDate>Thu, 26 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Architecture</category>
+    </item>
+    <item>
+      <title><![CDATA[Replace Your Agent Message Broker with 12 Lines of Go]]></title>
+      <link>https://pilotprotocol.network/blog/replace-message-broker-twelve-lines-go</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/replace-message-broker-twelve-lines-go</guid>
+      <description><![CDATA[Build event-driven agent architectures without Kafka, RabbitMQ, or Redis. Pilot's built-in pub/sub handles topic routing, wildcard subscriptions, and persistent connections.]]></description>
+      <pubDate>Tue, 24 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Tutorial</category>
+    </item>
+    <item>
+      <title><![CDATA[Run HTTP Services Over an Encrypted Agent Overlay]]></title>
+      <link>https://pilotprotocol.network/blog/http-services-over-encrypted-overlay</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/http-services-over-encrypted-overlay</guid>
+      <description><![CDATA[Standard Go HTTP servers running on Pilot ports. Gateway exposes them as local IPs. REST API mesh with automatic encryption, zero TLS configuration.]]></description>
+      <pubDate>Sun, 22 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Tutorial</category>
+    </item>
+    <item>
+      <title><![CDATA[Peer-to-Peer File Transfer Between AI Agents (No S3 Required)]]></title>
+      <link>https://pilotprotocol.network/blog/peer-to-peer-file-transfer-agents</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/peer-to-peer-file-transfer-agents</guid>
+      <description><![CDATA[Direct agent-to-agent file transfer over encrypted tunnels. Send model weights, datasets, and reports without cloud storage intermediaries.]]></description>
+      <pubDate>Fri, 20 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Tutorial</category>
+    </item>
+    <item>
+      <title><![CDATA[Contributing to Pilot Protocol: A Tour of the Codebase]]></title>
+      <link>https://pilotprotocol.network/blog/contributing-codebase-tour</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/contributing-codebase-tour</guid>
+      <description><![CDATA[Package map, test environment, how to add a new service, linter gotchas, and good first issues for new contributors.]]></description>
+      <pubDate>Wed, 18 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Building A2A Agent Cards Over Pilot Protocol Tunnels]]></title>
+      <link>https://pilotprotocol.network/blog/a2a-agent-cards-over-pilot-tunnels</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/a2a-agent-cards-over-pilot-tunnels</guid>
+      <description><![CDATA[Run Google's A2A protocol over Pilot's encrypted tunnels. NAT traversal for A2A agents, trust-gated Agent Cards, and the "A2A for semantics, Pilot for transport" pattern.]]></description>
+      <pubDate>Mon, 16 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[MCP + Pilot: Tools and a Network for AI Agents]]></title>
+      <link>https://pilotprotocol.network/blog/mcp-plus-pilot-tools-and-network</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/mcp-plus-pilot-tools-and-network</guid>
+      <description><![CDATA[MCP handles tool access. Pilot handles peer communication. Together: agents that gather data, share results, and delegate work without a platform in the middle.]]></description>
+      <pubDate>Sat, 14 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Integration</category>
+    </item>
+    <item>
+      <title><![CDATA[Building a Private Agent Network for Your Company]]></title>
+      <link>https://pilotprotocol.network/blog/private-agent-network-company</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/private-agent-network-company</guid>
+      <description><![CDATA[Set up a private Pilot network, enroll agents, configure trust policies, bridge legacy systems via gateway, and monitor with the built-in dashboard.]]></description>
+      <pubDate>Thu, 12 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[The Pilot Protocol Trust Model: Why Agents Should Be Invisible by Default]]></title>
+      <link>https://pilotprotocol.network/blog/trust-model-agents-invisible-by-default</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/trust-model-agents-invisible-by-default</guid>
+      <description><![CDATA[Private-by-default agent discovery, Ed25519 mutual handshakes, instant revocation, and why this is the opposite of A2A Agent Cards.]]></description>
+      <pubDate>Tue, 10 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[AES-256-GCM Encryption: Zero-Dependency Go Implementation Guide]]></title>
+      <link>https://pilotprotocol.network/blog/zero-dependency-encryption-x25519-aes-gcm</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/zero-dependency-encryption-x25519-aes-gcm</guid>
+      <description><![CDATA[AES-256-GCM encryption explained with code: X25519 key exchange, GCM authenticated encryption, nonce handling, and wire format in zero-dependency Go.]]></description>
+      <pubDate>Sun, 08 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[NAT Traversal for AI Agents: A Deep Dive]]></title>
+      <link>https://pilotprotocol.network/blog/nat-traversal-ai-agents-deep-dive</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/nat-traversal-ai-agents-deep-dive</guid>
+      <description><![CDATA[STUN discovery, UDP hole-punching, relay fallback, and beacon gossip. The definitive reference on making agents reachable through any NAT type.]]></description>
+      <pubDate>Fri, 06 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Where Pilot Fits with TCP, gRPC, and NATS]]></title>
+      <link>https://pilotprotocol.network/blog/pilot-vs-tcp-grpc-nats-comparison</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/pilot-vs-tcp-grpc-nats-comparison</guid>
+      <description><![CDATA[A responsibility-first comparison of transport, typed RPC, brokered messaging, agent identity, and cross-network reachability.]]></description>
+      <pubDate>Wed, 04 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Architecture</category>
+    </item>
+    <item>
+      <title><![CDATA[Agent Connectivity Best Practices: Why AI Agents Need a Network Stack]]></title>
+      <link>https://pilotprotocol.network/blog/why-ai-agents-need-network-stack</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/why-ai-agents-need-network-stack</guid>
+      <description><![CDATA[Agent connectivity best practices for reliable multi-agent systems: durable addresses, NAT traversal, encrypted tunnels, and per-peer trust.]]></description>
+      <pubDate>Mon, 02 Feb 2026 12:00:00 GMT</pubDate>
+      <category>Architecture</category>
+    </item>
+  </channel>
+</rss>

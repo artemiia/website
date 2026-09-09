@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Managed Fleet and Evidence — Pilot Protocol (plain)</title><meta name="description" content="Operate Pilot nodes remotely, inspect signed state and exchanges, monitor health, automate responses, and retain tenant-scoped audit evidence."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/docs/">&larr; Docs index</a></p><h1>Fleet, evidence, and operations</h1>
+  <p class="subtitle">Signed inventory, desired state, typed control, exact exchange evidence, audit, monitoring, and bounded automation.</p>
+
+  <div class="toc"><h4>On this page</h4><ul>
+    <li><a href="#inventory">Inventory and health</a></li>
+    <li><a href="#desired">Desired state and drift</a></li>
+    <li><a href="#commands">Remote commands</a></li>
+    <li><a href="#state">.pilot state visibility</a></li>
+    <li><a href="#exchanges">Exchanges and tracing</a></li>
+    <li><a href="#audit">Audit and investigations</a></li>
+    <li><a href="#procedures">Procedures</a></li>
+    <li><a href="#integrations">External integrations</a></li>
+    <li><a href="#lifecycle">Object lifecycle</a></li>
+  </ul></div>
+
+  <h2 id="inventory">Inventory and health</h2>
+  <p>The native management dashboard summarizes connected nodes, policy coverage, decision outcomes, pending approvals, evaluator health, command state, and recent activity. Fleet views support server-side filters and pagination for node status, group, tag, policy drift, connector capability, runtime version, and last report time.</p>
+  <p>Each node detail joins its signed identity, harness and connector versions, uptime, counters, connectivity, current and desired policy revisions, groups, tags, quarantine posture, recent actions, receipts, commands, state root, and acknowledgements. A stale or missing report is visible; the UI does not silently treat configured state as observed state.</p>
+
+  <h2 id="desired">Desired state and drift</h2>
+  <p>Authority-signed desired state can set group, tags, desired runtime version, desired policy revision, and quarantine posture. The node verifies the command key and monotonic floors, persists before applying, reconciles locally, then returns a signed <code>applied</code>, <code>partially_applied</code>, or <code>rejected</code> acknowledgement. Drift remains visible until the reported state converges.</p>
+  <p>Runtime version is a desired target, not permission for the control plane to replace arbitrary executables. The deployment supervisor remains responsible for changing installed software.</p>
+
+  <h2 id="commands">Remote commands</h2>
+  <p>Remote operations are typed, targeted, authority-signed, reason-bound, expiring, cancellable, and auditable. Supported commands are:</p>
+  <ul>
+    <li><code>refresh_policy</code> — fetch and acknowledge the current signed rollout;</li>
+    <li><code>export_receipts</code> — flush pending signed receipt evidence;</li>
+    <li><code>reload_control</code> — reload the verified local control attachment;</li>
+    <li><code>sync_state</code> — report and reconcile the safe state tree;</li>
+    <li><code>collect_diagnostics</code> — return bounded diagnostic status;</li>
+    <li><code>restart_runtime</code> and <code>shutdown_runtime</code> — graceful typed lifecycle requests.</li>
+  </ul>
+  <p>Pilot is not a remote shell. Operators cannot type arbitrary commands into the fleet console. Nodes return bounded signed result codes, and protected local authority cannot be widened through command parameters.</p>
+
+  <h2 id="state"><code>.pilot</code> state visibility</h2>
+  <p>An adopted node can report a signed manifest of its managed state directory: relative paths, file or directory kind, size, mode, modification time, content hash, revision, and root hash. Safe text files may expose sanitized or bounded content. Keys, seeds, credentials, identity, policy internals, trust material, and rollback floors are fingerprint-only and immutable through this channel.</p>
+  <p>Supported state changes use optimistic concurrency. A mutation names the expected tree revision and existing file hash, contains an auditable reason, expires, and is signed by the authority. The node independently validates safe paths and modes, applies the change locally, and reports the resulting signed revision. History records additions, changes, removals, and root hashes.</p>
+
+  <h2 id="exchanges">Exchanges and tracing</h2>
+  <p>The Exchanges workspace stores tenant-scoped request and response evidence with server-side search and pagination. A detail view correlates:</p>
+  <ul>
+    <li>agent, action, called resource, intent ID, session, and signing key;</li>
+    <li>exact request and reported response content, content type, length, encryption key ID, hash, and retention;</li>
+    <li>recipient, purpose, labels, residency, and retention class;</li>
+    <li>deterministic and semantic decisions, matched rules and clauses, evaluator/model/prompt versions;</li>
+    <li>approval transaction, votes, expiry, continuation, and execution state;</li>
+    <li>post-hook result, receipt, fleet activity, audit entries, and procedure runs.</li>
+  </ul>
+  <p>Browser previews are bounded. Complete retained objects require explicit evidence permission and an audited download. Audit metadata and exact exchange content are separate stores with different access and retention concerns.</p>
+
+  <h2 id="audit">Audit and investigations</h2>
+  <p>Management mutations write an append-only attempt event and a terminal result event. Records include actor, roles, authentication method, operation, reason, correlation ID, status, duration, and request/response hashes without copying secrets. Operators can filter, paginate, inspect, export NDJSON, monitor continuous delivery, and retry dead-letter exports.</p>
+  <p>Investigations have assignee, severity, status, resolution, timestamps, and links to action, exchange, receipt, command, and audit evidence. Legal hold and retention policy preserve required objects. Signed action receipts are verified at ingest and may be mirrored into compliance-retention object storage.</p>
+
+  <h2 id="procedures">Procedures</h2>
+  <p>Procedures are immutable, revisioned, post-action response policies. Triggers match action, node, risk, decision, or observed result. The closed response vocabulary can create an alert, open an investigation, quarantine a node, request policy refresh, request receipt export, or notify an active integration.</p>
+  <p>A run is durable and idempotent for the activity and procedure revision. Procedures cannot grant or retry the original action, inspect arbitrary content, execute shell commands, or invent remote methods.</p>
+
+  <h2 id="integrations">External integrations</h2>
+  <table><thead><tr><th>Kind</th><th>Purpose</th><th>Lifecycle</th></tr></thead><tbody>
+    <tr><td>OIDC / Keycloak</td><td>Optional workforce identity federation.</td><td>Stage, inspect, probe, activate, rotate, disable.</td></tr>
+    <tr><td>OpenBao / KMS</td><td>External signing-key custody.</td><td>Reference-only secrets and signature verification.</td></tr>
+    <tr><td>S3-compatible Object Lock</td><td>Immutable receipt and evidence mirror.</td><td>Retention and legal-hold evidence.</td></tr>
+    <tr><td>PostgreSQL</td><td>Replica-safe shared authority state.</td><td>TLS, migrations, backup, restore, and health.</td></tr>
+    <tr><td>Prometheus-compatible storage</td><td>Metrics retention.</td><td>Pilot's native UI remains the operator dashboard.</td></tr>
+    <tr><td>Usage sink</td><td>Asynchronous idempotent commercial usage delivery.</td><td>Tenant-scoped credentials and delivery health.</td></tr>
+    <tr><td>Audit/SIEM and webhook</td><td>Management export, approval, and procedure notifications.</td><td>Retry, dead letter, health, and rotation.</td></tr>
+  </tbody></table>
+  <p>Connectors store secret references, not rendered secret values. Hosted semantic evaluation is Pilot platform infrastructure and is not configured as a customer-owned integration.</p>
+
+  <h2 id="lifecycle">Object lifecycle</h2>
+  <table><thead><tr><th>Object</th><th>Create</th><th>Change</th><th>Terminal behavior</th></tr></thead><tbody>
+    <tr><td>Node</td><td>One-time adopted identity and signed report.</td><td>Desired state, tags, groups, quarantine, commands.</td><td>Retire or revoke; reactivate only where policy permits.</td></tr>
+    <tr><td>Policy statement</td><td>Inactive source revision.</td><td>Compile, review, approve, deploy.</td><td>Reject or retire; signed policy removal is a higher revision.</td></tr>
+    <tr><td>Policy change</td><td>Draft candidate.</td><td>Diff, simulate, approve, publish, canary, promote.</td><td>Withdraw, terminate, or monotonic rollback.</td></tr>
+    <tr><td>Approval transaction</td><td>Exact intent and payload binding.</td><td>Vote, escalate, cancel.</td><td>Execute once, reject, cancel, or expire.</td></tr>
+    <tr><td>Procedure</td><td>Inactive draft revision.</td><td>New revision, activate, disable.</td><td>Retire while retaining run evidence.</td></tr>
+    <tr><td>Integration</td><td>Staged revision.</td><td>Probe, activate, rotate, disable.</td><td>Retain revision and audit history.</td></tr>
+  </tbody></table>
+
+  <div class="notice"><strong>High-volume behavior.</strong> Fleet, exchanges, approvals, receipts, audit, procedures, and activity lists use tenant-scoped server-side filters and pagination. Production sizing still requires load, retention, backup, and failover evidence for the intended fleet and event rate.</div><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

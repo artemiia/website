@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Media Monitoring - Orgs - Pilot Protocol</title><meta name="description" content="A multi-agent media intelligence platform that coordinates web crawling, sentiment analysis, trend d"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Media Monitoring</h1><p><em>advanced &middot; 4 agents &middot; 12 skills</em></p><p>A multi-agent media intelligence platform that coordinates web crawling, sentiment analysis, trend detection, and automated reporting across four specialized agents. The crawler scrapes news sites, social media, blogs, forums, and press releases for brand mentions. The sentiment analyzer classifies mentions by sentiment and detects emerging narratives. The trend detector identifies viral content and spots PR crises early. The reporter generates media briefings, competitive share-of-voice reports, and crisis dashboards.</p><h2>Install</h2><pre><code>clawhub install pilot-media-monitoring-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-archive"><code>pilot-archive</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-dataset"><code>pilot-dataset</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-gossip"><code>pilot-gossip</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-slack-bridge"><code>pilot-slack-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-announce"><code>pilot-announce</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-crawler</code> - <strong>Media Crawler</strong><br>Scrapes news, social media, and blogs for mentions<br>Skills: <code>pilot-stream-data</code> , <code>pilot-cron</code> , <code>pilot-archive</code></li><li><code>&lt;your-prefix&gt;-sentiment-analyzer</code> - <strong>Sentiment Analyzer</strong><br>Classifies mentions by sentiment and reach<br>Skills: <code>pilot-event-filter</code> , <code>pilot-metrics</code> , <code>pilot-task-router</code></li><li><code>&lt;your-prefix&gt;-trend-detector</code> - <strong>Trend Detector</strong><br>Identifies viral content and PR crises<br>Skills: <code>pilot-dataset</code> , <code>pilot-alert</code> , <code>pilot-gossip</code></li><li><code>&lt;your-prefix&gt;-reporter</code> - <strong>Media Reporter</strong><br>Generates briefings and crisis dashboards<br>Skills: <code>pilot-slack-bridge</code> , <code>pilot-webhook-bridge</code> , <code>pilot-announce</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-crawler</code> &rarr; <code>&lt;your-prefix&gt;-sentiment-analyzer</code>:<code>1002</code> - raw media mentions with source metadata</li><li><code>&lt;your-prefix&gt;-sentiment-analyzer</code> &rarr; <code>&lt;your-prefix&gt;-trend-detector</code>:<code>1002</code> - scored mentions with sentiment and reach</li><li><code>&lt;your-prefix&gt;-trend-detector</code> &rarr; <code>&lt;your-prefix&gt;-reporter</code>:<code>1002</code> - trend alerts and crisis warnings</li><li><code>&lt;your-prefix&gt;-reporter</code> &rarr; <code>external</code>:<code>443</code> - media briefings via secure channel</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On crawling server
+clawhub install pilot-stream-data pilot-cron pilot-archive
+pilotctl set-hostname &lt;your-prefix&gt;-crawler
+
+# On sentiment analysis server
+clawhub install pilot-event-filter pilot-metrics pilot-task-router
+pilotctl set-hostname &lt;your-prefix&gt;-sentiment-analyzer
+
+# On trend detection server
+clawhub install pilot-dataset pilot-alert pilot-gossip
+pilotctl set-hostname &lt;your-prefix&gt;-trend-detector
+
+# On reporting server
+clawhub install pilot-slack-bridge pilot-webhook-bridge pilot-announce
+pilotctl set-hostname &lt;your-prefix&gt;-reporter
+# crawler &lt;-&gt; sentiment-analyzer (media mentions)
+# On crawler:
+pilotctl handshake &lt;your-prefix&gt;-sentiment-analyzer &quot;setup: media-monitoring&quot;
+# On sentiment-analyzer:
+pilotctl handshake &lt;your-prefix&gt;-crawler &quot;setup: media-monitoring&quot;
+
+# sentiment-analyzer &lt;-&gt; trend-detector (scored mentions)
+# On sentiment-analyzer:
+pilotctl handshake &lt;your-prefix&gt;-trend-detector &quot;setup: media-monitoring&quot;
+# On trend-detector:
+pilotctl handshake &lt;your-prefix&gt;-sentiment-analyzer &quot;setup: media-monitoring&quot;
+
+# trend-detector &lt;-&gt; reporter (trend alerts)
+# On trend-detector:
+pilotctl handshake &lt;your-prefix&gt;-reporter &quot;setup: media-monitoring&quot;
+# On reporter:
+pilotctl handshake &lt;your-prefix&gt;-trend-detector &quot;setup: media-monitoring&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

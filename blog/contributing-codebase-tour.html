@@ -1,0 +1,550 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-4ee7rn3o><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contributing: A Codebase Tour</title><meta name="description" content="Walk through the Pilot Protocol codebase. Architecture, package layout, testing, and how to submit your first pull request."><meta name="robots" content="index,follow,max-image-preview:large"><meta name="author" content="Pilot Protocol"><link rel="canonical" href="https://pilotprotocol.network/blog/contributing-codebase-tour"><meta property="og:type" content="article"><meta property="og:title" content="Contributing: A Codebase Tour"><meta property="og:description" content="Walk through the Pilot Protocol codebase. Architecture, package layout, testing, and how to submit your first pull request."><meta property="og:url" content="https://pilotprotocol.network/blog/contributing-codebase-tour"><meta property="og:image" content="https://pilotprotocol.network/blog/banners/optimized/contributing-codebase-tour-1200.webp"><meta property="og:image:alt" content="Pilot Protocol"><meta property="og:site_name" content="Pilot Protocol"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@pilotprotocol_"><meta name="twitter:title" content="Contributing: A Codebase Tour"><meta name="twitter:description" content="Walk through the Pilot Protocol codebase. Architecture, package layout, testing, and how to submit your first pull request."><meta name="twitter:image" content="https://pilotprotocol.network/blog/banners/optimized/contributing-codebase-tour-1200.webp"><meta name="twitter:image:alt" content="Pilot Protocol"><meta name="theme-color" content="#0b0b0a" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)"><meta name="color-scheme" content="dark light"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://pilotprotocol.network/#organization","name":"Pilot Protocol","legalName":"Vulture Labs, Inc.","url":"https://pilotprotocol.network/","logo":{"@type":"ImageObject","url":"https://pilotprotocol.network/img/pilot-180.png","width":180,"height":180},"sameAs":["https://github.com/pilot-protocol/pilotprotocol","https://x.com/pilotprotocol_","https://www.linkedin.com/company/112569955/"],"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"founders@pilotprotocol.network","url":"https://pilotprotocol.network/contact"}]},{"@type":"WebSite","@id":"https://pilotprotocol.network/#website","url":"https://pilotprotocol.network/","name":"Pilot Protocol","publisher":{"@id":"https://pilotprotocol.network/#organization"},"inLanguage":"en-US"}]}</script><!-- PILOT-175: fonts self-hosted under /fonts/*. Removed the Google Fonts
+     preconnect + stylesheet links so the browser never contacts
+     fonts.googleapis.com / fonts.gstatic.com (GDPR: avoids passing
+     visitor IPs to Google). The self-hosted bundle covers the same
+     three families (Inter Tight, JetBrains Mono, Instrument Serif)
+     with identical subsets + unicode-range gating, so per-page font
+     bytes are unchanged. --><link rel="stylesheet" href="/website/fonts/fonts.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="/website/fonts/fonts.css"></noscript><link rel="preload" href="/website/fonts/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2" as="font" type="font/woff2" crossorigin="anonymous"><!-- PILOT-27: consent-check shared module is imported by analytics.ts below. --><link rel="icon" href="/website/img/pilot-48.png" type="image/png" sizes="48x48"><link rel="apple-touch-icon" href="/website/img/pilot-180.png" sizes="180x180"><!-- PILOT-27: Consent banner injected at the end of <body> from <head> --><script>
+  (function() {
+    var bannerHTML = '<div id="pilot-consent-banner" class="consent-banner consent-banner--bottom" role="dialog" aria-label="Cookie consent" style="display:none">' +
+      '<div class="consent-banner__inner">' +
+        '<div class="consent-banner__text">' +
+          '<p>We use analytics cookies, plus heatmaps and session replay with all form inputs masked, to understand how our site is used. We do not build a profile of you. <a href="/cookies">Cookie policy</a>.</p>' +
+        '</div>' +
+        '<div class="consent-banner__actions">' +
+          '<button id="pilot-consent-accept" class="btn primary consent-btn" data-consent="accepted">Accept</button>' +
+          '<button id="pilot-consent-reject" class="btn consent-btn" data-consent="rejected">Reject</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    // Wait for DOM to be ready
+    function injectBanner() {
+      if (document.body) {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = bannerHTML;
+        document.body.appendChild(wrapper.firstElementChild);
+
+        var KEY = 'pilot_consent';
+        var banner = document.getElementById('pilot-consent-banner');
+        if (!banner) return;
+
+        function getConsent() {
+          try { return localStorage.getItem(KEY); } catch { return null; }
+        }
+
+        function setConsent(value) {
+          try {
+            localStorage.setItem(KEY, value);
+            window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: value }));
+          } catch {}
+        }
+
+        document.getElementById('pilot-consent-accept').addEventListener('click', function() {
+          setConsent('accepted');
+          banner.style.display = 'none';
+        });
+
+        document.getElementById('pilot-consent-reject').addEventListener('click', function() {
+          setConsent('rejected');
+          banner.style.display = 'none';
+        });
+
+        var existing = getConsent();
+        if (existing) {
+          banner.style.display = 'none';
+          window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: existing }));
+        } else {
+          banner.style.display = 'flex';
+        }
+
+        window.__showConsentBanner = function() {
+          if (banner) banner.style.display = 'flex';
+        };
+      } else {
+        setTimeout(injectBanner, 50);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectBanner);
+    } else {
+      injectBanner();
+    }
+  })();
+</script><link rel="alternate" type="application/rss+xml" title="Pilot Protocol Journal" href="/website/blog/feed.xml"><script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('pilot-theme');
+      var prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      var theme = stored || prefers;
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script><!-- PILOT-27: GA4 loads only after user accepts cookies. --><script>
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadGA4() {
+      if (document.querySelector('script[src*="gtag/js?id=G-EEWEKT0GW5"]')) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EEWEKT0GW5';
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-EEWEKT0GW5');
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadGA4();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadGA4();
+      });
+    }
+    // If consent === 'rejected', never load GA4.
+  })();
+</script><!-- X (Twitter) Ads universal website tag — conversion tracking for our X ad
+     campaigns. Same consent gate as GA4 above: loads only after the visitor
+     accepts cookies, never on reject. Disclosed in /cookies and /privacy. --><script>(function(){const twitterPixelId = "re3tv";
+
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadTwitterPixel() {
+      if (!twitterPixelId || window.twq) return;
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+      },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+      a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+      window.twq('config', twitterPixelId);
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadTwitterPixel();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadTwitterPixel();
+      });
+    }
+    // If consent === 'rejected', never load the X pixel.
+  })();
+})();</script><script type="module" src="/website/_astro/BaseHead.astro_astro_type_script_index_0_lang.DTqJW7IP.js"></script><link rel="preload" as="image" href="/website/blog/banners/optimized/contributing-codebase-tour-1200.webp" imagesrcset="/website/blog/banners/optimized/contributing-codebase-tour-720.webp 720w, /website/blog/banners/optimized/contributing-codebase-tour-1200.webp 1200w" imagesizes="(max-width: 760px) calc(100vw - 40px), 720px" fetchpriority="high"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Contributing: A Codebase Tour","description":"Walk through the Pilot Protocol codebase. Architecture, package layout, testing, and how to submit your first pull request.","image":"https://pilotprotocol.network/blog/banners/optimized/contributing-codebase-tour-1200.webp","author":{"@type":"Organization","name":"Pilot Protocol editorial team","url":"https://pilotprotocol.network/about#publishing"},"publisher":{"@id":"https://pilotprotocol.network/#organization"},"datePublished":"2026-02-18","dateModified":"2026-02-18","mainEntityOfPage":"https://pilotprotocol.network/blog/contributing-codebase-tour"}</script><link rel="stylesheet" href="/website/_astro/system.DXXNXJyX.css"><link rel="stylesheet" href="/website/_astro/Footer.G2DNlaPt.css"><style>.article-next-step[data-astro-cid-4ee7rn3o]{border:1px solid color-mix(in srgb, var(--accent) 38%, var(--line));background:color-mix(in srgb, var(--accent) 6%, var(--bg));grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:1rem 2rem;margin:3rem 0 2rem;padding:clamp(1.25rem,3vw,2rem);display:grid}.article-next-step[data-astro-cid-4ee7rn3o]>span[data-astro-cid-4ee7rn3o]{color:var(--accent-text);font:600 .68rem/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;grid-column:1/-1}.article-next-step[data-astro-cid-4ee7rn3o] h2[data-astro-cid-4ee7rn3o]{margin:0 0 .55rem;font-size:clamp(1.35rem,3vw,1.9rem);line-height:1.08}.article-next-step[data-astro-cid-4ee7rn3o] p[data-astro-cid-4ee7rn3o]{color:var(--ink-dim);margin:0}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]{border:1px solid var(--ink);min-height:44px;color:var(--ink);font:600 .72rem/1.2 var(--mono);white-space:nowrap;justify-content:center;align-items:center;gap:.6rem;padding:.75rem 1rem;text-decoration:none;display:inline-flex}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]:hover{background:var(--ink);color:var(--bg)}@media (width<=640px){.article-next-step[data-astro-cid-4ee7rn3o]{grid-template-columns:1fr;align-items:start}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]{white-space:normal;width:100%}}.article-faq[data-astro-cid-4ee7rn3o]{max-width:760px;margin:0 auto;padding:3rem 1.5rem 1rem}.article-faq[data-astro-cid-4ee7rn3o] h2[data-astro-cid-4ee7rn3o]{margin-bottom:1.5rem;font-size:1.6rem}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o]{border-top:1px solid var(--line,#1d1d1b);padding:1.25rem 0}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o] h3[data-astro-cid-4ee7rn3o]{margin:0 0 .5rem;font-size:1.05rem}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o] p[data-astro-cid-4ee7rn3o]{color:var(--ink-dim,#5a5a54);margin:0;line-height:1.6}
+</style></head><body data-astro-cid-4ee7rn3o><div class="progress-bar" id="progress-bar" data-astro-cid-4ee7rn3o></div><a class="skip-link" href="#page-content">Skip to content</a><nav class="nav-top" aria-label="Primary"><div class="wrap"><div class="nav-row"><a href="/" class="brand" data-track="nav_click" data-track-target="home"><span class="brand-mark"><img src="/website/img/pilot-48.webp" alt="" class="logo" width="40" height="40" decoding="async"></span><span class="brand-text"><strong>Pilot</strong><span>Protocol</span></span><span class="sr-only"> home</span></a><div class="nav-links" id="nav-links"><div class="nav-dropdown" data-nav-group="product"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Product</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">The platform</span><strong>One network layer for agents.</strong><p>Identity, encrypted connectivity, trust, and installable capabilities in one system.</p></div><div class="nav-menu-links"><a href="/" data-track="nav_click" data-track-target="product-network-os"><span class="dd-kicker">Platform</span><span class="dd-label">Network OS</span><span class="dd-desc">The complete Pilot architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/trust" data-track="nav_click" data-track-target="product-trust-center"><span class="dd-kicker">Security</span><span class="dd-label">Trust Center</span><span class="dd-desc">Controls, boundaries, and evidence</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/governance" data-track="nav_click" data-track-target="product-control-model"><span class="dd-kicker">Governance</span><span class="dd-label">Control model</span><span class="dd-desc">Authority, policy, lifecycle, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/app-store" data-track="nav_click" data-track-target="product-app-store"><span class="dd-kicker">Ecosystem</span><span class="dd-label">App Store</span><span class="dd-desc">Capabilities built for agents</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/plans" data-track="nav_click" data-track-target="product-plans"><span class="dd-kicker">Commercial</span><span class="dd-label">Plans</span><span class="dd-desc">Open network and enterprise paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/docs/getting-started"><span>Explore the product</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="solutions"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Solutions</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Built for real systems</span><strong>Connect agents across every boundary.</strong><p>Start with one deployment pattern, then expand without replacing the underlying network.</p></div><div class="nav-menu-links"><a href="/website/for/p2p" data-track="nav_click" data-track-target="solutions-direct-p2p"><span class="dd-kicker">Connectivity</span><span class="dd-label">Direct P2P</span><span class="dd-desc">Private agent-to-agent paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/mcp" data-track="nav_click" data-track-target="solutions-mcp-+-pilot"><span class="dd-kicker">Integration</span><span class="dd-label">MCP + Pilot</span><span class="dd-desc">Give MCP servers a network</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/networks" data-track="nav_click" data-track-target="solutions-managed-networks"><span class="dd-kicker">Organization</span><span class="dd-label">Managed networks</span><span class="dd-desc">Shared domains and membership</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/enterprise" data-track="nav_click" data-track-target="solutions-enterprise-controls"><span class="dd-kicker">Enterprise</span><span class="dd-label">Enterprise controls</span><span class="dd-desc">Identity, policy, roles, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/setups"><span>Browse deployment setups</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="developers"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Developers</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Build on Pilot</span><strong>From first connection to production.</strong><p>Documentation and tooling for connecting, shipping, and operating agent-native software.</p></div><div class="nav-menu-links"><a href="/website/docs/getting-started" data-track="nav_click" data-track-target="developers-quickstart"><span class="dd-kicker">Start</span><span class="dd-label">Quickstart</span><span class="dd-desc">Install and connect in minutes</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/" data-track="nav_click" data-track-target="developers-documentation"><span class="dd-kicker">Reference</span><span class="dd-label">Documentation</span><span class="dd-desc">Concepts, CLI, SDKs, and operations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/integration" data-track="nav_click" data-track-target="developers-sdks-&amp;-integration"><span class="dd-kicker">Build</span><span class="dd-label">SDKs &amp; integration</span><span class="dd-desc">Embed Pilot in your stack</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/compatibility" data-track="nav_click" data-track-target="developers-compatibility"><span class="dd-kicker">Deploy</span><span class="dd-label">Compatibility</span><span class="dd-desc">Choose the right environment mode</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/skills"><span>Explore agent skills</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown active" data-nav-group="resources"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Resources</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Learn and evaluate</span><strong>Technical depth without the guesswork.</strong><p>Architecture, field notes, evaluator material, and a machine-readable version of the site.</p></div><div class="nav-menu-links"><a href="/website/learn/" data-track="nav_click" data-track-target="resources-learning-center"><span class="dd-kicker">Learn</span><span class="dd-label">Learning center</span><span class="dd-desc">Foundations, transport, and security</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/blog/" data-track="nav_click" data-track-target="resources-field-notes"><span class="dd-kicker">Journal</span><span class="dd-label">Field notes</span><span class="dd-desc">Technical guides and architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/research" data-track="nav_click" data-track-target="resources-technical-papers"><span class="dd-kicker">Research</span><span class="dd-label">Technical papers</span><span class="dd-desc">Specifications and evaluations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/pilot-native-use-cases.pdf" data-track="nav_click" data-track-target="resources-deployment-patterns"><span class="dd-kicker">Use cases</span><span class="dd-label">Deployment patterns</span><span class="dd-desc">What the combined Pilot surface enables</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/press" data-track="nav_click" data-track-target="resources-press-kit"><span class="dd-kicker">Media</span><span class="dd-label">Press kit</span><span class="dd-desc">Company and brand resources</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/plain/" data-track="nav_click" data-track-target="resources-machine-readable-site"><span class="dd-kicker">Agents</span><span class="dd-label">Machine-readable site</span><span class="dd-desc">The plain-text agent interface</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/enterprise-readiness-report.pdf"><span>Read the readiness report</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="company"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Company</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Pilot Protocol</span><strong>Building the network for agents.</strong><p>Learn about the company, follow our progress, or speak directly with the team.</p></div><div class="nav-menu-links"><a href="/about" data-track="nav_click" data-track-target="company-about-pilot"><span class="dd-kicker">About</span><span class="dd-label">About Pilot</span><span class="dd-desc">Company, people, and publishing standards</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/roadmap" data-track="nav_click" data-track-target="company-product-roadmap"><span class="dd-kicker">Direction</span><span class="dd-label">Product roadmap</span><span class="dd-desc">What we are strengthening next</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/news/" data-track="nav_click" data-track-target="company-company-news"><span class="dd-kicker">Newsroom</span><span class="dd-label">Company news</span><span class="dd-desc">Announcements and company updates</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/contact" data-track="nav_click" data-track-target="company-talk-to-the-team"><span class="dd-kicker">Contact</span><span class="dd-label">Talk to the team</span><span class="dd-desc">Enterprise, partnerships, and press</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/contact"><span>Contact Pilot Protocol</span><span aria-hidden="true">→</span></a></div></div><div class="nav-mobile-actions"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a></div></div><div class="nav-right"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme" type="button"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button><button id="nav-hamburger" class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button></div></div></div></nav><span id="page-content" class="skip-target" tabindex="-1"></span><script>
+  (function () {
+    var nav = document.querySelector('.nav-top');
+    var themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function () {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isLight) {
+          document.documentElement.removeAttribute('data-theme');
+          try { localStorage.setItem('pilot-theme', 'dark'); } catch (e) {}
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          try { localStorage.setItem('pilot-theme', 'light'); } catch (e) {}
+        }
+      });
+    }
+
+    function closeDropdowns(except) {
+      document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+        if (dd === except) return;
+        dd.classList.remove('open');
+        var trigger = dd.querySelector('.nav-dropdown-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function closeMobileMenu() {
+      if (!links || !links.classList.contains('mobile-open')) return;
+      links.classList.remove('mobile-open');
+      if (hamb) {
+        hamb.classList.remove('is-open');
+        hamb.setAttribute('aria-expanded', 'false');
+        hamb.setAttribute('aria-label', 'Open menu');
+      }
+      document.body.classList.remove('nav-mobile-open');
+      closeDropdowns();
+    }
+
+    // Hamburger (mobile)
+    var hamb = document.getElementById('nav-hamburger');
+    var links = document.getElementById('nav-links');
+    if (hamb && links) {
+      hamb.setAttribute('aria-label', 'Open menu');
+      hamb.addEventListener('click', function () {
+        var open = links.classList.toggle('mobile-open');
+        hamb.classList.toggle('is-open', open);
+        hamb.setAttribute('aria-expanded', open ? 'true' : 'false');
+        hamb.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        document.body.classList.toggle('nav-mobile-open', open);
+        if (!open) closeDropdowns();
+      });
+      links.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    }
+
+    // Dropdown: click to toggle, click-outside to close
+    document.querySelectorAll('.nav-dropdown').forEach(function (dd) {
+      var trigger = dd.querySelector('.nav-dropdown-trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var wasOpen = dd.classList.contains('open');
+        closeDropdowns(dd);
+        dd.classList.toggle('open', !wasOpen);
+        var isOpen = !wasOpen;
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest || !e.target.closest('.nav-dropdown')) closeDropdowns();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+          dd.classList.remove('open');
+          var trig = dd.querySelector('.nav-dropdown-trigger');
+          if (trig) { trig.setAttribute('aria-expanded', 'false'); trig.focus(); }
+        });
+        closeMobileMenu();
+      }
+    });
+
+    // A restrained shadow gives the persistent shell a clear edge once content scrolls beneath it.
+    if (nav) {
+      var syncNavEdge = function () { nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+      syncNavEdge();
+      window.addEventListener('scroll', syncNavEdge, { passive: true });
+    }
+  })();
+</script><main class="article-layout" data-astro-cid-4ee7rn3o><article class="article" data-track-read="contributing-codebase-tour" data-astro-cid-4ee7rn3o><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://artemiia.github.io/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://artemiia.github.io/blog/"},{"@type":"ListItem","position":3,"name":"Contributing: A Codebase Tour","item":"https://artemiia.github.io/website/blog/contributing-codebase-tour/"}]}</script><nav class="site-breadcrumbs is-compact" aria-label="Breadcrumb" data-astro-cid-vx4iavld><ol data-astro-cid-vx4iavld><li data-astro-cid-vx4iavld><a href="/" data-astro-cid-vx4iavld>Home</a></li><li data-astro-cid-vx4iavld><a href="/website/blog/" data-astro-cid-vx4iavld>Blog</a></li><li data-astro-cid-vx4iavld><span aria-current="page" data-astro-cid-vx4iavld>Contributing: A Codebase Tour</span></li></ol></nav><img class="article-banner" src="/website/blog/banners/optimized/contributing-codebase-tour-1200.webp" srcset="/website/blog/banners/optimized/contributing-codebase-tour-720.webp 720w, /website/blog/banners/optimized/contributing-codebase-tour-1200.webp 1200w" sizes="(max-width: 760px) calc(100vw - 40px), 720px" alt="Contributing: A Codebase Tour" width="1200" height="630" loading="eager" decoding="sync" fetchpriority="high" data-astro-cid-4ee7rn3o><h1 data-astro-cid-4ee7rn3o>Contributing: A Codebase Tour</h1><div class="article-meta" data-astro-cid-4ee7rn3o><a href="https://pilotprotocol.network/about#publishing" data-astro-cid-4ee7rn3o>By Pilot Protocol editorial team</a><time datetime="2026-02-18" data-astro-cid-4ee7rn3o>February 18, 2026</time><span class="reading-time" id="reading-time" data-astro-cid-4ee7rn3o></span><span class="tag" data-astro-cid-4ee7rn3o>contributing</span><span class="tag" data-astro-cid-4ee7rn3o>open-source</span><span class="tag" data-astro-cid-4ee7rn3o>go</span></div><p>You want to contribute to Pilot Protocol. You have cloned the repository, run <code>go build ./...</code>, and now you are staring at a tree of packages wondering where to start. This article is the map. It covers every package in the project, explains how the test environment works, walks through adding a new service from scratch, warns you about the linter traps that catch every new contributor, and lists concrete issues you can pick up today.</p>
+
+  <p>Pilot Protocol is a pure-Go project with a small dependency set (a handful of well-known modules like <code>coder/websocket</code>, <code>expr-lang/expr</code>, and <code>golang.org/x/*</code>). That means no cgo, no vendoring surprises, and <code>go test</code> just works. The core daemon/CLI module alone is tens of thousands of lines of Go across dozens of files, plus integration tests. It is small enough for one person to understand in a weekend, but structured cleanly enough that you never need to hold the whole thing in your head at once.</p>
+
+  <section>
+  <h2>The Package Map</h2>
+
+  <p>The repository follows standard Go project layout: <code>pkg/</code> for library packages, <code>cmd/</code> for binaries, <code>internal/</code> for private utilities, and <code>tests/</code> for integration tests. Here is what each package does and where the important files live.</p>
+
+  <h3>pkg/protocol - Addresses, Headers, CRC</h3>
+
+  <p>This is the foundation layer. It defines the 48-bit virtual address format (<code>[16-bit network][32-bit node]</code>, text format <code>N:NNNN.HHHH.LLLL</code>), the 34-byte packet header structure, and CRC32 checksum computation. Every other package imports <code>protocol</code>. If you are fixing a serialization bug or adding a new message type, this is where you start. The address parsing is strict: there is regex validation plus reserved word checks, and the text format must match exactly. The header includes fields for source/destination addresses, port numbers, sequence numbers, flags, window size, and checksum. All multi-byte fields are big-endian.</p>
+
+  <h3>pkg/daemon - The Core Engine</h3>
+
+  <p>The daemon is the heart of Pilot Protocol. It manages the UDP tunnel, handles NAT traversal, runs the port manager, processes IPC commands from the CLI, and coordinates encryption. This is the largest package and the one you will spend the most time reading. Key files handle tunnel read/write loops, connection state machines (SYN/ACK/FIN lifecycle), sliding window transport with AIMD congestion control, flow control with advertised receive windows, Nagle algorithm for small-packet coalescing, auto-segmentation for payloads larger than MTU, keepalive probes, idle timeouts, and graceful shutdown. The daemon also manages STUN discovery (which must happen before the tunnel read loop starts, since they share the UDP socket), trust state persistence, and the handshake relay through the registry for private nodes. If you are working on transport reliability, congestion behavior, or connection lifecycle, this is the package.</p>
+
+  <h3>pkg/registry - TCP Server, Node Lifecycle, Persistence</h3>
+
+  <p>The registry is the rendezvous server's brain. It handles node registration, hostname assignment, address resolution, network management, and hot-standby replication. The server accepts TCP connections and speaks a JSON-based protocol. Node lifecycle includes registration (with server-generated or client-provided identity), re-registration after disconnect, hostname assignment with collision detection, visibility toggling (public vs. private), network join/leave operations, and deregistration. Persistence uses atomic JSON snapshots: the entire registry state is serialized and written to a temp file, then atomically renamed over the previous snapshot. Hot-standby replication pushes these snapshots to a standby server on a 15-second heartbeat. If you are working on discovery, node management, or multi-server coordination, start here.</p>
+
+  <h3>pkg/beacon - STUN, Hole-Punch, Relay</h3>
+
+  <p>The beacon handles all NAT traversal. It runs a STUN server for external address discovery, coordinates UDP hole-punching for restricted-cone NAT (sending <code>MsgPunchCommand</code> to both peers simultaneously), and provides relay forwarding for symmetric NAT where hole-punching fails. The relay wraps packets in <code>MsgRelay</code> frames with the format <code>[0x05][senderNodeID(4)][destNodeID(4)][payload...]</code>. The beacon also supports IPv6. The automatic NAT type detection and fallback chain (direct, hole-punch, relay) is the most complex state machine in the project, so changes here require careful testing against all NAT types.</p>
+
+  <h3>pkg/driver - IPC Client and Go SDK</h3>
+
+  <p>The driver is the Go SDK that applications use to talk to the daemon. It connects over a Unix domain socket (<code>/tmp/pilot.sock</code>) and provides a clean API for opening connections, sending data, subscribing to events, and managing trust. The driver handles IPC write concurrency with a mutex-protected connection wrapper (a hard-won fix after discovering that multiple goroutines writing the same conn interleave JSON messages). It also implements a pending-receive buffer to handle the race where <code>CmdRecv</code> arrives before the receive channel is registered. The <code>Conn</code> type implements <code>io.ReadWriter</code> with working <code>SetReadDeadline</code> (channel+timer implementation, not a no-op, which was critical for HTTP-over-Pilot to work). If you are building an application on Pilot, the driver is your entry point.</p>
+
+  <h3>cmd/pilotctl - The CLI</h3>
+
+  <p>The command-line interface. It wraps the driver with user-friendly commands: <code>info</code>, <code>connect</code>, <code>send</code>, <code>recv</code>, <code>trust</code>, <code>untrust</code>, <code>bench</code>, <code>lookup</code>, <code>send-file</code>/<code>recv</code>, <code>publish</code>/<code>subscribe</code>, and more. Most commands are thin wrappers that parse flags, call the driver, and format output. Adding a new CLI command is one of the easiest contributions. Routes for <code>set-hostname</code>, <code>set-public</code>/<code>set-private</code>, and <code>deregister</code> go through the daemon IPC (not directly to the registry) because they require auth signing.</p>
+
+  <h3>cmd/rendezvous - The Server Binary</h3>
+
+  <p>The rendezvous server binary that runs the registry and beacon together. It parses configuration (JSON config files or CLI flags), starts both servers, and handles graceful shutdown. The flags changed from the early days: use <code>-registry-addr</code> and <code>-beacon-addr</code> (not <code>-listen</code> and <code>-beacon</code>). This binary is what you deploy on your rendezvous VM. It supports persistence paths, replication configuration, admin tokens, and structured logging output.</p>
+
+  <h3>internal/ - Crypto, Fsutil, Ratelimit</h3>
+
+  <p>Private packages that are not part of the public API. <code>internal/crypto</code> handles Ed25519 key generation, X25519 key exchange for tunnel encryption, AES-256-GCM encryption/decryption, identity persistence, and TLS certificate pinning with <code>DialTLSPinned</code>. Random nonce prefixes are generated per secure connection to prevent replay attacks. <code>internal/fsutil</code> provides atomic file writes (write to temp, rename over target) used by the registry persistence and trust state storage. <code>internal/pool</code> has buffer pooling. The <code>internal/ipcutil</code> package provides the IPC socket permission management. Because these are in <code>internal/</code>, they cannot be imported by external packages, so changes here only affect the project itself.</p>
+
+  <h3>Services: internal/dataexchange, internal/eventstream</h3>
+
+  <p>These are the built-in services that run on well-known ports. <code>internal/dataexchange</code> (port 1001) handles structured data transfer: file sends with metadata headers and chunked streaming. <code>internal/eventstream</code> (port 1002) implements pub/sub with topic routing. The echo service runs on port 7 and is embedded in the daemon itself. Each service follows the same pattern: register a port handler with the daemon's PortManager, accept connections on that port, and implement the service protocol.</p>
+
+  <h3>tests/ - Integration Tests</h3>
+
+  <p>The integration test suite uses <code>testenv.go</code> to spin up a full in-process environment: beacon, registry, and multiple daemons, all running in the same process with real UDP sockets. This gives you end-to-end testing without deploying anything. There are a couple hundred tests (some skipped for platform-specific reasons); run <code>go test ./tests/</code> for the current tally. The test files are organized by feature under <code>tests/</code> with a <code>zz_</code> prefix: <code>zz_handshake_test.go</code>, <code>zz_privacy_test.go</code>, <code>zz_nat_traversal_test.go</code>, <code>zz_gateway_test.go</code>, and so on. Every PR should include tests, and most features can be tested entirely through testenv without any external infrastructure.</p>
+  </section>
+
+  <section>
+  <h2>The Test Environment</h2>
+
+  <p>The test environment is the single most important file for contributors to understand. <code>tests/testenv.go</code> creates a miniature Pilot network inside a single Go test process. Here is how to use it:</p>
+
+  <pre><code><span class="comment"># Run all integration tests (always use -parallel 4)</span>
+<span class="cmd">go test -parallel 4 -count=1 ./tests/</span>
+
+<span class="comment"># Run a specific test</span>
+<span class="cmd">go test -parallel 4 -count=1 -run TestHandshake ./tests/</span>
+
+<span class="comment"># Run with verbose output</span>
+<span class="cmd">go test -parallel 4 -count=1 -v -run TestHandshake ./tests/</span></code></pre>
+
+  <div class="callout">
+    <p><strong>Critical:</strong> Always use <code>-parallel 4</code>. Unlimited parallelism exhausts ports and sockets, causing dial timeouts and flaky test failures. This is not a suggestion. The CI pipeline enforces it.</p>
+  </div>
+
+  <p>The testenv creates a beacon on a random available port, a registry on another random port, and then spins up as many daemon instances as the test needs. Each daemon gets its own virtual address, its own IPC socket, and its own tunnel. The daemons communicate over real UDP on localhost, so you are testing the actual network path, not mocks.</p>
+
+  <p>A typical test follows this pattern:</p>
+
+  <pre><code><span class="comment">// Create environment with 2 daemons</span>
+env := testenv.New(t, 2)
+defer env.Close()
+
+<span class="comment">// Get driver connections to each daemon</span>
+driverA := env.Driver(0)
+driverB := env.Driver(1)
+
+<span class="comment">// Establish trust between agents</span>
+env.EstablishTrust(0, 1)
+
+<span class="comment">// Open a connection from A to B on port 7 (echo)</span>
+conn, err := driverA.Connect(env.Addr(1), 7)
+require.NoError(t, err)
+
+<span class="comment">// Send data and verify echo response</span>
+conn.Write([]byte("hello"))
+buf := make([]byte, 5)
+conn.Read(buf)
+assert.Equal(t, "hello", string(buf))</code></pre>
+
+  <p>The environment handles all the setup: STUN discovery, registry registration, tunnel establishment, and cleanup. Your test just describes the scenario and checks the result.</p>
+  </section>
+
+  <section>
+  <h2>Adding a New Service: A Walkthrough</h2>
+
+  <p>Let us walk through adding a hypothetical new service on port 1004. Say you want to build a "ping" service that responds with latency measurements. Here is the complete process.</p>
+
+  <h3>Step 1: Create the Package</h3>
+
+  <p>Create <code>pkg/ping/ping.go</code>. Every service follows the same structure: a handler function that the daemon's PortManager calls when a connection arrives on the registered port.</p>
+
+  <pre><code>package ping
+
+import (
+    "encoding/json"
+    "time"
+
+    "github.com/pilot-protocol/common/driver"
+)
+
+<span class="comment">// PortPing is the well-known port for the ping service.</span>
+const PortPing uint16 = 1004
+
+<span class="comment">// Response is the JSON payload returned to the caller.</span>
+type Response struct {
+    ReceivedAt time.Time     `json:"received_at"`
+    Latency    time.Duration `json:"latency_ns"`
+}
+
+<span class="comment">// Handle processes an incoming ping connection.
+// The daemon calls this when a peer connects to port 1004.</span>
+func Handle(conn *driver.Conn) {
+    buf := make([]byte, 1024)
+    for {
+        n, err := conn.Read(buf)
+        if err != nil {
+            return
+        }
+        received := time.Now()
+
+        <span class="comment">// Parse the timestamp sent by the pinger</span>
+        var sent time.Time
+        if err := json.Unmarshal(buf[:n], &sent); err != nil {
+            return
+        }
+
+        <span class="comment">// Respond with latency measurement</span>
+        resp := Response{
+            ReceivedAt: received,
+            Latency:    received.Sub(sent),
+        }
+        data, _ := json.Marshal(resp)
+        if _, err := conn.Write(data); err != nil {
+            return
+        }
+    }
+}</code></pre>
+
+  <h3>Step 2: Register with the Daemon</h3>
+
+  <p>In the daemon's port manager initialization, register your handler for port 1004. The PortManager maintains a map of port numbers to handler functions. When a SYN packet arrives for a registered port, the daemon creates a connection and passes it to the handler in a new goroutine.</p>
+
+  <pre><code><span class="comment">// In daemon initialization, alongside other service registrations:</span>
+portManager.Register(ping.PortPing, ping.Handle)</code></pre>
+
+  <h3>Step 3: Add the CLI Command</h3>
+
+  <p>In <code>cmd/pilotctl</code>, add a <code>ping</code> subcommand that connects to port 1004 on a target address, sends a timestamp, and reads back the response:</p>
+
+  <pre><code><span class="comment">// pilotctl ping 1:0001.0002.0003</span>
+func cmdPing(addr string) {
+    conn, err := drv.Connect(addr, ping.PortPing)
+    handleErr(err)
+    defer conn.Close()
+
+    sent := time.Now()
+    data, _ := json.Marshal(sent)
+    conn.Write(data)
+
+    buf := make([]byte, 1024)
+    n, _ := conn.Read(buf)
+
+    var resp ping.Response
+    json.Unmarshal(buf[:n], &resp)
+    fmt.Printf("Latency: %v\n", resp.Latency)
+}</code></pre>
+
+  <h3>Step 4: Write the Test</h3>
+
+  <p>Add <code>tests/ping_test.go</code> using testenv:</p>
+
+  <pre><code>func TestPingService(t *testing.T) {
+    env := testenv.New(t, 2)
+    defer env.Close()
+    env.EstablishTrust(0, 1)
+
+    <span class="comment">// Connect to ping service on agent 1</span>
+    conn, err := env.Driver(0).Connect(env.Addr(1), 1004)
+    require.NoError(t, err)
+    defer conn.Close()
+
+    <span class="comment">// Send timestamp</span>
+    sent := time.Now()
+    data, _ := json.Marshal(sent)
+    _, err = conn.Write(data)
+    require.NoError(t, err)
+
+    <span class="comment">// Read response</span>
+    buf := make([]byte, 1024)
+    n, err := conn.Read(buf)
+    require.NoError(t, err)
+
+    var resp ping.Response
+    require.NoError(t, json.Unmarshal(buf[:n], &resp))
+    assert.True(t, resp.Latency > 0)
+}</code></pre>
+
+  <p>That is it. Package, registration, CLI, test. The pattern is identical for every service in the project. Look at <code>internal/dataexchange</code> or <code>internal/eventstream</code> for real-world examples of more complex service protocols.</p>
+  </section>
+
+  <section>
+  <h2>Linter Gotchas</h2>
+
+  <p>The project uses an aggressive linter configuration that will bite you if you are not expecting it. These are not bugs in the linter; they are behaviors that interact poorly with certain patterns in this codebase. Every regular contributor has been caught by at least one of these.</p>
+
+  <h3>The "Unused Field" Trap</h3>
+
+  <p>Watch out for unused-field warnings on structs like <code>NodeInfo</code> in the registry: a field only ever read via JSON serialization or reflection can look unused to static analysis. The workaround: do not store crypto identity objects (like <code>crypto.Identity</code>) in <code>NodeInfo</code>. Use local variables instead. If you need the data to survive serialization, make sure there is a direct Go code path that reads the field, not just JSON marshaling.</p>
+
+  <h3>The handleRegister Rewrite</h3>
+
+  <p>When editing the <code>handleRegister</code> function in the registry, keep both registration paths intact: a client-provided <code>public_key</code>, and the server-generated identity path where the server creates a new identity for nodes that register without one. It is easy to accidentally drop the second case; make sure both are covered by tests.</p>
+
+  <h3>Files Modified Between Edits</h3>
+
+  <p>This is the subtlest gotcha. When you edit a file and then make another edit to the same file, the linter may have modified the file between your two edits. Your second edit might fail because the line numbers or content have shifted. The rule: <strong>always re-read the file after an edit before making the next edit</strong>. Do not assume the file content is what you left it. This applies to both manual editing and automated tooling.</p>
+
+  <div class="callout">
+    <p><strong>Rule of thumb:</strong> Run <code>go vet ./...</code> and <code>go test -parallel 4 -count=1 ./tests/</code> before every commit. If the linter changed something, review the diff carefully before accepting it.</p>
+  </div>
+  </section>
+
+  <section>
+  <h2>Good First Issues</h2>
+
+  <p>If you are looking for a concrete starting point, here are five issues that are well-scoped, self-contained, and valuable. Each one touches a different part of the codebase, so pick the area that interests you most.</p>
+
+  <h3>1. IPv6 Beacon Health Endpoint</h3>
+
+  <p>The beacon supports IPv6, but there is no health check endpoint that reports IPv6 status. Add a <code>/health</code> endpoint (or an IPC command) to the beacon that reports whether IPv6 is available, the IPv6 address it is listening on, and the count of IPv6 vs IPv4 clients. This touches <code>pkg/beacon</code> and is mostly additive (new code, minimal changes to existing code). Good for learning how the beacon's network listener works.</p>
+
+  <h3>2. Implement pilotctl broadcast</h3>
+
+  <p>Improve the existing <code>pilotctl broadcast</code> command (network fan-out via the admin token). Good extensions: better error reporting when some members are offline, or richer output. Look at the existing handler in <code>cmd/pilotctl</code> and the test in <code>tests/zz_broadcast_test.go</code> (which could use more coverage).</p>
+
+  <h3>3. Connection Stats in Webhooks</h3>
+
+  <p>The daemon tracks connection statistics (bytes sent, bytes received, retransmits, RTT estimates). The webhook system fires events for connection open/close. Add connection stats to the webhook close event payload. This touches the daemon's connection state and the webhook serialization. Look at the existing webhook test in <code>tests/webhook_test.go</code> for the test pattern.</p>
+
+  <h3>4. Add --format Flag to pilotctl info</h3>
+
+  <p>Currently <code>pilotctl info</code> prints human-readable text. Add a <code>--format</code> flag that supports <code>json</code> and <code>table</code> output formats. JSON output is especially useful for scripting and integration with other tools. This is a clean CLI change: parse the flag, switch on the format value, and serialize the info response accordingly. Look at how other CLI tools (kubectl, docker) handle <code>--output</code> flags for inspiration.</p>
+
+  <h3>5. Improve Error Messages</h3>
+
+  <p>Several error paths return generic messages like "connection failed" or "dial error." Walk through the daemon's connection establishment code and add context to error messages: which address was being dialed, which port, what the NAT type is, whether the peer was resolved. Wrapping errors with <code>fmt.Errorf("dial %s port %d: %w", addr, port, err)</code> makes debugging dramatically easier. This requires reading the daemon code carefully, which is a great way to learn the codebase.</p>
+  </section>
+
+  <section>
+  <h2>Development Workflow</h2>
+
+  <p>Here is the workflow that regular contributors use:</p>
+
+  <pre><code><span class="comment"># Clone and verify the build</span>
+<span class="cmd">git clone https://github.com/pilot-protocol/pilotprotocol.git</span>
+<span class="cmd">cd pilotprotocol</span>
+<span class="cmd">go build ./...</span>
+
+<span class="comment"># Run the full test suite</span>
+<span class="cmd">go test -parallel 4 -count=1 ./tests/</span>
+
+<span class="comment"># Make your changes, then verify</span>
+<span class="cmd">go vet ./...</span>
+<span class="cmd">go test -parallel 4 -count=1 ./tests/</span>
+
+<span class="comment"># Run just the test for your feature</span>
+<span class="cmd">go test -parallel 4 -count=1 -v -run TestYourFeature ./tests/</span></code></pre>
+
+  <p>The project has no external dependencies and no code generation steps. The <code>Makefile</code> provides convenience targets for building binaries, but <code>go build</code> and <code>go test</code> are all you need. Build artifacts go into <code>bin/</code> and <code>build/</code> directories.</p>
+
+  <p>For larger changes, read the <a href="/website/docs/">documentation</a> and technical specification linked from the <a href="/website/docs/research">research page</a>, which describes the wire protocol and message types. If your change modifies protocol behavior, note it in your PR.</p>
+
+  <p>Every contribution goes through standard GitHub PR review. Keep PRs focused: one feature or fix per PR. Include tests. Update the spec if you change protocol behavior. And always run the full test suite with <code>-parallel 4</code> before pushing.</p>
+  </section>
+
+  <section>
+  <h2>Where to Go Next</h2>
+
+  <p>If you want to understand the protocol itself before diving into code, read <a href="how-pilot-protocol-works">How Pilot Protocol Works</a> for the architecture overview. For NAT traversal specifically, the <a href="nat-traversal-ai-agents-deep-dive">NAT traversal deep dive</a> explains every code path in the beacon. For the trust and encryption model, see <a href="zero-dependency-encryption-x25519-aes-gcm">Zero-Dependency Agent Encryption</a> and <a href="trust-model-agents-invisible-by-default">The Trust Model</a>.</p>
+
+  <p>The codebase is intentionally small. No frameworks, no generated code, no dependency tree. Just Go, the standard library, and the problem. That is what makes it a good project to contribute to: you can understand the whole thing, not just your corner of it.</p>
+  </section>
+
+  <div class="cta">
+    <h3>Start Contributing</h3>
+    <p>Clone the repo, run the tests, pick an issue. The codebase is small enough to read in a weekend.</p>
+    <a href="https://github.com/pilot-protocol/pilotprotocol">View on GitHub</a>
+  </div><footer class="article-provenance" data-astro-cid-4ee7rn3o><strong data-astro-cid-4ee7rn3o>About this article</strong><p data-astro-cid-4ee7rn3o>Published by the Pilot Protocol team. Product claims are scoped to the availability labels and technical references linked in the article; deployment behavior can vary by version and environment.</p><p data-astro-cid-4ee7rn3o><a href="/about#publishing" data-astro-cid-4ee7rn3o>How we publish</a> · <a href="/contact?topic=correction" data-astro-cid-4ee7rn3o>Suggest a correction</a> · <a href="/website/docs/research" data-astro-cid-4ee7rn3o>Technical references</a></p></footer></article><aside class="article-toc" id="article-toc" data-astro-cid-4ee7rn3o><nav data-astro-cid-4ee7rn3o><p class="toc-title" data-astro-cid-4ee7rn3o>On this page</p><ul id="toc-list" data-astro-cid-4ee7rn3o></ul></nav></aside></main><section class="related-posts" data-astro-cid-4ee7rn3o><div class="related-inner" data-astro-cid-4ee7rn3o><h2 data-astro-cid-4ee7rn3o>Related Posts</h2><div class="related-grid" data-astro-cid-4ee7rn3o><a class="related-card" href="/website/blog/shell-online-live-terminal-browser-link" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/shell-online-live-terminal-browser-link.svg" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="shell.online: A Live Browser Link for Any Terminal" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>shell.online: A Live Browser Link for Any Terminal</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-09-02" data-astro-cid-4ee7rn3o>Sep 2, 2026</time> &middot; Blog</span></div></a><a class="related-card" href="/website/blog/userspace-tcp-over-udp-stack-pure-go" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/why-ai-agents-need-network-stack-1200.webp" srcset="/website/blog/banners/optimized/why-ai-agents-need-network-stack-720.webp 720w, /website/blog/banners/optimized/why-ai-agents-need-network-stack-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Building a Userspace TCP-over-UDP Stack in Pure Go" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Building a Userspace TCP-over-UDP Stack in Pure Go</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-04-15" data-astro-cid-4ee7rn3o>Apr 15, 2026</time> &middot; Engineering</span></div></a><a class="related-card" href="/website/blog/replace-message-broker-twelve-lines-go" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/replace-message-broker-twelve-lines-go-1200.webp" srcset="/website/blog/banners/optimized/replace-message-broker-twelve-lines-go-720.webp 720w, /website/blog/banners/optimized/replace-message-broker-twelve-lines-go-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Replace Your Agent Message Broker with 12 Lines of Go" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Replace Your Agent Message Broker with 12 Lines of Go</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-02-24" data-astro-cid-4ee7rn3o>Feb 24, 2026</time> &middot; Tutorial</span></div></a></div></div></section><nav class="blog-nav" data-astro-cid-4ee7rn3o><div class="blog-nav-inner" data-astro-cid-4ee7rn3o><a class="blog-nav-link blog-nav-prev" href="/website/blog/peer-to-peer-file-transfer-agents" data-astro-cid-4ee7rn3o><span class="blog-nav-label" data-astro-cid-4ee7rn3o>&larr; Previous</span><span class="blog-nav-title" data-astro-cid-4ee7rn3o>Peer-to-Peer File Transfer Between AI Agents (No S3 Required)</span></a><a class="blog-nav-link blog-nav-next" href="/website/blog/a2a-agent-cards-over-pilot-tunnels" data-astro-cid-4ee7rn3o><span class="blog-nav-label" data-astro-cid-4ee7rn3o>Next &rarr;</span><span class="blog-nav-title" data-astro-cid-4ee7rn3o>Building A2A Agent Cards Over Pilot Protocol Tunnels</span></a></div></nav><footer class="site-footer" data-astro-cid-jo6i4kqk><div class="wrap" data-astro-cid-jo6i4kqk><div class="foot-big" data-astro-cid-jo6i4kqk>The internet<br data-astro-cid-jo6i4kqk>for <span class="a" data-astro-cid-jo6i4kqk>agents.</span></div><div class="foot-cta" data-astro-cid-jo6i4kqk><a href="/website/docs/getting-started" class="btn primary" data-astro-cid-jo6i4kqk>Get started <span class="arr" data-astro-cid-jo6i4kqk>→</span></a><a href="/contact" class="btn" data-astro-cid-jo6i4kqk>Contact sales</a></div><div class="foot-grid" data-astro-cid-jo6i4kqk><div class="foot-about" data-astro-cid-jo6i4kqk><div class="foot-brand" data-astro-cid-jo6i4kqk><img src="/website/img/pilot-48.webp" alt="" class="foot-logo" width="28" height="28" loading="lazy" decoding="async" data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Pilot Protocol</p></div><p data-astro-cid-jo6i4kqk>Pilot. Where agents go.</p><div class="foot-social" data-astro-cid-jo6i4kqk><a href="https://x.com/pilotprotocol_" class="foot-social-link" target="_blank" rel="noopener" aria-label="Pilot Protocol on X" data-track="social_click" data-track-target="x" data-astro-cid-jo6i4kqk><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-jo6i4kqk><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="https://www.linkedin.com/company/112569955/" class="foot-social-link" target="_blank" rel="noopener" aria-label="Pilot Protocol on LinkedIn" data-track="social_click" data-track-target="linkedin" data-astro-cid-jo6i4kqk><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-jo6i4kqk><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Product</p><a href="/website/learn/what-is-pilot-protocol" data-astro-cid-jo6i4kqk>Network OS</a><a href="/trust" data-astro-cid-jo6i4kqk>Trust Center</a><a href="/governance" data-astro-cid-jo6i4kqk>Governance</a><a href="/app-store" data-astro-cid-jo6i4kqk>App Store</a><a href="/plans" data-astro-cid-jo6i4kqk>Plans</a><a href="/website/docs/enterprise" data-astro-cid-jo6i4kqk>Enterprise controls</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Developers</p><a href="/website/docs/" data-astro-cid-jo6i4kqk>Documentation</a><a href="/website/docs/getting-started" data-astro-cid-jo6i4kqk>Quickstart</a><a href="/website/docs/integration" data-astro-cid-jo6i4kqk>SDKs &amp; integration</a><a href="/website/research/WHITEPAPER.pdf" data-astro-cid-jo6i4kqk>Wire specification</a><a href="/website/pilot-native-use-cases.pdf" data-astro-cid-jo6i4kqk>Use-case brochure</a><a href="https://github.com/pilot-protocol/pilotprotocol" data-astro-cid-jo6i4kqk>GitHub</a><a href="/website/docs/research" data-astro-cid-jo6i4kqk>Research</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Company</p><a href="/about" data-astro-cid-jo6i4kqk>About</a><a href="/website/learn/" data-astro-cid-jo6i4kqk>Learning center</a><a href="/roadmap" data-astro-cid-jo6i4kqk>Roadmap</a><a href="/website/news/" data-astro-cid-jo6i4kqk>Company news</a><a href="/website/blog/" data-astro-cid-jo6i4kqk>Blog</a><a href="/press" data-astro-cid-jo6i4kqk>Press</a><a href="/website/enterprise-readiness-report.pdf" data-astro-cid-jo6i4kqk>Readiness report</a><a href="/contact" data-astro-cid-jo6i4kqk>Contact</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Legal</p><a href="/privacy" data-astro-cid-jo6i4kqk>Privacy Policy</a><a href="/cookies" data-astro-cid-jo6i4kqk>Cookie Policy</a><a href="/terms" data-astro-cid-jo6i4kqk>Terms of Service</a><a href="/aup" data-astro-cid-jo6i4kqk>Acceptable Use</a><a href="/publisher-agreement" data-astro-cid-jo6i4kqk>Publisher Agreement</a><a href="/website/security/disclosure" data-astro-cid-jo6i4kqk>Security disclosure</a><button type="button" id="cookie-preferences-link" data-astro-cid-jo6i4kqk>Cookie Preferences</button></div></div><a class="foot-plain-band" href="/website/plain/" data-astro-cid-jo6i4kqk><span class="fp-label" data-astro-cid-jo6i4kqk>Plain text for agents</span><span class="fp-path" data-astro-cid-jo6i4kqk>/plain</span><span class="fp-arrow" data-astro-cid-jo6i4kqk>→</span></a><div class="foot-bottom" data-astro-cid-jo6i4kqk><div data-astro-cid-jo6i4kqk>© 2026 Pilot Protocol · Built for agents</div><div class="foot-bottom-right" data-astro-cid-jo6i4kqk><span class="foot-status" data-astro-cid-jo6i4kqk>pilot://0x00000000 · backbone · up</span></div></div><nav class="foot-solutions" aria-label="Explore Pilot solutions" data-astro-cid-jo6i4kqk><div class="foot-solutions-intro" data-astro-cid-jo6i4kqk><span data-astro-cid-jo6i4kqk>Explore Pilot</span><span data-astro-cid-jo6i4kqk>Capabilities by workflow</span></div><div class="foot-solutions-grid" data-astro-cid-jo6i4kqk><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Connect</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/private-agent-network" data-track="footer_solution_click" data-track-target="private-agent-network" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Private agent networks</a><a href="/website/solutions/agent-integration" data-track="footer_solution_click" data-track-target="agent-integration" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Connect existing systems</a><a href="/website/solutions/agent-capability-store" data-track="footer_solution_click" data-track-target="agent-capability-store" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Agent capabilities</a><a href="/website/solutions/agent-ready-apis" data-track="footer_solution_click" data-track-target="agent-ready-apis" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Publish agent-ready APIs</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Build</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/secure-agent-runtime" data-track="footer_solution_click" data-track-target="secure-agent-runtime" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Secure agent runtime</a><a href="/website/solutions/grounded-agent-search" data-track="footer_solution_click" data-track-target="grounded-agent-search" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Grounded private search</a><a href="/website/solutions/web-access-for-agents" data-track="footer_solution_click" data-track-target="web-access-for-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Web access for agents</a><a href="/website/solutions/isolated-agent-compute" data-track="footer_solution_click" data-track-target="isolated-agent-compute" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Isolated agent compute</a><a href="/website/solutions/live-data-for-agents" data-track="footer_solution_click" data-track-target="live-data-for-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Live data for agents</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Operate</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/agent-email-phone" data-track="footer_solution_click" data-track-target="agent-email-phone" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Email, phone and SMS</a><a href="/website/solutions/sales-agent-stack" data-track="footer_solution_click" data-track-target="sales-agent-stack" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Sales agent stack</a><a href="/website/solutions/agent-commerce" data-track="footer_solution_click" data-track-target="agent-commerce" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Agent commerce</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Enterprise</p><div data-astro-cid-jo6i4kqk><a href="/website/enterprise/autonomous-ai-agents" data-track="footer_enterprise_click" data-track-target="autonomous-ai-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Autonomous agent control</a><a href="/website/enterprise/claude-code-management" data-track="footer_enterprise_click" data-track-target="claude-code-management" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Claude Code management</a></div></div></div></nav></div></footer><script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var link = document.getElementById('cookie-preferences-link');
+    if (link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (typeof window.__showConsentBanner === 'function') {
+          window.__showConsentBanner();
+        }
+      });
+    }
+  });
+</script><button class="scroll-top" id="scroll-top" aria-label="Scroll to top" data-astro-cid-4ee7rn3o><svg viewBox="0 0 24 24" data-astro-cid-4ee7rn3o><polyline points="18 15 12 9 6 15" data-astro-cid-4ee7rn3o></polyline></svg></button><script type="module">(function(){var e=document.getElementById(`progress-bar`),t=document.getElementById(`scroll-top`);window.addEventListener(`scroll`,function(){var n=document.documentElement.scrollHeight-window.innerHeight,r=n>0?window.scrollY/n*100:0;e&&(e.style.width=r+`%`),t&&(window.scrollY>400?t.classList.add(`visible`):t.classList.remove(`visible`))}),t&&t.addEventListener(`click`,function(){window.scrollTo({top:0,behavior:`smooth`})})})(),(function(){var e=document.getElementById(`reading-time`),t=document.querySelector(`.article`);if(!(!e||!t)){var n=(t.innerText||t.textContent||``).trim().split(/\s+/).length;e.textContent=Math.ceil(n/200)+` min read`}})(),(function(){var e=document.getElementById(`toc-list`),t=document.getElementById(`article-toc`);if(!(!e||!t)){var n=document.querySelectorAll(`.article h2[id]`);if(n.length===0){t.style.display=`none`;return}n.forEach(function(t){var n=document.createElement(`li`),r=document.createElement(`a`);r.href=`#`+t.id,r.textContent=t.textContent,n.appendChild(r),e.appendChild(n)});var r=e.querySelectorAll(`a`),i=new IntersectionObserver(function(t){t.forEach(function(t){if(t.isIntersecting){r.forEach(function(e){e.classList.remove(`active`)});var n=e.querySelector(`a[href="#`+t.target.id+`"]`);n&&n.classList.add(`active`)}})},{rootMargin:`0px 0px -70% 0px`,threshold:0});n.forEach(function(e){i.observe(e)})}})(),(function(){function e(e){return e.split(`
+`).map(function(e){return e.replace(/^(\s*)\$\s(?=\S)/,`$1`)}).join(`
+`).trim()}document.querySelectorAll(`.article pre`).forEach(function(t){var n=document.createElement(`button`);n.className=`copy-btn`,n.type=`button`,n.setAttribute(`aria-label`,`Copy code`),n.textContent=`Copy`,n.addEventListener(`click`,function(){var r=t.querySelector(`code`),i;if(r)i=r.textContent;else{var a=t.cloneNode(!0),o=a.querySelector(`.copy-btn`);o&&o.remove(),i=a.textContent}var s=e(i);navigator.clipboard.writeText(s).then(function(){n.textContent=`Copied`,n.setAttribute(`aria-label`,`Copied`),setTimeout(function(){n.textContent=`Copy`,n.setAttribute(`aria-label`,`Copy code`)},2e3)}).catch(function(){n.textContent=`Copy failed`,n.setAttribute(`aria-label`,`Copy failed`),setTimeout(function(){n.textContent=`Copy`,n.setAttribute(`aria-label`,`Copy code`)},2e3)})}),t.appendChild(n)})})(),(function(){var e=document.querySelectorAll(`.article h2, .article blockquote, .article .callout, .related-card, .blog-nav-link`);if(e.length){var t=new IntersectionObserver(function(e){e.forEach(function(e){e.isIntersecting&&(e.target.classList.add(`visible`),t.unobserve(e.target))})},{threshold:.1});e.forEach(function(e){e.classList.add(`reveal`),t.observe(e)})}})();</script></body></html>

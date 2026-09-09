@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Compliance &amp; Governance - Orgs - Pilot Protocol</title><meta name="description" content="Automated compliance for regulated environments."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Compliance &amp; Governance</h1><p><em>advanced &middot; 4 agents &middot; 15 skills</em></p><p>Automated compliance for regulated environments. A policy engine evaluates every agent action against governance rules, an auditor maintains tamper-evident logs, a certifier issues and verifies compliance certificates, and a reporter generates audit reports on schedule.</p><h2>Install</h2><pre><code>clawhub install pilot-compliance-governance-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-sla"><code>pilot-sla</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-workflow"><code>pilot-workflow</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-chain"><code>pilot-task-chain</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-verify"><code>pilot-verify</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-log"><code>pilot-event-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-certificate"><code>pilot-certificate</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-keychain"><code>pilot-keychain</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-receipt"><code>pilot-receipt</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-slack-bridge"><code>pilot-slack-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-archive"><code>pilot-archive</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-policy-engine</code> - <strong>Policy Engine</strong><br>Violations for logging&quot; },<br>Skills: <code>pilot-event-filter</code> , <code>pilot-sla</code> , <code>pilot-workflow</code> , <code>pilot-task-chain</code></li><li><code>&lt;your-prefix&gt;-auditor</code> - <strong>Audit Trail</strong><br>Violations&quot; },<br>Skills: <code>pilot-audit-log</code> , <code>pilot-verify</code> , <code>pilot-event-log</code> , <code>pilot-cron</code></li><li><code>&lt;your-prefix&gt;-certifier</code> - <strong>Compliance Certifier</strong><br>Certification requests&quot; },<br>Skills: <code>pilot-certificate</code> , <code>pilot-keychain</code> , <code>pilot-verify</code> , <code>pilot-receipt</code></li><li><code>&lt;your-prefix&gt;-reporter</code> - <strong>Compliance Reporter</strong><br>Audit data&quot; },<br>Skills: <code>pilot-metrics</code> , <code>pilot-webhook-bridge</code> , <code>pilot-slack-bridge</code> , <code>pilot-archive</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-policy</code> &rarr; <code>&lt;your-prefix&gt;-auditor</code>:<code>1002</code> - policy violations</li><li><code>&lt;your-prefix&gt;-policy</code> &rarr; <code>&lt;your-prefix&gt;-certifier</code>:<code>1002</code> - certification requests</li><li><code>&lt;your-prefix&gt;-auditor</code> &rarr; <code>&lt;your-prefix&gt;-reporter</code>:<code>1002</code> - audit data for reports</li><li><code>&lt;your-prefix&gt;-certifier</code> &rarr; <code>&lt;your-prefix&gt;-reporter</code>:<code>1002</code> - certification records</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On policy engine node
+clawhub install pilot-event-filter pilot-sla pilot-workflow pilot-task-chain
+pilotctl set-hostname &lt;your-prefix&gt;-policy
+
+# On auditor node
+clawhub install pilot-audit-log pilot-verify pilot-event-log pilot-cron
+pilotctl set-hostname &lt;your-prefix&gt;-auditor
+
+# On certifier node
+clawhub install pilot-certificate pilot-keychain pilot-verify pilot-receipt
+pilotctl set-hostname &lt;your-prefix&gt;-certifier
+
+# On reporter node
+clawhub install pilot-metrics pilot-webhook-bridge pilot-slack-bridge pilot-archive
+pilotctl set-hostname &lt;your-prefix&gt;-reporter
+# policy &lt;-&gt; auditor
+# On policy:
+pilotctl handshake &lt;your-prefix&gt;-auditor &quot;compliance&quot;
+# On auditor:
+pilotctl handshake &lt;your-prefix&gt;-policy &quot;compliance&quot;
+
+# policy &lt;-&gt; certifier
+# On policy:
+pilotctl handshake &lt;your-prefix&gt;-certifier &quot;compliance&quot;
+# On certifier:
+pilotctl handshake &lt;your-prefix&gt;-policy &quot;compliance&quot;
+
+# auditor &lt;-&gt; reporter
+# On auditor:
+pilotctl handshake &lt;your-prefix&gt;-reporter &quot;compliance&quot;
+# On reporter:
+pilotctl handshake &lt;your-prefix&gt;-auditor &quot;compliance&quot;
+
+# certifier &lt;-&gt; reporter
+# On certifier:
+pilotctl handshake &lt;your-prefix&gt;-reporter &quot;compliance&quot;
+# On reporter:
+pilotctl handshake &lt;your-prefix&gt;-certifier &quot;compliance&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

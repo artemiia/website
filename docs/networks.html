@@ -1,0 +1,441 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Networks</title><meta name="description" content="Private networks in Pilot Protocol - group-level connectivity, membership permissions, join rules, and the security model."><meta name="robots" content="index,follow,max-image-preview:large"><meta name="author" content="Pilot Protocol"><link rel="canonical" href="https://pilotprotocol.network/docs/networks"><meta property="og:type" content="website"><meta property="og:title" content="Networks"><meta property="og:description" content="Private networks in Pilot Protocol - group-level connectivity, membership permissions, join rules, and the security model."><meta property="og:url" content="https://pilotprotocol.network/docs/networks"><meta property="og:image" content="https://pilotprotocol.network/og/docs.jpg"><meta property="og:image:alt" content="Pilot Protocol"><meta property="og:site_name" content="Pilot Protocol"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@pilotprotocol_"><meta name="twitter:title" content="Networks"><meta name="twitter:description" content="Private networks in Pilot Protocol - group-level connectivity, membership permissions, join rules, and the security model."><meta name="twitter:image" content="https://pilotprotocol.network/og/docs.jpg"><meta name="twitter:image:alt" content="Pilot Protocol"><meta name="theme-color" content="#0b0b0a" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)"><meta name="color-scheme" content="dark light"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://pilotprotocol.network/#organization","name":"Pilot Protocol","legalName":"Vulture Labs, Inc.","url":"https://pilotprotocol.network/","logo":{"@type":"ImageObject","url":"https://pilotprotocol.network/img/pilot-180.png","width":180,"height":180},"sameAs":["https://github.com/pilot-protocol/pilotprotocol","https://x.com/pilotprotocol_","https://www.linkedin.com/company/112569955/"],"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"founders@pilotprotocol.network","url":"https://pilotprotocol.network/contact"}]},{"@type":"WebSite","@id":"https://pilotprotocol.network/#website","url":"https://pilotprotocol.network/","name":"Pilot Protocol","publisher":{"@id":"https://pilotprotocol.network/#organization"},"inLanguage":"en-US"}]}</script><!-- PILOT-175: fonts self-hosted under /fonts/*. Removed the Google Fonts
+     preconnect + stylesheet links so the browser never contacts
+     fonts.googleapis.com / fonts.gstatic.com (GDPR: avoids passing
+     visitor IPs to Google). The self-hosted bundle covers the same
+     three families (Inter Tight, JetBrains Mono, Instrument Serif)
+     with identical subsets + unicode-range gating, so per-page font
+     bytes are unchanged. --><link rel="stylesheet" href="/website/fonts/fonts.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="/website/fonts/fonts.css"></noscript><link rel="preload" href="/website/fonts/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2" as="font" type="font/woff2" crossorigin="anonymous"><!-- PILOT-27: consent-check shared module is imported by analytics.ts below. --><link rel="icon" href="/website/img/pilot-48.png" type="image/png" sizes="48x48"><link rel="apple-touch-icon" href="/website/img/pilot-180.png" sizes="180x180"><!-- PILOT-27: Consent banner injected at the end of <body> from <head> --><script>
+  (function() {
+    var bannerHTML = '<div id="pilot-consent-banner" class="consent-banner consent-banner--bottom" role="dialog" aria-label="Cookie consent" style="display:none">' +
+      '<div class="consent-banner__inner">' +
+        '<div class="consent-banner__text">' +
+          '<p>We use analytics cookies, plus heatmaps and session replay with all form inputs masked, to understand how our site is used. We do not build a profile of you. <a href="/cookies">Cookie policy</a>.</p>' +
+        '</div>' +
+        '<div class="consent-banner__actions">' +
+          '<button id="pilot-consent-accept" class="btn primary consent-btn" data-consent="accepted">Accept</button>' +
+          '<button id="pilot-consent-reject" class="btn consent-btn" data-consent="rejected">Reject</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    // Wait for DOM to be ready
+    function injectBanner() {
+      if (document.body) {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = bannerHTML;
+        document.body.appendChild(wrapper.firstElementChild);
+
+        var KEY = 'pilot_consent';
+        var banner = document.getElementById('pilot-consent-banner');
+        if (!banner) return;
+
+        function getConsent() {
+          try { return localStorage.getItem(KEY); } catch { return null; }
+        }
+
+        function setConsent(value) {
+          try {
+            localStorage.setItem(KEY, value);
+            window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: value }));
+          } catch {}
+        }
+
+        document.getElementById('pilot-consent-accept').addEventListener('click', function() {
+          setConsent('accepted');
+          banner.style.display = 'none';
+        });
+
+        document.getElementById('pilot-consent-reject').addEventListener('click', function() {
+          setConsent('rejected');
+          banner.style.display = 'none';
+        });
+
+        var existing = getConsent();
+        if (existing) {
+          banner.style.display = 'none';
+          window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: existing }));
+        } else {
+          banner.style.display = 'flex';
+        }
+
+        window.__showConsentBanner = function() {
+          if (banner) banner.style.display = 'flex';
+        };
+      } else {
+        setTimeout(injectBanner, 50);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectBanner);
+    } else {
+      injectBanner();
+    }
+  })();
+</script><link rel="alternate" type="application/rss+xml" title="Pilot Protocol Journal" href="/website/blog/feed.xml"><script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('pilot-theme');
+      var prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      var theme = stored || prefers;
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script><!-- PILOT-27: GA4 loads only after user accepts cookies. --><script>
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadGA4() {
+      if (document.querySelector('script[src*="gtag/js?id=G-EEWEKT0GW5"]')) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EEWEKT0GW5';
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-EEWEKT0GW5');
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadGA4();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadGA4();
+      });
+    }
+    // If consent === 'rejected', never load GA4.
+  })();
+</script><!-- X (Twitter) Ads universal website tag — conversion tracking for our X ad
+     campaigns. Same consent gate as GA4 above: loads only after the visitor
+     accepts cookies, never on reject. Disclosed in /cookies and /privacy. --><script>(function(){const twitterPixelId = "re3tv";
+
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadTwitterPixel() {
+      if (!twitterPixelId || window.twq) return;
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+      },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+      a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+      window.twq('config', twitterPixelId);
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadTwitterPixel();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadTwitterPixel();
+      });
+    }
+    // If consent === 'rejected', never load the X pixel.
+  })();
+})();</script><script type="module" src="/website/_astro/BaseHead.astro_astro_type_script_index_0_lang.DTqJW7IP.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Networks","description":"Private networks in Pilot Protocol - group-level connectivity, membership permissions, join rules, and the security model.","url":"https://pilotprotocol.network/docs/networks","isPartOf":{"@type":"WebSite","name":"Pilot Protocol","url":"https://pilotprotocol.network/"},"author":{"@id":"https://pilotprotocol.network/#organization"},"publisher":{"@id":"https://pilotprotocol.network/#organization"}}</script><link rel="stylesheet" href="/website/_astro/system.DXXNXJyX.css"><link rel="stylesheet" href="/website/_astro/DocLayout.C-qhf5mz.css"></head><body><a class="skip-link" href="#page-content">Skip to content</a><nav class="nav-top" aria-label="Primary"><div class="wrap"><div class="nav-row"><a href="/" class="brand" data-track="nav_click" data-track-target="home"><span class="brand-mark"><img src="/website/img/pilot-48.webp" alt="" class="logo" width="40" height="40" decoding="async"></span><span class="brand-text"><strong>Pilot</strong><span>Protocol</span></span><span class="sr-only"> home</span></a><div class="nav-links" id="nav-links"><div class="nav-dropdown" data-nav-group="product"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Product</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">The platform</span><strong>One network layer for agents.</strong><p>Identity, encrypted connectivity, trust, and installable capabilities in one system.</p></div><div class="nav-menu-links"><a href="/" data-track="nav_click" data-track-target="product-network-os"><span class="dd-kicker">Platform</span><span class="dd-label">Network OS</span><span class="dd-desc">The complete Pilot architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/trust" data-track="nav_click" data-track-target="product-trust-center"><span class="dd-kicker">Security</span><span class="dd-label">Trust Center</span><span class="dd-desc">Controls, boundaries, and evidence</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/governance" data-track="nav_click" data-track-target="product-control-model"><span class="dd-kicker">Governance</span><span class="dd-label">Control model</span><span class="dd-desc">Authority, policy, lifecycle, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/app-store" data-track="nav_click" data-track-target="product-app-store"><span class="dd-kicker">Ecosystem</span><span class="dd-label">App Store</span><span class="dd-desc">Capabilities built for agents</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/plans" data-track="nav_click" data-track-target="product-plans"><span class="dd-kicker">Commercial</span><span class="dd-label">Plans</span><span class="dd-desc">Open network and enterprise paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/docs/getting-started"><span>Explore the product</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="solutions"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Solutions</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Built for real systems</span><strong>Connect agents across every boundary.</strong><p>Start with one deployment pattern, then expand without replacing the underlying network.</p></div><div class="nav-menu-links"><a href="/website/for/p2p" data-track="nav_click" data-track-target="solutions-direct-p2p"><span class="dd-kicker">Connectivity</span><span class="dd-label">Direct P2P</span><span class="dd-desc">Private agent-to-agent paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/mcp" data-track="nav_click" data-track-target="solutions-mcp-+-pilot"><span class="dd-kicker">Integration</span><span class="dd-label">MCP + Pilot</span><span class="dd-desc">Give MCP servers a network</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/networks" data-track="nav_click" data-track-target="solutions-managed-networks"><span class="dd-kicker">Organization</span><span class="dd-label">Managed networks</span><span class="dd-desc">Shared domains and membership</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/enterprise" data-track="nav_click" data-track-target="solutions-enterprise-controls"><span class="dd-kicker">Enterprise</span><span class="dd-label">Enterprise controls</span><span class="dd-desc">Identity, policy, roles, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/setups"><span>Browse deployment setups</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown active" data-nav-group="developers"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Developers</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Build on Pilot</span><strong>From first connection to production.</strong><p>Documentation and tooling for connecting, shipping, and operating agent-native software.</p></div><div class="nav-menu-links"><a href="/website/docs/getting-started" data-track="nav_click" data-track-target="developers-quickstart"><span class="dd-kicker">Start</span><span class="dd-label">Quickstart</span><span class="dd-desc">Install and connect in minutes</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/" data-track="nav_click" data-track-target="developers-documentation"><span class="dd-kicker">Reference</span><span class="dd-label">Documentation</span><span class="dd-desc">Concepts, CLI, SDKs, and operations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/integration" data-track="nav_click" data-track-target="developers-sdks-&amp;-integration"><span class="dd-kicker">Build</span><span class="dd-label">SDKs &amp; integration</span><span class="dd-desc">Embed Pilot in your stack</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/compatibility" data-track="nav_click" data-track-target="developers-compatibility"><span class="dd-kicker">Deploy</span><span class="dd-label">Compatibility</span><span class="dd-desc">Choose the right environment mode</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/skills"><span>Explore agent skills</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="resources"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Resources</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Learn and evaluate</span><strong>Technical depth without the guesswork.</strong><p>Architecture, field notes, evaluator material, and a machine-readable version of the site.</p></div><div class="nav-menu-links"><a href="/website/learn/" data-track="nav_click" data-track-target="resources-learning-center"><span class="dd-kicker">Learn</span><span class="dd-label">Learning center</span><span class="dd-desc">Foundations, transport, and security</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/blog/" data-track="nav_click" data-track-target="resources-field-notes"><span class="dd-kicker">Journal</span><span class="dd-label">Field notes</span><span class="dd-desc">Technical guides and architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/research" data-track="nav_click" data-track-target="resources-technical-papers"><span class="dd-kicker">Research</span><span class="dd-label">Technical papers</span><span class="dd-desc">Specifications and evaluations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/pilot-native-use-cases.pdf" data-track="nav_click" data-track-target="resources-deployment-patterns"><span class="dd-kicker">Use cases</span><span class="dd-label">Deployment patterns</span><span class="dd-desc">What the combined Pilot surface enables</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/press" data-track="nav_click" data-track-target="resources-press-kit"><span class="dd-kicker">Media</span><span class="dd-label">Press kit</span><span class="dd-desc">Company and brand resources</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/plain/" data-track="nav_click" data-track-target="resources-machine-readable-site"><span class="dd-kicker">Agents</span><span class="dd-label">Machine-readable site</span><span class="dd-desc">The plain-text agent interface</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/enterprise-readiness-report.pdf"><span>Read the readiness report</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="company"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Company</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Pilot Protocol</span><strong>Building the network for agents.</strong><p>Learn about the company, follow our progress, or speak directly with the team.</p></div><div class="nav-menu-links"><a href="/about" data-track="nav_click" data-track-target="company-about-pilot"><span class="dd-kicker">About</span><span class="dd-label">About Pilot</span><span class="dd-desc">Company, people, and publishing standards</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/roadmap" data-track="nav_click" data-track-target="company-product-roadmap"><span class="dd-kicker">Direction</span><span class="dd-label">Product roadmap</span><span class="dd-desc">What we are strengthening next</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/news/" data-track="nav_click" data-track-target="company-company-news"><span class="dd-kicker">Newsroom</span><span class="dd-label">Company news</span><span class="dd-desc">Announcements and company updates</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/contact" data-track="nav_click" data-track-target="company-talk-to-the-team"><span class="dd-kicker">Contact</span><span class="dd-label">Talk to the team</span><span class="dd-desc">Enterprise, partnerships, and press</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/contact"><span>Contact Pilot Protocol</span><span aria-hidden="true">→</span></a></div></div><div class="nav-mobile-actions"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a></div></div><div class="nav-right"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme" type="button"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button><button id="nav-hamburger" class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button></div></div></div></nav><span id="page-content" class="skip-target" tabindex="-1"></span><script>
+  (function () {
+    var nav = document.querySelector('.nav-top');
+    var themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function () {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isLight) {
+          document.documentElement.removeAttribute('data-theme');
+          try { localStorage.setItem('pilot-theme', 'dark'); } catch (e) {}
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          try { localStorage.setItem('pilot-theme', 'light'); } catch (e) {}
+        }
+      });
+    }
+
+    function closeDropdowns(except) {
+      document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+        if (dd === except) return;
+        dd.classList.remove('open');
+        var trigger = dd.querySelector('.nav-dropdown-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function closeMobileMenu() {
+      if (!links || !links.classList.contains('mobile-open')) return;
+      links.classList.remove('mobile-open');
+      if (hamb) {
+        hamb.classList.remove('is-open');
+        hamb.setAttribute('aria-expanded', 'false');
+        hamb.setAttribute('aria-label', 'Open menu');
+      }
+      document.body.classList.remove('nav-mobile-open');
+      closeDropdowns();
+    }
+
+    // Hamburger (mobile)
+    var hamb = document.getElementById('nav-hamburger');
+    var links = document.getElementById('nav-links');
+    if (hamb && links) {
+      hamb.setAttribute('aria-label', 'Open menu');
+      hamb.addEventListener('click', function () {
+        var open = links.classList.toggle('mobile-open');
+        hamb.classList.toggle('is-open', open);
+        hamb.setAttribute('aria-expanded', open ? 'true' : 'false');
+        hamb.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        document.body.classList.toggle('nav-mobile-open', open);
+        if (!open) closeDropdowns();
+      });
+      links.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    }
+
+    // Dropdown: click to toggle, click-outside to close
+    document.querySelectorAll('.nav-dropdown').forEach(function (dd) {
+      var trigger = dd.querySelector('.nav-dropdown-trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var wasOpen = dd.classList.contains('open');
+        closeDropdowns(dd);
+        dd.classList.toggle('open', !wasOpen);
+        var isOpen = !wasOpen;
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest || !e.target.closest('.nav-dropdown')) closeDropdowns();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+          dd.classList.remove('open');
+          var trig = dd.querySelector('.nav-dropdown-trigger');
+          if (trig) { trig.setAttribute('aria-expanded', 'false'); trig.focus(); }
+        });
+        closeMobileMenu();
+      }
+    });
+
+    // A restrained shadow gives the persistent shell a clear edge once content scrolls beneath it.
+    if (nav) {
+      var syncNavEdge = function () { nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+      syncNavEdge();
+      window.addEventListener('scroll', syncNavEdge, { passive: true });
+    }
+  })();
+</script><button class="docs-menu-toggle" id="docs-menu-toggle" type="button" aria-controls="docs-sidebar" aria-expanded="false"><span aria-hidden="true">☰</span> Documentation</button><aside class="sidebar" id="docs-sidebar" aria-label="Documentation"><div class="sidebar-head"><span>Documentation</span><button class="sidebar-close" id="docs-sidebar-close" type="button" aria-label="Close documentation menu">×</button></div><div class="nav-section">Documentation</div><a class href="/website/docs/"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Overview</a><a class href="/website/docs/getting-started"><svg class="nav-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Getting Started</a><a class href="/website/docs/concepts"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Core Concepts</a><a class href="/website/docs/cli-reference"><svg class="nav-icon" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>CLI Reference</a><a class href="/website/docs/go-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>Go SDK</a><a class href="/website/docs/python-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 4.69 2 8v2c0 3.31 4.48 6 10 6s10-2.69 10-6V8c0-3.31-4.48-6-10-6z"/><path d="M2 14v2c0 3.31 4.48 6 10 6s10-2.69 10-6v-2"/></svg>Python SDK</a><a class href="/website/docs/node-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12"/><path d="M3 7l9 5 9-5"/></svg>Node.js SDK</a><a class href="/website/docs/swift-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>Swift SDK</a><a class href="/website/docs/sdk-parity"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>SDK Parity</a><div class="nav-section">Features</div><a class href="/website/docs/messaging"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messaging</a><a class href="/website/docs/trust"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Trust &amp; Handshakes</a><a class="active" href="/website/docs/networks" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><line x1="12" y1="8" x2="5" y2="16"/><line x1="12" y1="8" x2="19" y2="16"/><line x1="8" y1="19" x2="16" y2="19"/></svg>Networks</a><a class href="/website/docs/services"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>Built-in Services</a><a class href="/website/docs/pubsub"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/><circle cx="12" cy="12" r="11"/></svg>Pub/Sub</a><a class href="/website/docs/webhooks"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Webhooks</a><a class href="/website/docs/gateway"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/><line x1="12" y1="7" x2="12" y2="17"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Gateway</a><a class href="/website/docs/tags"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Tags</a><a class href="/website/docs/pilot-mom"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg>pilot-mom</a><a class href="/website/docs/service-agents"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/><path d="M12 12v9"/><path d="M9 18l3 3 3-3"/></svg>Service Agents</a><a class href="/website/docs/app-store"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>App Store</a><a class href="/website/docs/mcp-setup"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/><path d="M15 21h4a2 2 0 0 0 2-2v-4"/><circle cx="12" cy="12" r="2"/></svg>MCP Setup</a><a class href="/website/docs/consent"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Consent &amp; Privacy</a><div class="nav-section">Hosted Control Plane</div><a class href="/website/docs/managed-control-plane"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h10M7 12h6M7 16h8"/></svg>Managed Overview</a><a class href="/website/docs/managed-accounts"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6M8 10h.01M12 10h.01M16 10h.01"/></svg>Accounts &amp; Organizations</a><a class href="/website/docs/managed-agent-adoption"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0M18 4l2 2 3-3"/></svg>Agent Adoption</a><a class href="/website/docs/managed-harnesses"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-8 8l-7 7a2.1 2.1 0 0 1-3-3l7-7a6 6 0 0 1 8-8z"/></svg>Harness Coverage</a><a class href="/website/docs/managed-policies"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>Policies &amp; Approvals</a><a class href="/website/docs/managed-fleet"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8l-7 8M12 8l7 8M8 19h8"/></svg>Fleet &amp; Evidence</a><a class href="/website/docs/managed-readiness"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12h4l2-7 4 14 2-7h6"/><circle cx="12" cy="12" r="10"/></svg>Availability &amp; Readiness</a><div class="nav-section">Enterprise</div><a class href="/website/docs/security"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Security</a><a class href="/website/docs/enterprise"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Enterprise Overview</a><a class href="/website/docs/enterprise-rbac"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>RBAC &amp; Access Control</a><a class href="/website/docs/enterprise-identity"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Identity &amp; SSO</a><a class href="/website/docs/enterprise-policies"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Network Policies</a><a class href="/website/docs/enterprise-audit"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>Audit &amp; Compliance</a><a class href="/website/docs/enterprise-blueprints"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Blueprints</a><div class="nav-section">Operations</div><a class href="/website/docs/firewalls"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Firewalls &amp; Compat Mode</a><a class href="/website/docs/diagnostics"><svg class="nav-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Diagnostics</a><a class href="/website/docs/configuration"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configuration</a><a class href="/website/docs/motd"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>Message of the Day</a><a class href="/website/docs/integration"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Integration</a><div class="nav-section">Reference</div><a class href="/website/docs/error-codes"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Error Codes</a><a class href="/website/docs/troubleshooting"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Troubleshooting</a><div class="nav-section">Compare</div><a class href="/website/docs/comparison"><svg class="nav-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>vs MCP / A2A / ACP</a><a class href="/website/docs/comparison-networking"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><line x1="12" y1="8" x2="5" y2="16"/><line x1="12" y1="8" x2="19" y2="16"/><line x1="5" y1="16" x2="19" y2="16"/></svg>vs Tailscale / ZeroTier / Nebula</a><div class="nav-section">Research</div><a class href="/website/docs/research"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Papers</a></aside><button class="docs-sidebar-backdrop" id="docs-sidebar-backdrop" type="button" aria-label="Close documentation menu" hidden></button><aside class="toc-sidebar" id="toc-sidebar"></aside><main class="content"><div class="content-body"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://artemiia.github.io/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://artemiia.github.io/docs/"},{"@type":"ListItem","position":3,"name":"Networks","item":"https://artemiia.github.io/website/docs/networks/"}]}</script><nav class="site-breadcrumbs is-compact" aria-label="Breadcrumb" data-astro-cid-vx4iavld><ol data-astro-cid-vx4iavld><li data-astro-cid-vx4iavld><a href="/" data-astro-cid-vx4iavld>Home</a></li><li data-astro-cid-vx4iavld><a href="/website/docs/" data-astro-cid-vx4iavld>Documentation</a></li><li data-astro-cid-vx4iavld><span aria-current="page" data-astro-cid-vx4iavld>Networks</span></li></ol></nav><a class="back-overview" href="/website/docs/#flow"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>Flow</a><h1>Networks</h1>
+  <p class="subtitle">Private networks - group-level connectivity without bilateral trust.</p>
+
+  <div class="toc">
+    <h4>On this page</h4>
+    <ul>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#vs-trust">Networks vs. bilateral trust</a></li>
+      <li><a href="#permissions">What network membership grants</a></li>
+      <li><a href="#backbone">The backbone (network 0)</a></li>
+      <li><a href="#join-rules">Join rules</a></li>
+      <li><a href="#lifecycle">Network lifecycle</a></li>
+      <li><a href="#how-it-works">How it works under the hood</a></li>
+      <li><a href="#security">Security model</a></li>
+    </ul>
+  </div>
+
+  <h2 id="overview">Overview</h2>
+
+  <p>Networks are the group-level access control primitive in Pilot Protocol. Where <a href="trust">bilateral trust</a> requires every pair of agents to independently negotiate a handshake, a network grants connectivity to all members at once.</p>
+
+  <p>Add 10 agents to the same network and they can discover and connect to each other without creating N&sup2; bilateral trust pairs. Membership is a group-level network grant; enterprise port policy and application authorization can further narrow the resulting access.</p>
+
+  <p>Networks are managed through the <code>pilotctl network</code> commands - create networks, add agents, monitor status, and control membership from the CLI. Private Network is in <a href="/plans">early access</a>; the team onboards deployments directly.</p>
+
+  <h2 id="vs-trust">Networks vs. bilateral trust</h2>
+
+  <p>Pilot Protocol has two distinct access control models. They serve different purposes and can be used together.</p>
+
+  <table>
+    <thead><tr><th></th><th>Bilateral trust</th><th>Network membership</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Scope</strong></td><td>One-to-one</td><td>Group-wide</td></tr>
+      <tr><td><strong>Setup</strong></td><td>Handshake + approve per pair</td><td>Add to network once, connect to all members</td></tr>
+      <tr><td><strong>Scaling</strong></td><td>O(n&sup2;) handshakes for n agents (e.g. 10 agents = 45 pairs)</td><td>O(n) adds for n agents</td></tr>
+      <tr><td><strong>Discovery</strong></td><td>Must know address or hostname</td><td>Enumerate via <code>pilotctl network members</code></td></tr>
+      <tr><td><strong>Revocation</strong></td><td>Per-peer (<code>untrust</code>)</td><td>Remove from network; all access revoked at once</td></tr>
+      <tr><td><strong>Use case</strong></td><td>Cross-org collaboration, unknown peers</td><td>Teams, fleets, same-org agents</td></tr>
+      <tr><td><strong>Persistence</strong></td><td>Stored locally on each node</td><td>Stored in registry, survives any node restart</td></tr>
+    </tbody>
+  </table>
+
+  <p>Bilateral trust is designed for relationships between agents that don&rsquo;t share an organizational boundary - two companies collaborating, an agent reaching out to an unknown peer, or any scenario where explicit mutual consent matters.</p>
+
+  <p>Networks are designed for agents that <em>should</em> be able to establish network connections by default - a fleet of workers, a team&rsquo;s agents, or a research cluster. Membership grants connectivity; it does not independently authorize a task, tool call, data disclosure, payment, or other business action.</p>
+
+  <h2 id="permissions">What network membership grants</h2>
+
+  <p>When two agents share a network, they get a specific set of permissions that would otherwise require bilateral trust:</p>
+
+  <table>
+    <thead><tr><th>Permission</th><th>Without network</th><th>With shared network</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Resolve endpoints</strong></td><td>Reachable endpoint is withheld; some directory metadata may remain visible</td><td>Can resolve any member&rsquo;s endpoint</td></tr>
+      <tr><td><strong>Open connections</strong></td><td>Connection attempts silently dropped</td><td>Connections accepted immediately</td></tr>
+      <tr><td><strong>Send datagrams</strong></td><td>Silently dropped</td><td>Delivered</td></tr>
+      <tr><td><strong>List members</strong></td><td>Non-backbone networks are enumerable via the registry today (backbone #0 is admin-gated)</td><td>Full member list via <code>pilotctl network members</code></td></tr>
+      <tr><td><strong>Handshake auto-approval</strong></td><td>Requires manual approve or mutual request</td><td>Network membership serves as a trust signal</td></tr>
+    </tbody>
+  </table>
+
+  <h3>What networks do NOT grant</h3>
+
+  <ul>
+    <li><strong>No traffic inspection</strong> - encryption is end-to-end between agents. The network grants connectivity, not visibility.</li>
+    <li><strong>No transitive access</strong> - if A and B share network 1, and B and C share network 2, A cannot reach C. Each network is an independent trust domain.</li>
+  </ul>
+
+  <h3>Enterprise networks</h3>
+
+  <p><em>Enterprise networks are in early access — the commands below work on self-hosted deployments; managed availability is onboarding via <a href="/plans">Plans</a>.</em></p>
+  <p>Enterprise networks add a full suite of production controls on top of standard network membership. Enable enterprise at creation time with <code>pilotctl network create --name prod --enterprise</code>.</p>
+
+  <ul>
+    <li><strong><a href="enterprise-rbac">RBAC</a></strong> - three-tier roles (owner, admin, member) with a permissions matrix. Promote, demote, kick, and transfer ownership.</li>
+    <li><strong><a href="enterprise-rbac#invites">Invites</a></strong> - consent-based invite flow with 30-day TTL and inbox cap.</li>
+    <li><strong><a href="enterprise-identity">Identity &amp; SSO</a></strong> - OIDC/JWT validation plus external identity mapping and webhook-based bridges.</li>
+    <li><strong><a href="enterprise-identity#directory-sync">Directory sync</a></strong> - map external directory entries and roles to existing agents; sync does not create agents or add members.</li>
+    <li><strong><a href="enterprise-policies">Policies</a></strong> - membership caps, port whitelists, and network descriptions with merge-on-update semantics.</li>
+    <li><strong><a href="enterprise-audit">Audit &amp; compliance</a></strong> - structured audit events, SIEM export (Splunk HEC, CEF, JSON), webhooks with DLQ.</li>
+    <li><strong><a href="enterprise-blueprints">Blueprints</a></strong> - declarative JSON provisioning: one document, one command, full network setup.</li>
+  </ul>
+
+  <p>See the <a href="enterprise">Enterprise documentation</a> for the full guide, or the <a href="cli-reference#networks">CLI reference</a> for enterprise commands.</p>
+
+  <h3>The design principle</h3>
+
+  <p>Standard network permissions are intentionally simple: you are either a member or you are not, and membership grants network connectivity to available ports. Outside the boundary, a private agent's <em>endpoint</em> (IP:port) is withheld — though the registry may still expose some directory metadata (see the privacy note below). Enterprise networks add roles and port policies; applications retain responsibility for method, data, spend, approval, and other business authority.</p>
+
+  <h2 id="backbone">The backbone (network 0)</h2>
+
+  <p>Every registered agent belongs to network 0 (the backbone). This is the global address space where node IDs are allocated and endpoints are registered. The backbone provides:</p>
+
+  <ul>
+    <li><strong>Address allocation</strong> - 32-bit node IDs assigned at registration</li>
+    <li><strong>Endpoint resolution</strong> - public IP:port discovery via STUN</li>
+    <li><strong>NAT traversal</strong> - hole-punching and relay coordination</li>
+    <li><strong>Handshake relay</strong> - trust negotiation via the registry</li>
+  </ul>
+
+  <p>The backbone does <em>not</em> grant communication rights. Being on the backbone means you exist in the address space, not that anyone can connect to you. A private agent's endpoint is withheld from everyone except its trusted peers and network co-members; other directory metadata (hostname, tags) may still be resolvable.</p>
+
+  <h2 id="join-rules">Join rules</h2>
+
+  <p>When you create a network with <code>pilotctl network create</code>, you choose a join rule that controls how new members are added:</p>
+
+  <table>
+    <thead><tr><th>Rule</th><th>Who can join</th><th>Use case</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Open</strong></td><td>Any node can join without approval</td><td>Internal fleets where every owned agent should join without a per-agent invite</td></tr>
+      <tr><td><strong>Invite only</strong></td><td>Only when an owner or admin invites them</td><td>High-security environments where membership is tightly controlled</td></tr>
+      <tr><td><strong>Token-gated</strong></td><td>Anyone with the shared secret token</td><td>Teams that can distribute a token out-of-band (Slack, email, config file)</td></tr>
+    </tbody>
+  </table>
+
+  <p>The join rule is set at network creation and enforced by the registry. For token-gated networks, share the token out-of-band and agents self-join:</p>
+
+  <pre><code><span class="cmd">pilotctl</span> network join 1 --token my-secret</code></pre>
+
+  <h2 id="lifecycle">Network lifecycle</h2>
+
+  <h3>Create a network</h3>
+
+  <pre><code><span class="cmd">pilotctl</span> network create --name research-lab --join-rule token --token my-secret</code></pre>
+
+  <p>The <code>--join-rule</code> is one of <code>open</code>, <code>invite</code>, or <code>token</code>. Use <code>--enterprise</code> to enable RBAC, policies, audit, and blueprints. See <a href="/plans">Plans</a> for tier details.</p>
+
+  <h3>Add agents</h3>
+
+  <p>Admins add agents by identifier:</p>
+
+  <table>
+    <thead><tr><th>Format</th><th>Example</th><th>Where to find it</th></tr></thead>
+    <tbody>
+      <tr><td>Node ID</td><td><code>1001</code></td><td><code>pilotctl info</code> output</td></tr>
+      <tr><td>Pilot address</td><td><code>1:0001.0000.03E9</code></td><td>Daemon startup output</td></tr>
+      <tr><td>Hostname</td><td><code>my-agent</code></td><td>Set at daemon start with <code>--hostname</code></td></tr>
+    </tbody>
+  </table>
+
+  <pre><code><span class="cmd">pilotctl</span> network invite 1 1001
+<span class="comment"># or by hostname / pilot address</span>
+<span class="cmd">pilotctl</span> network invite 1 my-agent
+<span class="cmd">pilotctl</span> network invite 1 1:0001.0000.03E9</code></pre>
+
+  <p>Once added, the agent can immediately communicate with all other network members.</p>
+
+  <h3>Monitor agents</h3>
+
+  <p>List live members with <code>pilotctl network members &lt;network_id&gt;</code> - shows node ID, hostname, version, and public status per member in the table (JSON mode additionally includes address, real_addr, and last_seen).</p>
+
+  <h3>Remove agents</h3>
+
+  <pre><code><span class="cmd">pilotctl</span> network kick 1 1001
+<span class="comment"># or by hostname / pilot address</span>
+<span class="cmd">pilotctl</span> network kick 1 my-agent</code></pre>
+
+  <p>Access is revoked immediately - the agent can no longer resolve, connect to, or be discovered by other network members (unless they also share bilateral trust).</p>
+
+  <h3>Delete a network</h3>
+
+  <p>Owners can delete a network with <code>pilotctl network delete &lt;network_id&gt;</code>. All member associations are removed. Agents retain their backbone registration and bilateral trust relationships, but lose all network-granted permissions.</p>
+
+  <h2 id="how-it-works">How it works under the hood</h2>
+
+  <p>Network membership is checked automatically at three points in the protocol. You don&rsquo;t need to configure any of this - it happens transparently when agents communicate.</p>
+
+  <h3>1. Address resolution</h3>
+
+  <p>When agent A looks up agent B&rsquo;s endpoint, the registry checks: is B public? If not, does A share a network with B, or do they have mutual trust? If neither, the <em>endpoint</em> lookup is denied. Note the denial distinguishes "private" from "not found", and the directory <code>lookup</code> still returns hostname/networks/tags for a known node — endpoint privacy is enforced, directory-metadata privacy is weaker.</p>
+
+  <h3>2. Connection acceptance</h3>
+
+  <p>When a connection request arrives at a private agent, the daemon checks the source against its trust list and shared network membership. If neither applies, the request is silently dropped - no response, no indication the target exists.</p>
+
+  <h3>3. Datagram delivery</h3>
+
+  <p>Datagrams to private agents use the same check. If the sender is not trusted and not in a shared network, the datagram is silently dropped.</p>
+
+  <h2 id="security">Security model</h2>
+
+  <h3>Membership is the boundary</h3>
+
+  <p>The standard network model is deliberately simple: membership grants connectivity. Standard networks do not inspect application payloads; list the members with <code>pilotctl network members</code> to review the group-level connectivity boundary. Enterprise networks layer on RBAC (owner/admin/member roles) and port-level policies. Application authorization remains separate.</p>
+
+  <h3>Silent rejection</h3>
+
+  <p>When a non-member tries to connect to a private network agent, the connection gate returns no response and exposes no endpoint-level signal. Directory listings or metadata can still be enumerable under some registry configurations, so this limits connectivity probing rather than promising total metadata invisibility.</p>
+
+  <h3>Backbone isolation</h3>
+
+  <p>Backbone (network 0) membership does not grant any communication rights. A private agent's endpoint is hidden from everyone outside its trust and network boundaries (endpoint-level privacy; directory metadata may still be visible).</p>
+
+  <h3>Immediate revocation</h3>
+
+  <p>Running <code>pilotctl network kick</code> revokes the agent&rsquo;s access at the connection gate immediately: a kicked peer&rsquo;s next connection attempt re-checks the registry and is silently dropped. Membership <em>metadata</em> is not instant everywhere, though — daemons reconcile network membership on a periodic sync loop (every 5 minutes), and resolve/policy results are cached — so listings and cached lookups can briefly lag the registry, which remains the single source of truth.</p>
+
+  <h3>No transitive trust</h3>
+
+  <p>Network membership is not transitive. If A and B share network 1, and B and C share network 2, A cannot reach C through B unless A and C also share a network or have bilateral trust. Each network is an independent trust domain.</p>
+
+  <h3>Enterprise port policies</h3>
+
+  <p>Enterprise networks support <a href="enterprise-policies">port-level policies</a> that restrict which ports members can access. Use <code>pilotctl network policy &lt;network_id&gt; --allowed-ports 80,443,1001</code> to limit accessible ports within a network. Other settable flags: <code>--max-members &lt;n&gt;</code>, <code>--description &lt;text&gt;</code>. Without any <code>--&lt;flag&gt;</code> argument, <code>pilotctl network policy &lt;network_id&gt;</code> shows the current policy. See <a href="enterprise-policies">Network Policies</a> for details on membership caps, port whitelists, and merge-on-update semantics.</p>
+
+  <div class="callout">
+    <strong>Further reading:</strong> <a href="/website/blog/private-networks-now-in-testing">Private Networks: Now in Testing</a> · <a href="/website/blog/private-agent-network-company">Build a Private Agent Network for Your Company</a> · <a href="trust">Trust & Handshakes</a>
+  </div><div class="page-nav"><a href="/website/docs/trust">&larr; Trust &amp; Handshakes</a><a class="next" href="/website/docs/services">Built-in Services &rarr;</a></div></div></main><div class="doc-footer-wrap"><footer class="docs-footer" data-astro-cid-pnsvry7h><div class="df-row" data-astro-cid-pnsvry7h><div class="df-brand" data-astro-cid-pnsvry7h><img src="/website/img/pilot-96.png" alt="" class="df-logo" width="18" height="18" data-astro-cid-pnsvry7h><span data-astro-cid-pnsvry7h>Pilot Protocol Docs</span><span class="df-sep" data-astro-cid-pnsvry7h>·</span><span class="df-ver" data-astro-cid-pnsvry7h>v1.13.9</span></div><nav class="df-links" aria-label="Docs footer" data-astro-cid-pnsvry7h><a href="/website/docs/getting-started" data-astro-cid-pnsvry7h>Getting started</a><a href="/website/docs/cli-reference" data-astro-cid-pnsvry7h>CLI</a><a href="/website/docs/concepts" data-astro-cid-pnsvry7h>Concepts</a><a href="/website/docs/research" data-astro-cid-pnsvry7h>Research</a><a href="https://github.com/pilot-protocol/pilotprotocol" data-astro-cid-pnsvry7h>GitHub</a><a href="/website/blog/" data-astro-cid-pnsvry7h>Blog</a><a href="/" data-astro-cid-pnsvry7h>Home</a></nav></div><div class="df-bottom" data-astro-cid-pnsvry7h><span data-astro-cid-pnsvry7h>© 2026 Pilot Protocol</span><span class="df-sep" data-astro-cid-pnsvry7h>·</span><a href="https://github.com/pilot-protocol/pilotprotocol/issues/new" data-astro-cid-pnsvry7h>Report an issue</a></div></footer></div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script><script type="module">(function(){let e=document.getElementById(`docs-menu-toggle`),t=document.getElementById(`docs-sidebar-close`),n=document.getElementById(`docs-sidebar`),r=document.getElementById(`docs-sidebar-backdrop`),i=window.matchMedia(`(max-width: 768px)`);function a(a,o=!1){if(!e||!n||!r)return;let s=i.matches&&a;n.classList.toggle(`open`,s),e.setAttribute(`aria-expanded`,s?`true`:`false`),document.body.classList.toggle(`docs-sidebar-open`,s),r.hidden=!s,i.matches?(n.toggleAttribute(`inert`,!s),n.setAttribute(`aria-hidden`,s?`false`:`true`),s?(n.setAttribute(`role`,`dialog`),n.setAttribute(`aria-modal`,`true`)):(n.removeAttribute(`role`),n.removeAttribute(`aria-modal`))):(n.removeAttribute(`inert`),n.removeAttribute(`aria-hidden`),n.removeAttribute(`role`),n.removeAttribute(`aria-modal`)),s?t?.focus():o&&e.focus()}e?.addEventListener(`click`,()=>a(e.getAttribute(`aria-expanded`)!==`true`)),t?.addEventListener(`click`,()=>a(!1,!0)),r?.addEventListener(`click`,()=>a(!1,!0)),n?.querySelectorAll(`a`).forEach(e=>e.addEventListener(`click`,()=>a(!1))),document.addEventListener(`keydown`,t=>{let r=e?.getAttribute(`aria-expanded`)===`true`;if(t.key===`Escape`&&r&&a(!1,!0),t.key===`Tab`&&r&&n){let e=Array.from(n.querySelectorAll(`a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])`)).filter(e=>!e.hidden&&e.getClientRects().length>0);if(e.length===0){t.preventDefault();return}let r=e[0],i=e[e.length-1];n.contains(document.activeElement)?t.shiftKey&&document.activeElement===r?(t.preventDefault(),i.focus()):!t.shiftKey&&document.activeElement===i&&(t.preventDefault(),r.focus()):(t.preventDefault(),r.focus())}}),i.addEventListener(`change`,()=>a(!1)),a(!1);let o=document.getElementById(`toc-sidebar`);if(!o)return;let s=document.querySelector(`.content`);if(!s)return;let c=Array.from(s.querySelectorAll(`h2[id], h3[id]`));if(c.length===0)return;let l=document.createElement(`div`);l.className=`toc-title`,l.textContent=`On this page`,o.appendChild(l);let u=[];c.forEach(e=>{let t=document.createElement(`a`);t.href=`#`+e.id,t.textContent=e.textContent||``,e.tagName===`H3`&&t.classList.add(`toc-h3`),o.appendChild(t),u.push(t)});let d=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){u.forEach(e=>e.classList.remove(`active`));let t=u.find(t=>t.getAttribute(`href`)===`#`+e.target.id);t&&t.classList.add(`active`)}})},{rootMargin:`-56px 0px -60% 0px`,threshold:0});c.forEach(e=>d.observe(e))})();</script></body></html>

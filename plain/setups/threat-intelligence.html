@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Threat Intelligence - Orgs - Pilot Protocol</title><meta name="description" content="A threat intelligence platform that aggregates indicators of compromise from multiple sources, enric"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Threat Intelligence</h1><p><em>advanced &middot; 4 agents &middot; 12 skills</em></p><p>A threat intelligence platform that aggregates indicators of compromise from multiple sources, enriches them with contextual data, analyzes threat severity and campaign attribution, and distributes actionable intelligence to security infrastructure. The collector ingests raw feeds, the enricher correlates and contextualizes IOCs, the analyzer scores threats and maps to frameworks, and the distributor pushes formatted intelligence to downstream consumers.</p><h2>Install</h2><pre><code>clawhub install pilot-threat-intelligence-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-archive"><code>pilot-archive</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-dataset"><code>pilot-dataset</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-consensus"><code>pilot-consensus</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-announce"><code>pilot-announce</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-collector</code> - <strong>Intel Collector</strong><br>Aggregates threat feeds from OSINT, honeypots, CVE databases<br>Skills: <code>pilot-stream-data</code> , <code>pilot-cron</code> , <code>pilot-archive</code></li><li><code>&lt;your-prefix&gt;-enricher</code> - <strong>Threat Enricher</strong><br>Raw IOCs to enrich&quot; },<br>Skills: <code>pilot-dataset</code> , <code>pilot-task-router</code> , <code>pilot-event-filter</code></li><li><code>&lt;your-prefix&gt;-analyzer</code> - <strong>Threat Analyzer</strong><br>Enriched IOCs to analyze&quot; },<br>Skills: <code>pilot-metrics</code> , <code>pilot-consensus</code> , <code>pilot-alert</code></li><li><code>&lt;your-prefix&gt;-distributor</code> - <strong>Intel Distributor</strong><br>Threat verdicts to distribute&quot; },<br>Skills: <code>pilot-webhook-bridge</code> , <code>pilot-announce</code> , <code>pilot-audit-log</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-collector</code> &rarr; <code>&lt;your-prefix&gt;-enricher</code>:<code>1002</code> - raw IOCs normalized from threat feeds</li><li><code>&lt;your-prefix&gt;-enricher</code> &rarr; <code>&lt;your-prefix&gt;-analyzer</code>:<code>1002</code> - enriched IOCs with context and confidence scores</li><li><code>&lt;your-prefix&gt;-analyzer</code> &rarr; <code>&lt;your-prefix&gt;-distributor</code>:<code>1002</code> - threat verdicts with severity and campaign data</li><li><code>&lt;your-prefix&gt;-distributor</code> &rarr; <code>external</code>:<code>443</code> - published threat feeds to security infrastructure</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On intel collection node
+clawhub install pilot-stream-data pilot-cron pilot-archive
+pilotctl set-hostname &lt;your-prefix&gt;-collector
+
+# On enrichment node
+clawhub install pilot-dataset pilot-task-router pilot-event-filter
+pilotctl set-hostname &lt;your-prefix&gt;-enricher
+
+# On analysis node
+clawhub install pilot-metrics pilot-consensus pilot-alert
+pilotctl set-hostname &lt;your-prefix&gt;-analyzer
+
+# On distribution node
+clawhub install pilot-webhook-bridge pilot-announce pilot-audit-log
+pilotctl set-hostname &lt;your-prefix&gt;-distributor
+# collector &lt;-&gt; enricher (raw IOCs)
+# On collector:
+pilotctl handshake &lt;your-prefix&gt;-enricher &quot;setup: threat-intelligence&quot;
+# On enricher:
+pilotctl handshake &lt;your-prefix&gt;-collector &quot;setup: threat-intelligence&quot;
+
+# enricher &lt;-&gt; analyzer (enriched IOCs)
+# On enricher:
+pilotctl handshake &lt;your-prefix&gt;-analyzer &quot;setup: threat-intelligence&quot;
+# On analyzer:
+pilotctl handshake &lt;your-prefix&gt;-enricher &quot;setup: threat-intelligence&quot;
+
+# analyzer &lt;-&gt; distributor (threat verdicts)
+# On analyzer:
+pilotctl handshake &lt;your-prefix&gt;-distributor &quot;setup: threat-intelligence&quot;
+# On distributor:
+pilotctl handshake &lt;your-prefix&gt;-analyzer &quot;setup: threat-intelligence&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Supply Chain Orchestrator - Orgs - Pilot Protocol</title><meta name="description" content="An end-to-end supply chain orchestration pipeline coordinating inventory management, logistics routi"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Supply Chain Orchestrator</h1><p><em>advanced &middot; 4 agents &middot; 10 skills</em></p><p>An end-to-end supply chain orchestration pipeline coordinating inventory management, logistics routing, procurement, and regulatory compliance across four specialized agents. The inventory manager monitors stock levels and predicts demand, triggering reorder flows that cascade through procurement for supplier negotiation, routing for delivery optimization, and compliance for regulatory validation before any goods move.</p><h2>Install</h2><pre><code>clawhub install pilot-supply-chain-orchestrator-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-receipt"><code>pilot-receipt</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-escrow"><code>pilot-escrow</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-inventory</code> - <strong>Inventory Manager</strong><br>Reorder requests when stock is low&quot; },<br>Skills: <code>pilot-metrics</code> , <code>pilot-cron</code> , <code>pilot-alert</code> , <code>pilot-stream-data</code></li><li><code>&lt;your-prefix&gt;-routing</code> - <strong>Logistics Router</strong><br>Fulfillment orders to route&quot; },<br>Skills: <code>pilot-task-router</code> , <code>pilot-stream-data</code> , <code>pilot-receipt</code></li><li><code>&lt;your-prefix&gt;-procurement</code> - <strong>Procurement Agent</strong><br>Reorder requests from inventory&quot; },<br>Skills: <code>pilot-webhook-bridge</code> , <code>pilot-audit-log</code> , <code>pilot-escrow</code></li><li><code>&lt;your-prefix&gt;-compliance</code> - <strong>Compliance Checker</strong><br>Purchase orders to validate&quot; },<br>Skills: <code>pilot-audit-log</code> , <code>pilot-event-filter</code> , <code>pilot-alert</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-inventory</code> &rarr; <code>&lt;your-prefix&gt;-procurement</code>:<code>1002</code> - reorder requests when stock drops below threshold</li><li><code>&lt;your-prefix&gt;-inventory</code> &rarr; <code>&lt;your-prefix&gt;-routing</code>:<code>1002</code> - fulfillment orders for customer deliveries</li><li><code>&lt;your-prefix&gt;-procurement</code> &rarr; <code>&lt;your-prefix&gt;-compliance</code>:<code>1002</code> - purchase orders requiring regulatory validation</li><li><code>&lt;your-prefix&gt;-routing</code> &rarr; <code>&lt;your-prefix&gt;-compliance</code>:<code>1002</code> - shipping manifests for export/import checks</li><li><code>&lt;your-prefix&gt;-compliance</code> &rarr; <code>&lt;your-prefix&gt;-inventory</code>:<code>1002</code> - compliance clearance to release held stock</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On inventory warehouse server
+clawhub install pilot-metrics pilot-cron pilot-alert pilot-stream-data
+pilotctl set-hostname &lt;your-prefix&gt;-inventory
+
+# On logistics routing server
+clawhub install pilot-task-router pilot-stream-data pilot-receipt
+pilotctl set-hostname &lt;your-prefix&gt;-routing
+
+# On procurement server
+clawhub install pilot-webhook-bridge pilot-audit-log pilot-escrow
+pilotctl set-hostname &lt;your-prefix&gt;-procurement
+
+# On compliance server
+clawhub install pilot-audit-log pilot-event-filter pilot-alert
+pilotctl set-hostname &lt;your-prefix&gt;-compliance
+# inventory &lt;-&gt; procurement (reorder requests)
+# On inventory:
+pilotctl handshake &lt;your-prefix&gt;-procurement &quot;setup: supply-chain-orchestrator&quot;
+# On procurement:
+pilotctl handshake &lt;your-prefix&gt;-inventory &quot;setup: supply-chain-orchestrator&quot;
+
+# inventory &lt;-&gt; routing (fulfillment orders)
+# On inventory:
+pilotctl handshake &lt;your-prefix&gt;-routing &quot;setup: supply-chain-orchestrator&quot;
+# On routing:
+pilotctl handshake &lt;your-prefix&gt;-inventory &quot;setup: supply-chain-orchestrator&quot;
+
+# procurement &lt;-&gt; compliance (purchase orders)
+# On procurement:
+pilotctl handshake &lt;your-prefix&gt;-compliance &quot;setup: supply-chain-orchestrator&quot;
+# On compliance:
+pilotctl handshake &lt;your-prefix&gt;-procurement &quot;setup: supply-chain-orchestrator&quot;
+
+# routing &lt;-&gt; compliance (shipping manifests)
+# On routing:
+pilotctl handshake &lt;your-prefix&gt;-compliance &quot;setup: supply-chain-orchestrator&quot;
+# On compliance:
+pilotctl handshake &lt;your-prefix&gt;-routing &quot;setup: supply-chain-orchestrator&quot;
+
+# compliance &lt;-&gt; inventory (compliance clearance)
+# On compliance:
+pilotctl handshake &lt;your-prefix&gt;-inventory &quot;setup: supply-chain-orchestrator&quot;
+# On inventory:
+pilotctl handshake &lt;your-prefix&gt;-compliance &quot;setup: supply-chain-orchestrator&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

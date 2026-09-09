@@ -1,0 +1,492 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-4ee7rn3o><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Enterprise Phase 3: RBAC, Policies, Audit Trail, and Fleet Enrollment</title><meta name="description" content="Pilot Protocol v1.5 ships role-based access control, network policies, structured audit logging, consent-based invites, fleet enrollment, webhook reliability."><meta name="robots" content="index,follow,max-image-preview:large"><meta name="author" content="Pilot Protocol"><link rel="canonical" href="https://pilotprotocol.network/blog/enterprise-phase-3-rbac-policies-audit-fleet"><meta property="og:type" content="article"><meta property="og:title" content="Enterprise Phase 3: RBAC, Policies, Audit Trail, and Fleet Enrollment"><meta property="og:description" content="Pilot Protocol v1.5 ships role-based access control, network policies, structured audit logging, consent-based invites, fleet enrollment, webhook reliability."><meta property="og:url" content="https://pilotprotocol.network/blog/enterprise-phase-3-rbac-policies-audit-fleet"><meta property="og:image" content="https://pilotprotocol.network/blog/banners/optimized/enterprise-phase-3-rbac-policies-audit-fleet-1200.webp"><meta property="og:image:alt" content="Pilot Protocol"><meta property="og:site_name" content="Pilot Protocol"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@pilotprotocol_"><meta name="twitter:title" content="Enterprise Phase 3: RBAC, Policies, Audit Trail, and Fleet Enrollment"><meta name="twitter:description" content="Pilot Protocol v1.5 ships role-based access control, network policies, structured audit logging, consent-based invites, fleet enrollment, webhook reliability."><meta name="twitter:image" content="https://pilotprotocol.network/blog/banners/optimized/enterprise-phase-3-rbac-policies-audit-fleet-1200.webp"><meta name="twitter:image:alt" content="Pilot Protocol"><meta name="theme-color" content="#0b0b0a" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)"><meta name="color-scheme" content="dark light"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://pilotprotocol.network/#organization","name":"Pilot Protocol","legalName":"Vulture Labs, Inc.","url":"https://pilotprotocol.network/","logo":{"@type":"ImageObject","url":"https://pilotprotocol.network/img/pilot-180.png","width":180,"height":180},"sameAs":["https://github.com/pilot-protocol/pilotprotocol","https://x.com/pilotprotocol_","https://www.linkedin.com/company/112569955/"],"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"founders@pilotprotocol.network","url":"https://pilotprotocol.network/contact"}]},{"@type":"WebSite","@id":"https://pilotprotocol.network/#website","url":"https://pilotprotocol.network/","name":"Pilot Protocol","publisher":{"@id":"https://pilotprotocol.network/#organization"},"inLanguage":"en-US"}]}</script><!-- PILOT-175: fonts self-hosted under /fonts/*. Removed the Google Fonts
+     preconnect + stylesheet links so the browser never contacts
+     fonts.googleapis.com / fonts.gstatic.com (GDPR: avoids passing
+     visitor IPs to Google). The self-hosted bundle covers the same
+     three families (Inter Tight, JetBrains Mono, Instrument Serif)
+     with identical subsets + unicode-range gating, so per-page font
+     bytes are unchanged. --><link rel="stylesheet" href="/website/fonts/fonts.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="/website/fonts/fonts.css"></noscript><link rel="preload" href="/website/fonts/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2" as="font" type="font/woff2" crossorigin="anonymous"><!-- PILOT-27: consent-check shared module is imported by analytics.ts below. --><link rel="icon" href="/website/img/pilot-48.png" type="image/png" sizes="48x48"><link rel="apple-touch-icon" href="/website/img/pilot-180.png" sizes="180x180"><!-- PILOT-27: Consent banner injected at the end of <body> from <head> --><script>
+  (function() {
+    var bannerHTML = '<div id="pilot-consent-banner" class="consent-banner consent-banner--bottom" role="dialog" aria-label="Cookie consent" style="display:none">' +
+      '<div class="consent-banner__inner">' +
+        '<div class="consent-banner__text">' +
+          '<p>We use analytics cookies, plus heatmaps and session replay with all form inputs masked, to understand how our site is used. We do not build a profile of you. <a href="/cookies">Cookie policy</a>.</p>' +
+        '</div>' +
+        '<div class="consent-banner__actions">' +
+          '<button id="pilot-consent-accept" class="btn primary consent-btn" data-consent="accepted">Accept</button>' +
+          '<button id="pilot-consent-reject" class="btn consent-btn" data-consent="rejected">Reject</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    // Wait for DOM to be ready
+    function injectBanner() {
+      if (document.body) {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = bannerHTML;
+        document.body.appendChild(wrapper.firstElementChild);
+
+        var KEY = 'pilot_consent';
+        var banner = document.getElementById('pilot-consent-banner');
+        if (!banner) return;
+
+        function getConsent() {
+          try { return localStorage.getItem(KEY); } catch { return null; }
+        }
+
+        function setConsent(value) {
+          try {
+            localStorage.setItem(KEY, value);
+            window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: value }));
+          } catch {}
+        }
+
+        document.getElementById('pilot-consent-accept').addEventListener('click', function() {
+          setConsent('accepted');
+          banner.style.display = 'none';
+        });
+
+        document.getElementById('pilot-consent-reject').addEventListener('click', function() {
+          setConsent('rejected');
+          banner.style.display = 'none';
+        });
+
+        var existing = getConsent();
+        if (existing) {
+          banner.style.display = 'none';
+          window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: existing }));
+        } else {
+          banner.style.display = 'flex';
+        }
+
+        window.__showConsentBanner = function() {
+          if (banner) banner.style.display = 'flex';
+        };
+      } else {
+        setTimeout(injectBanner, 50);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectBanner);
+    } else {
+      injectBanner();
+    }
+  })();
+</script><link rel="alternate" type="application/rss+xml" title="Pilot Protocol Journal" href="/website/blog/feed.xml"><script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('pilot-theme');
+      var prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      var theme = stored || prefers;
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script><!-- PILOT-27: GA4 loads only after user accepts cookies. --><script>
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadGA4() {
+      if (document.querySelector('script[src*="gtag/js?id=G-EEWEKT0GW5"]')) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EEWEKT0GW5';
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-EEWEKT0GW5');
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadGA4();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadGA4();
+      });
+    }
+    // If consent === 'rejected', never load GA4.
+  })();
+</script><!-- X (Twitter) Ads universal website tag — conversion tracking for our X ad
+     campaigns. Same consent gate as GA4 above: loads only after the visitor
+     accepts cookies, never on reject. Disclosed in /cookies and /privacy. --><script>(function(){const twitterPixelId = "re3tv";
+
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadTwitterPixel() {
+      if (!twitterPixelId || window.twq) return;
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+      },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+      a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+      window.twq('config', twitterPixelId);
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadTwitterPixel();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadTwitterPixel();
+      });
+    }
+    // If consent === 'rejected', never load the X pixel.
+  })();
+})();</script><script type="module" src="/website/_astro/BaseHead.astro_astro_type_script_index_0_lang.DTqJW7IP.js"></script><link rel="preload" as="image" href="/website/blog/banners/optimized/enterprise-phase-3-rbac-policies-audit-fleet-1200.webp" imagesrcset="/website/blog/banners/optimized/enterprise-phase-3-rbac-policies-audit-fleet-720.webp 720w, /website/blog/banners/optimized/enterprise-phase-3-rbac-policies-audit-fleet-1200.webp 1200w" imagesizes="(max-width: 760px) calc(100vw - 40px), 720px" fetchpriority="high"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Enterprise Phase 3: RBAC, Policies, Audit Trail, and Fleet Enrollment","description":"Pilot Protocol v1.5 ships role-based access control, network policies, structured audit logging, consent-based invites, fleet enrollment, webhook reliability, key lifecycle management, and a health endpoint.","image":"https://pilotprotocol.network/blog/banners/optimized/enterprise-phase-3-rbac-policies-audit-fleet-1200.webp","author":{"@type":"Organization","name":"Pilot Protocol editorial team","url":"https://pilotprotocol.network/about#publishing"},"publisher":{"@id":"https://pilotprotocol.network/#organization"},"datePublished":"2026-03-27","dateModified":"2026-03-27","mainEntityOfPage":"https://pilotprotocol.network/blog/enterprise-phase-3-rbac-policies-audit-fleet"}</script><link rel="stylesheet" href="/website/_astro/system.DXXNXJyX.css"><link rel="stylesheet" href="/website/_astro/Footer.G2DNlaPt.css"><style>.article-next-step[data-astro-cid-4ee7rn3o]{border:1px solid color-mix(in srgb, var(--accent) 38%, var(--line));background:color-mix(in srgb, var(--accent) 6%, var(--bg));grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:1rem 2rem;margin:3rem 0 2rem;padding:clamp(1.25rem,3vw,2rem);display:grid}.article-next-step[data-astro-cid-4ee7rn3o]>span[data-astro-cid-4ee7rn3o]{color:var(--accent-text);font:600 .68rem/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;grid-column:1/-1}.article-next-step[data-astro-cid-4ee7rn3o] h2[data-astro-cid-4ee7rn3o]{margin:0 0 .55rem;font-size:clamp(1.35rem,3vw,1.9rem);line-height:1.08}.article-next-step[data-astro-cid-4ee7rn3o] p[data-astro-cid-4ee7rn3o]{color:var(--ink-dim);margin:0}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]{border:1px solid var(--ink);min-height:44px;color:var(--ink);font:600 .72rem/1.2 var(--mono);white-space:nowrap;justify-content:center;align-items:center;gap:.6rem;padding:.75rem 1rem;text-decoration:none;display:inline-flex}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]:hover{background:var(--ink);color:var(--bg)}@media (width<=640px){.article-next-step[data-astro-cid-4ee7rn3o]{grid-template-columns:1fr;align-items:start}.article-next-step[data-astro-cid-4ee7rn3o]>a[data-astro-cid-4ee7rn3o]{white-space:normal;width:100%}}.article-faq[data-astro-cid-4ee7rn3o]{max-width:760px;margin:0 auto;padding:3rem 1.5rem 1rem}.article-faq[data-astro-cid-4ee7rn3o] h2[data-astro-cid-4ee7rn3o]{margin-bottom:1.5rem;font-size:1.6rem}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o]{border-top:1px solid var(--line,#1d1d1b);padding:1.25rem 0}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o] h3[data-astro-cid-4ee7rn3o]{margin:0 0 .5rem;font-size:1.05rem}.article-faq[data-astro-cid-4ee7rn3o] .faq-item[data-astro-cid-4ee7rn3o] p[data-astro-cid-4ee7rn3o]{color:var(--ink-dim,#5a5a54);margin:0;line-height:1.6}
+</style></head><body data-astro-cid-4ee7rn3o><div class="progress-bar" id="progress-bar" data-astro-cid-4ee7rn3o></div><a class="skip-link" href="#page-content">Skip to content</a><nav class="nav-top" aria-label="Primary"><div class="wrap"><div class="nav-row"><a href="/" class="brand" data-track="nav_click" data-track-target="home"><span class="brand-mark"><img src="/website/img/pilot-48.webp" alt="" class="logo" width="40" height="40" decoding="async"></span><span class="brand-text"><strong>Pilot</strong><span>Protocol</span></span><span class="sr-only"> home</span></a><div class="nav-links" id="nav-links"><div class="nav-dropdown" data-nav-group="product"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Product</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">The platform</span><strong>One network layer for agents.</strong><p>Identity, encrypted connectivity, trust, and installable capabilities in one system.</p></div><div class="nav-menu-links"><a href="/" data-track="nav_click" data-track-target="product-network-os"><span class="dd-kicker">Platform</span><span class="dd-label">Network OS</span><span class="dd-desc">The complete Pilot architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/trust" data-track="nav_click" data-track-target="product-trust-center"><span class="dd-kicker">Security</span><span class="dd-label">Trust Center</span><span class="dd-desc">Controls, boundaries, and evidence</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/governance" data-track="nav_click" data-track-target="product-control-model"><span class="dd-kicker">Governance</span><span class="dd-label">Control model</span><span class="dd-desc">Authority, policy, lifecycle, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/app-store" data-track="nav_click" data-track-target="product-app-store"><span class="dd-kicker">Ecosystem</span><span class="dd-label">App Store</span><span class="dd-desc">Capabilities built for agents</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/plans" data-track="nav_click" data-track-target="product-plans"><span class="dd-kicker">Commercial</span><span class="dd-label">Plans</span><span class="dd-desc">Open network and enterprise paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/docs/getting-started"><span>Explore the product</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="solutions"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Solutions</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Built for real systems</span><strong>Connect agents across every boundary.</strong><p>Start with one deployment pattern, then expand without replacing the underlying network.</p></div><div class="nav-menu-links"><a href="/website/for/p2p" data-track="nav_click" data-track-target="solutions-direct-p2p"><span class="dd-kicker">Connectivity</span><span class="dd-label">Direct P2P</span><span class="dd-desc">Private agent-to-agent paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/mcp" data-track="nav_click" data-track-target="solutions-mcp-+-pilot"><span class="dd-kicker">Integration</span><span class="dd-label">MCP + Pilot</span><span class="dd-desc">Give MCP servers a network</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/networks" data-track="nav_click" data-track-target="solutions-managed-networks"><span class="dd-kicker">Organization</span><span class="dd-label">Managed networks</span><span class="dd-desc">Shared domains and membership</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/enterprise" data-track="nav_click" data-track-target="solutions-enterprise-controls"><span class="dd-kicker">Enterprise</span><span class="dd-label">Enterprise controls</span><span class="dd-desc">Identity, policy, roles, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/setups"><span>Browse deployment setups</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="developers"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Developers</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Build on Pilot</span><strong>From first connection to production.</strong><p>Documentation and tooling for connecting, shipping, and operating agent-native software.</p></div><div class="nav-menu-links"><a href="/website/docs/getting-started" data-track="nav_click" data-track-target="developers-quickstart"><span class="dd-kicker">Start</span><span class="dd-label">Quickstart</span><span class="dd-desc">Install and connect in minutes</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/" data-track="nav_click" data-track-target="developers-documentation"><span class="dd-kicker">Reference</span><span class="dd-label">Documentation</span><span class="dd-desc">Concepts, CLI, SDKs, and operations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/integration" data-track="nav_click" data-track-target="developers-sdks-&amp;-integration"><span class="dd-kicker">Build</span><span class="dd-label">SDKs &amp; integration</span><span class="dd-desc">Embed Pilot in your stack</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/compatibility" data-track="nav_click" data-track-target="developers-compatibility"><span class="dd-kicker">Deploy</span><span class="dd-label">Compatibility</span><span class="dd-desc">Choose the right environment mode</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/skills"><span>Explore agent skills</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown active" data-nav-group="resources"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Resources</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Learn and evaluate</span><strong>Technical depth without the guesswork.</strong><p>Architecture, field notes, evaluator material, and a machine-readable version of the site.</p></div><div class="nav-menu-links"><a href="/website/learn/" data-track="nav_click" data-track-target="resources-learning-center"><span class="dd-kicker">Learn</span><span class="dd-label">Learning center</span><span class="dd-desc">Foundations, transport, and security</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/blog/" data-track="nav_click" data-track-target="resources-field-notes"><span class="dd-kicker">Journal</span><span class="dd-label">Field notes</span><span class="dd-desc">Technical guides and architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/research" data-track="nav_click" data-track-target="resources-technical-papers"><span class="dd-kicker">Research</span><span class="dd-label">Technical papers</span><span class="dd-desc">Specifications and evaluations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/pilot-native-use-cases.pdf" data-track="nav_click" data-track-target="resources-deployment-patterns"><span class="dd-kicker">Use cases</span><span class="dd-label">Deployment patterns</span><span class="dd-desc">What the combined Pilot surface enables</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/press" data-track="nav_click" data-track-target="resources-press-kit"><span class="dd-kicker">Media</span><span class="dd-label">Press kit</span><span class="dd-desc">Company and brand resources</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/plain/" data-track="nav_click" data-track-target="resources-machine-readable-site"><span class="dd-kicker">Agents</span><span class="dd-label">Machine-readable site</span><span class="dd-desc">The plain-text agent interface</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/enterprise-readiness-report.pdf"><span>Read the readiness report</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="company"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Company</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Pilot Protocol</span><strong>Building the network for agents.</strong><p>Learn about the company, follow our progress, or speak directly with the team.</p></div><div class="nav-menu-links"><a href="/about" data-track="nav_click" data-track-target="company-about-pilot"><span class="dd-kicker">About</span><span class="dd-label">About Pilot</span><span class="dd-desc">Company, people, and publishing standards</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/roadmap" data-track="nav_click" data-track-target="company-product-roadmap"><span class="dd-kicker">Direction</span><span class="dd-label">Product roadmap</span><span class="dd-desc">What we are strengthening next</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/news/" data-track="nav_click" data-track-target="company-company-news"><span class="dd-kicker">Newsroom</span><span class="dd-label">Company news</span><span class="dd-desc">Announcements and company updates</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/contact" data-track="nav_click" data-track-target="company-talk-to-the-team"><span class="dd-kicker">Contact</span><span class="dd-label">Talk to the team</span><span class="dd-desc">Enterprise, partnerships, and press</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/contact"><span>Contact Pilot Protocol</span><span aria-hidden="true">→</span></a></div></div><div class="nav-mobile-actions"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a></div></div><div class="nav-right"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme" type="button"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button><button id="nav-hamburger" class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button></div></div></div></nav><span id="page-content" class="skip-target" tabindex="-1"></span><script>
+  (function () {
+    var nav = document.querySelector('.nav-top');
+    var themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function () {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isLight) {
+          document.documentElement.removeAttribute('data-theme');
+          try { localStorage.setItem('pilot-theme', 'dark'); } catch (e) {}
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          try { localStorage.setItem('pilot-theme', 'light'); } catch (e) {}
+        }
+      });
+    }
+
+    function closeDropdowns(except) {
+      document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+        if (dd === except) return;
+        dd.classList.remove('open');
+        var trigger = dd.querySelector('.nav-dropdown-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function closeMobileMenu() {
+      if (!links || !links.classList.contains('mobile-open')) return;
+      links.classList.remove('mobile-open');
+      if (hamb) {
+        hamb.classList.remove('is-open');
+        hamb.setAttribute('aria-expanded', 'false');
+        hamb.setAttribute('aria-label', 'Open menu');
+      }
+      document.body.classList.remove('nav-mobile-open');
+      closeDropdowns();
+    }
+
+    // Hamburger (mobile)
+    var hamb = document.getElementById('nav-hamburger');
+    var links = document.getElementById('nav-links');
+    if (hamb && links) {
+      hamb.setAttribute('aria-label', 'Open menu');
+      hamb.addEventListener('click', function () {
+        var open = links.classList.toggle('mobile-open');
+        hamb.classList.toggle('is-open', open);
+        hamb.setAttribute('aria-expanded', open ? 'true' : 'false');
+        hamb.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        document.body.classList.toggle('nav-mobile-open', open);
+        if (!open) closeDropdowns();
+      });
+      links.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    }
+
+    // Dropdown: click to toggle, click-outside to close
+    document.querySelectorAll('.nav-dropdown').forEach(function (dd) {
+      var trigger = dd.querySelector('.nav-dropdown-trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var wasOpen = dd.classList.contains('open');
+        closeDropdowns(dd);
+        dd.classList.toggle('open', !wasOpen);
+        var isOpen = !wasOpen;
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest || !e.target.closest('.nav-dropdown')) closeDropdowns();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+          dd.classList.remove('open');
+          var trig = dd.querySelector('.nav-dropdown-trigger');
+          if (trig) { trig.setAttribute('aria-expanded', 'false'); trig.focus(); }
+        });
+        closeMobileMenu();
+      }
+    });
+
+    // A restrained shadow gives the persistent shell a clear edge once content scrolls beneath it.
+    if (nav) {
+      var syncNavEdge = function () { nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+      syncNavEdge();
+      window.addEventListener('scroll', syncNavEdge, { passive: true });
+    }
+  })();
+</script><main class="article-layout" data-astro-cid-4ee7rn3o><article class="article" data-track-read="enterprise-phase-3-rbac-policies-audit-fleet" data-astro-cid-4ee7rn3o><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://artemiia.github.io/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://artemiia.github.io/blog/"},{"@type":"ListItem","position":3,"name":"Enterprise Phase 3: RBAC, Policies, Audit Trail, and Fleet Enrollment","item":"https://artemiia.github.io/website/blog/enterprise-phase-3-rbac-policies-audit-fleet/"}]}</script><nav class="site-breadcrumbs is-compact" aria-label="Breadcrumb" data-astro-cid-vx4iavld><ol data-astro-cid-vx4iavld><li data-astro-cid-vx4iavld><a href="/" data-astro-cid-vx4iavld>Home</a></li><li data-astro-cid-vx4iavld><a href="/website/blog/" data-astro-cid-vx4iavld>Blog</a></li><li data-astro-cid-vx4iavld><span aria-current="page" data-astro-cid-vx4iavld>Enterprise Phase 3: RBAC, Policies, Audit Trail, and Fleet Enrollment</span></li></ol></nav><img class="article-banner" src="/website/blog/banners/optimized/enterprise-phase-3-rbac-policies-audit-fleet-1200.webp" srcset="/website/blog/banners/optimized/enterprise-phase-3-rbac-policies-audit-fleet-720.webp 720w, /website/blog/banners/optimized/enterprise-phase-3-rbac-policies-audit-fleet-1200.webp 1200w" sizes="(max-width: 760px) calc(100vw - 40px), 720px" alt="Enterprise Phase 3: RBAC, Policies, Audit Trail, and Fleet Enrollment" width="1200" height="630" loading="eager" decoding="sync" fetchpriority="high" data-astro-cid-4ee7rn3o><h1 data-astro-cid-4ee7rn3o>Enterprise Phase 3: RBAC, Policies, Audit Trail, and Fleet Enrollment</h1><div class="article-meta" data-astro-cid-4ee7rn3o><a href="https://pilotprotocol.network/about#publishing" data-astro-cid-4ee7rn3o>By Pilot Protocol editorial team</a><time datetime="2026-03-27" data-astro-cid-4ee7rn3o>March 27, 2026</time><span class="reading-time" id="reading-time" data-astro-cid-4ee7rn3o></span><span class="tag" data-astro-cid-4ee7rn3o>enterprise</span><span class="tag" data-astro-cid-4ee7rn3o>security</span><span class="tag" data-astro-cid-4ee7rn3o>rbac</span><span class="tag" data-astro-cid-4ee7rn3o>audit</span></div>
+<p>Pilot Protocol v1.5 introduced a broad enterprise-control milestone covering role-based access control, network policies, structured audit logging, consent-based invites, fleet enrollment, webhook reliability, key lifecycle management, and a health endpoint.</p>
+
+<div class="callout"><p><strong>Release-history note:</strong> This article records the v1.5 implementation milestone. Managed enterprise deployment remains early access, and the current <a href="/website/docs/enterprise">enterprise documentation</a> supersedes release-specific details.</p></div>
+
+<h2 id="rbac">Role-Based Access Control</h2>
+
+<p>Every network now has three roles: <strong>owner</strong>, <strong>admin</strong>, and <strong>member</strong>. The node that creates a network is automatically the owner. Nodes that join via token or accept an invite start as members.</p>
+
+<ul>
+  <li><strong>Owner</strong> - full control. Can promote, demote, kick, set policies, delete the network.</li>
+  <li><strong>Admin</strong> - can invite nodes, kick members, and manage settings. Cannot promote or demote other admins.</li>
+  <li><strong>Member</strong> - can communicate with all network peers. No management privileges.</li>
+</ul>
+
+<p>Authorization is checked on every mutation. The registry evaluates a three-step chain: global admin token, per-network admin token, then the node&rsquo;s RBAC role. This means infrastructure operators can always override, but day-to-day management works through roles without sharing tokens.</p>
+
+<pre><code><span class="comment"># Promote a member to admin</span>
+pilotctl network promote 1 686
+
+<span class="comment"># Demote an admin back to member</span>
+pilotctl network demote 1 686
+
+<span class="comment"># Kick a node from the network</span>
+pilotctl network kick 1 687</code></pre>
+
+<p>Owners cannot be kicked. Admins cannot promote or demote - only owners can change roles. This prevents privilege escalation within the network.</p>
+
+<h2 id="policies">Network Policies</h2>
+
+<p>Networks can now enforce policies that restrict membership and communication:</p>
+
+<ul>
+  <li><strong>MaxMembers</strong> - cap the number of nodes in a network. Once the limit is reached, join attempts fail with a clear error. Set to 0 for unlimited.</li>
+  <li><strong>AllowedPorts</strong> - restrict which ports are available within the network. Empty means all ports allowed.</li>
+  <li><strong>Description</strong> - human-readable policy metadata for dashboards and audit trails.</li>
+</ul>
+
+<p>Policies use merge-on-update semantics. Setting <code>MaxMembers</code> does not reset <code>AllowedPorts</code>. Partial updates are safe.</p>
+
+<pre><code><span class="comment"># Set a membership cap</span>
+pilotctl network policy 1 --max-members 50
+
+<span class="comment"># Restrict ports</span>
+pilotctl network policy 1 --allowed-ports 80,443,7</code></pre>
+
+<h2 id="invites">Consent-Based Invites</h2>
+
+<p>Invite-only networks no longer auto-add nodes. When you invite a node to a network, it lands in an inbox. The target node must explicitly accept or reject. This is a privacy requirement: joining a network changes your trust surface, since any member can connect to you. Nodes should not be silently enrolled.</p>
+
+<p>The flow:</p>
+
+<ol>
+  <li>An admin invites a node: <code>pilotctl network invite 1 686</code></li>
+  <li>The target polls their inbox: <code>pilotctl network invites</code></li>
+  <li>The target accepts or rejects: <code>pilotctl network accept 1</code> or <code>pilotctl network reject 1</code></li>
+  <li>On acceptance, the node joins the network with <code>member</code> role.</li>
+</ol>
+
+<p>Invites are deduplicated (one per network per target), persisted across registry restarts, and capped at 100 per node. The old direct-join path for invite-only networks is blocked - attempting <code>JoinNetwork</code> on an invite-only network returns an error directing you to the consent flow.</p>
+
+<h2 id="audit">Structured Audit Trail</h2>
+
+<p>Every registry mutation now emits a structured audit event via <code>slog</code>. When the registry runs with <code>--log-format=json</code>, the output is SIEM-ingestible. Filter with <code>jq</code>:</p>
+
+<pre><code><span class="comment"># Stream audit events from the registry log</span>
+tail -f /var/log/pilot-registry.log | jq 'select(.msg=="audit")'
+
+<span class="comment"># Example output</span>
+{
+  "time": "2026-03-27T10:15:03Z",
+  "level": "INFO",
+  "msg": "audit",
+  "audit_action": "network.created",
+  "network_id": 3,
+  "name": "prod-fleet",
+  "join_rule": "token",
+  "creator_node_id": 685
+}</code></pre>
+
+<p>18 mutation handlers are instrumented:</p>
+
+<table>
+  <thead><tr><th>Category</th><th>Actions</th></tr></thead>
+  <tbody>
+    <tr><td>Nodes</td><td><code>node.registered</code>, <code>node.deregistered</code></td></tr>
+    <tr><td>Networks</td><td><code>network.created</code>, <code>network.deleted</code>, <code>network.renamed</code></td></tr>
+    <tr><td>Membership</td><td><code>network.joined</code>, <code>network.left</code>, <code>member.promoted</code>, <code>member.demoted</code></td></tr>
+    <tr><td>Trust</td><td><code>trust.created</code>, <code>trust.revoked</code></td></tr>
+    <tr><td>Settings</td><td><code>visibility.changed</code>, <code>task_exec.changed</code>, <code>hostname.changed</code>, <code>tags.changed</code></td></tr>
+    <tr><td>Handshake</td><td><code>handshake.relayed</code>, <code>handshake.responded</code></td></tr>
+    <tr><td>Keys</td><td><code>key.rotated</code></td></tr>
+  </tbody>
+</table>
+
+<p>Every event includes the relevant IDs (node, network, peer) as structured attributes. No string parsing required.</p>
+
+<h2 id="fleet">Fleet Enrollment</h2>
+
+<p>Deploying N agents to the same network is now a config change, not N manual commands. The daemon accepts two new flags:</p>
+
+<pre><code><span class="comment"># Start a daemon that auto-joins networks 1 and 3</span>
+pilot-daemon -registry host:9000 -beacon host:9001 \
+  -admin-token $TOKEN -networks 1,3 \
+  -listen :4000 -encrypt</code></pre>
+
+<p>On startup, the daemon calls <code>JoinNetwork</code> for each configured network ID. Already-a-member errors are silently ignored (idempotent). Failed joins log a warning but do not prevent the daemon from starting. Each successful auto-join emits a <code>network.auto_joined</code> webhook event.</p>
+
+<p>This means you can deploy a fleet with identical config files. Push the config, restart the daemons, and they all converge to the same network membership.</p>
+
+<h2 id="webhooks">Webhook Reliability</h2>
+
+<p>The webhook system got three upgrades for enterprise event delivery:</p>
+
+<ul>
+  <li><strong>Monotonic event IDs.</strong> Every event gets a sequential <code>event_id</code>. Consumers can detect gaps, sequence events, and build exactly-once delivery on top.</li>
+  <li><strong>Retry with backoff.</strong> Failed deliveries (5xx or network errors) retry up to 3 times with exponential backoff (1s, 2s, 4s). Client errors (4xx) are not retried - those are permanent.</li>
+  <li><strong>Dropped counter.</strong> When the internal buffer is full, events are dropped and counted. The <code>Dropped()</code> accessor lets you monitor event loss without blocking the daemon.</li>
+</ul>
+
+<p>On shutdown, the webhook client drains its queue with a 5-second timeout. Pending events are delivered if the endpoint is reachable; abandoned otherwise.</p>
+
+<h2 id="keys">Key Lifecycle Management</h2>
+
+<p>Ed25519 identity keys now carry metadata:</p>
+
+<ul>
+  <li><strong>CreatedAt</strong> - when the key was first registered.</li>
+  <li><strong>RotatedAt</strong> - when the key was last rotated (zero if never).</li>
+  <li><strong>RotateCount</strong> - how many times the key has been rotated.</li>
+  <li><strong>ExpiresAt</strong> - optional expiration time. Expired keys are rejected at registration.</li>
+  <li><strong>KeyAgeDays</strong> - computed age for compliance dashboards.</li>
+</ul>
+
+<p>Nodes can set their own key expiry via a signature-verified command. This enables compliance policies like &ldquo;rotate keys every 90 days&rdquo; without requiring infrastructure-level enforcement.</p>
+
+<h2 id="health">Health Endpoint and Metrics</h2>
+
+<p>The registry now exposes a <code>/healthz</code> HTTP endpoint:</p>
+
+<pre><code>curl http://registry:9000/healthz
+{
+  "status": "ok",
+  "version": "1.5.0",
+  "uptime_seconds": 86412,
+  "nodes_online": 247,
+  "networks_count": 12,
+  "requests_total": 1482903,
+  "errors_total": 37
+}</code></pre>
+
+<p>Internal Prometheus-style metrics track request counts, duration, and errors per message type. The <code>pilotctl health</code> command queries daemon health via IPC for local monitoring.</p>
+
+<h2 id="hardening">Registry Hardening</h2>
+
+<p>Four hardening measures to protect the registry under adversarial conditions:</p>
+
+<ul>
+  <li><strong>Connection limits.</strong> Maximum concurrent connections enforced at accept time.</li>
+  <li><strong>Message size cap.</strong> 64MB per message (<code>MaxMessageSize</code>). Oversized messages are rejected immediately.</li>
+  <li><strong>Per-operation rate limiting.</strong> Separate from connection rate limits. Prevents mutation flooding.</li>
+  <li><strong>Snapshot checksums.</strong> Registry persistence files are integrity-checked on load. Corrupted snapshots are detected and rejected.</li>
+</ul>
+
+<h2 id="secure-channels">Secure Channel Authentication</h2>
+
+<p>Encrypted tunnels verify identity during the key-agreement handshake. Both sides present Ed25519 signatures, and the tunnel records the authenticated <code>PeerNodeID</code>. Current releases derive peer-specific secrets from daemon-lifetime X25519 keys; this authenticates the peer but does not provide per-session forward secrecy.</p>
+
+<p>The v1.5 rollout included a compatibility transition for older peers. Current deployment guidance is to require authenticated peers and apply the controls described in the <a href="/website/docs/security">security documentation</a>.</p>
+
+<h2 id="pilotctl">Network Management via pilotctl</h2>
+
+<p>All network operations are now available through <code>pilotctl</code>, routed through the daemon&rsquo;s IPC socket. Every command is signed by the daemon&rsquo;s Ed25519 identity.</p>
+
+<pre><code><span class="comment"># List your networks</span>
+pilotctl network list
+
+<span class="comment"># Join a token-gated network</span>
+pilotctl network join 1 --token my-secret
+
+<span class="comment"># Leave a network</span>
+pilotctl network leave 1
+
+<span class="comment"># List members</span>
+pilotctl network members 1
+
+<span class="comment"># Invite a node (admin/owner only)</span>
+pilotctl network invite 1 686
+
+<span class="comment"># Check pending invites</span>
+pilotctl network invites
+
+<span class="comment"># Accept or reject</span>
+pilotctl network accept 1
+pilotctl network reject 1</code></pre>
+
+<h2 id="test-coverage">Test Coverage</h2>
+
+<p>The enterprise features ship with 43 new tests across 8 test files, all passing with <code>-parallel 4</code>. Coverage includes:</p>
+
+<ul>
+  <li>RBAC role assignment, promotion, demotion, and permission boundaries</li>
+  <li>Network policy enforcement (membership limits, port restrictions)</li>
+  <li>Invite consent flow (accept, reject, dedup, persistence across restart)</li>
+  <li>Auto-join idempotency and webhook emission</li>
+  <li>Webhook event ID monotonicity, retry behavior, and dropped counters</li>
+  <li>Key lifecycle metadata (creation, rotation, expiry)</li>
+  <li>Secure channel authentication and replay prevention</li>
+  <li>Registry hardening (connection limits, message caps, rate limits)</li>
+  <li>Health endpoint and metrics</li>
+</ul>
+
+<h2 id="release">Release</h2>
+
+<p>All enterprise features are in <code>v1.5.0-rc1</code>, available now via the install script:</p>
+
+<pre><code><span class="comment"># Install the latest release candidate (edge channel)</span>
+curl -fsSL https://pilotprotocol.network/install.sh | sh -s -- --channel edge
+
+<span class="comment"># Or wait for the stable release</span>
+curl -fsSL https://pilotprotocol.network/install.sh | sh</code></pre>
+
+<p>The release pipeline is fully automated: push a <code>v*</code> tag, and GitHub Actions runs the full test suite, builds binaries for 4 platforms (linux/amd64, linux/arm64, darwin/amd64, darwin/arm64), executes an integration harness with a live registry + beacon + 2 daemons, and publishes the release with checksums.</p>
+
+<h2 id="whats-next">What Is Next</h2>
+
+<p>The enterprise stack is the foundation. What follows:</p>
+
+<ul>
+  <li><strong>Management surface.</strong> RBAC, policies, invites, and audit logs are available through <code>pilotctl</code> and the JSON API for tooling integrations.</li>
+  <li><strong>OIDC/SPIFFE identity.</strong> Bring your own identity provider. Map enterprise identities to Pilot nodes.</li>
+  <li><strong>Cascading revocation.</strong> When an admin is removed, cascade the effect to nodes they invited.</li>
+  <li><strong>Dedicated infrastructure.</strong> Private registry and beacon instances for organizations that need full isolation.</li>
+</ul>
+
+<div class="cta">
+  <h3>Try the Enterprise Features</h3>
+  <p>Install the release candidate and create your first RBAC-governed network.</p>
+  <a href="/website/docs/getting-started">Get Started</a>
+  &nbsp;&middot;&nbsp;
+  <a href="/website/docs/networks">Network Docs</a>
+  &nbsp;&middot;&nbsp;
+  <a href="/plans">See Plans</a>
+</div><aside class="article-next-step" aria-label="Recommended next step" data-track-cta="enterprise-phase-3-rbac-policies-audit-fleet:/enterprise/autonomous-ai-agents" data-astro-cid-4ee7rn3o><span data-astro-cid-4ee7rn3o>For enterprise AI teams</span><div data-astro-cid-4ee7rn3o><h2 data-astro-cid-4ee7rn3o>Put autonomous agents inside an operating control loop</h2><p data-astro-cid-4ee7rn3o>Connect fleet state, signed policy, approvals, bounded remote operations, usage telemetry, and action evidence.</p></div><a href="/website/enterprise/autonomous-ai-agents" data-astro-cid-4ee7rn3o>Explore the agent control plane <i aria-hidden="true" data-astro-cid-4ee7rn3o>→</i></a></aside><footer class="article-provenance" data-astro-cid-4ee7rn3o><strong data-astro-cid-4ee7rn3o>About this article</strong><p data-astro-cid-4ee7rn3o>Published by the Pilot Protocol team. Product claims are scoped to the availability labels and technical references linked in the article; deployment behavior can vary by version and environment.</p><p data-astro-cid-4ee7rn3o><a href="/about#publishing" data-astro-cid-4ee7rn3o>How we publish</a> · <a href="/contact?topic=correction" data-astro-cid-4ee7rn3o>Suggest a correction</a> · <a href="/website/docs/research" data-astro-cid-4ee7rn3o>Technical references</a></p></footer></article><aside class="article-toc" id="article-toc" data-astro-cid-4ee7rn3o><nav data-astro-cid-4ee7rn3o><p class="toc-title" data-astro-cid-4ee7rn3o>On this page</p><ul id="toc-list" data-astro-cid-4ee7rn3o></ul></nav></aside></main><section class="related-posts" data-astro-cid-4ee7rn3o><div class="related-inner" data-astro-cid-4ee7rn3o><h2 data-astro-cid-4ee7rn3o>Related Posts</h2><div class="related-grid" data-astro-cid-4ee7rn3o><a class="related-card" href="/website/blog/enterprise-production-complete-identity-directory-audit-export" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/enterprise-production-complete-identity-directory-audit-export-1200.webp" srcset="/website/blog/banners/optimized/enterprise-production-complete-identity-directory-audit-export-720.webp 720w, /website/blog/banners/optimized/enterprise-production-complete-identity-directory-audit-export-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Enterprise Implementation Milestone: 99 Features, 234 Tests" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Enterprise Implementation Milestone: 99 Features, 234 Tests</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-03-29" data-astro-cid-4ee7rn3o>Mar 29, 2026</time> &middot; Enterprise</span></div></a><a class="related-card" href="/website/blog/private-networks-now-in-testing" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/private-networks-now-in-testing-1200.webp" srcset="/website/blog/banners/optimized/private-networks-now-in-testing-720.webp 720w, /website/blog/banners/optimized/private-networks-now-in-testing-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Private Networks: Now in Testing" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Private Networks: Now in Testing</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-03-25" data-astro-cid-4ee7rn3o>Mar 25, 2026</time> &middot; Enterprise</span></div></a><a class="related-card" href="/website/blog/enterprise-private-networks-roadmap" data-astro-cid-4ee7rn3o><img src="/website/blog/banners/optimized/enterprise-private-networks-roadmap-1200.webp" srcset="/website/blog/banners/optimized/enterprise-private-networks-roadmap-720.webp 720w, /website/blog/banners/optimized/enterprise-private-networks-roadmap-1200.webp 1200w" sizes="(max-width: 720px) calc(100vw - 40px), 360px" alt="Enterprise Private Networks: The Roadmap" width="1200" height="630" loading="lazy" decoding="async" data-astro-cid-4ee7rn3o><div class="related-body" data-astro-cid-4ee7rn3o><h3 data-astro-cid-4ee7rn3o>Enterprise Private Networks: The Roadmap</h3><span class="related-meta" data-astro-cid-4ee7rn3o><time datetime="2026-03-23" data-astro-cid-4ee7rn3o>Mar 23, 2026</time> &middot; Security</span></div></a></div></div></section><nav class="blog-nav" data-astro-cid-4ee7rn3o><div class="blog-nav-inner" data-astro-cid-4ee7rn3o><a class="blog-nav-link blog-nav-prev" href="/website/blog/enterprise-production-complete-identity-directory-audit-export" data-astro-cid-4ee7rn3o><span class="blog-nav-label" data-astro-cid-4ee7rn3o>&larr; Previous</span><span class="blog-nav-title" data-astro-cid-4ee7rn3o>Enterprise Implementation Milestone: 99 Features, 234 Tests</span></a><a class="blog-nav-link blog-nav-next" href="/website/blog/private-networks-now-in-testing" data-astro-cid-4ee7rn3o><span class="blog-nav-label" data-astro-cid-4ee7rn3o>Next &rarr;</span><span class="blog-nav-title" data-astro-cid-4ee7rn3o>Private Networks: Now in Testing</span></a></div></nav><footer class="site-footer" data-astro-cid-jo6i4kqk><div class="wrap" data-astro-cid-jo6i4kqk><div class="foot-big" data-astro-cid-jo6i4kqk>The internet<br data-astro-cid-jo6i4kqk>for <span class="a" data-astro-cid-jo6i4kqk>agents.</span></div><div class="foot-cta" data-astro-cid-jo6i4kqk><a href="/website/docs/getting-started" class="btn primary" data-astro-cid-jo6i4kqk>Get started <span class="arr" data-astro-cid-jo6i4kqk>→</span></a><a href="/contact" class="btn" data-astro-cid-jo6i4kqk>Contact sales</a></div><div class="foot-grid" data-astro-cid-jo6i4kqk><div class="foot-about" data-astro-cid-jo6i4kqk><div class="foot-brand" data-astro-cid-jo6i4kqk><img src="/website/img/pilot-48.webp" alt="" class="foot-logo" width="28" height="28" loading="lazy" decoding="async" data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Pilot Protocol</p></div><p data-astro-cid-jo6i4kqk>Pilot. Where agents go.</p><div class="foot-social" data-astro-cid-jo6i4kqk><a href="https://x.com/pilotprotocol_" class="foot-social-link" target="_blank" rel="noopener" aria-label="Pilot Protocol on X" data-track="social_click" data-track-target="x" data-astro-cid-jo6i4kqk><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-jo6i4kqk><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a><a href="https://www.linkedin.com/company/112569955/" class="foot-social-link" target="_blank" rel="noopener" aria-label="Pilot Protocol on LinkedIn" data-track="social_click" data-track-target="linkedin" data-astro-cid-jo6i4kqk><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" data-astro-cid-jo6i4kqk><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a></div></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Product</p><a href="/website/learn/what-is-pilot-protocol" data-astro-cid-jo6i4kqk>Network OS</a><a href="/trust" data-astro-cid-jo6i4kqk>Trust Center</a><a href="/governance" data-astro-cid-jo6i4kqk>Governance</a><a href="/app-store" data-astro-cid-jo6i4kqk>App Store</a><a href="/plans" data-astro-cid-jo6i4kqk>Plans</a><a href="/website/docs/enterprise" data-astro-cid-jo6i4kqk>Enterprise controls</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Developers</p><a href="/website/docs/" data-astro-cid-jo6i4kqk>Documentation</a><a href="/website/docs/getting-started" data-astro-cid-jo6i4kqk>Quickstart</a><a href="/website/docs/integration" data-astro-cid-jo6i4kqk>SDKs &amp; integration</a><a href="/website/research/WHITEPAPER.pdf" data-astro-cid-jo6i4kqk>Wire specification</a><a href="/website/pilot-native-use-cases.pdf" data-astro-cid-jo6i4kqk>Use-case brochure</a><a href="https://github.com/pilot-protocol/pilotprotocol" data-astro-cid-jo6i4kqk>GitHub</a><a href="/website/docs/research" data-astro-cid-jo6i4kqk>Research</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Company</p><a href="/about" data-astro-cid-jo6i4kqk>About</a><a href="/website/learn/" data-astro-cid-jo6i4kqk>Learning center</a><a href="/roadmap" data-astro-cid-jo6i4kqk>Roadmap</a><a href="/website/news/" data-astro-cid-jo6i4kqk>Company news</a><a href="/website/blog/" data-astro-cid-jo6i4kqk>Blog</a><a href="/press" data-astro-cid-jo6i4kqk>Press</a><a href="/website/enterprise-readiness-report.pdf" data-astro-cid-jo6i4kqk>Readiness report</a><a href="/contact" data-astro-cid-jo6i4kqk>Contact</a></div><div data-astro-cid-jo6i4kqk><p class="foot-heading" data-astro-cid-jo6i4kqk>Legal</p><a href="/privacy" data-astro-cid-jo6i4kqk>Privacy Policy</a><a href="/cookies" data-astro-cid-jo6i4kqk>Cookie Policy</a><a href="/terms" data-astro-cid-jo6i4kqk>Terms of Service</a><a href="/aup" data-astro-cid-jo6i4kqk>Acceptable Use</a><a href="/publisher-agreement" data-astro-cid-jo6i4kqk>Publisher Agreement</a><a href="/website/security/disclosure" data-astro-cid-jo6i4kqk>Security disclosure</a><button type="button" id="cookie-preferences-link" data-astro-cid-jo6i4kqk>Cookie Preferences</button></div></div><a class="foot-plain-band" href="/website/plain/" data-astro-cid-jo6i4kqk><span class="fp-label" data-astro-cid-jo6i4kqk>Plain text for agents</span><span class="fp-path" data-astro-cid-jo6i4kqk>/plain</span><span class="fp-arrow" data-astro-cid-jo6i4kqk>→</span></a><div class="foot-bottom" data-astro-cid-jo6i4kqk><div data-astro-cid-jo6i4kqk>© 2026 Pilot Protocol · Built for agents</div><div class="foot-bottom-right" data-astro-cid-jo6i4kqk><span class="foot-status" data-astro-cid-jo6i4kqk>pilot://0x00000000 · backbone · up</span></div></div><nav class="foot-solutions" aria-label="Explore Pilot solutions" data-astro-cid-jo6i4kqk><div class="foot-solutions-intro" data-astro-cid-jo6i4kqk><span data-astro-cid-jo6i4kqk>Explore Pilot</span><span data-astro-cid-jo6i4kqk>Capabilities by workflow</span></div><div class="foot-solutions-grid" data-astro-cid-jo6i4kqk><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Connect</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/private-agent-network" data-track="footer_solution_click" data-track-target="private-agent-network" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Private agent networks</a><a href="/website/solutions/agent-integration" data-track="footer_solution_click" data-track-target="agent-integration" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Connect existing systems</a><a href="/website/solutions/agent-capability-store" data-track="footer_solution_click" data-track-target="agent-capability-store" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Agent capabilities</a><a href="/website/solutions/agent-ready-apis" data-track="footer_solution_click" data-track-target="agent-ready-apis" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Publish agent-ready APIs</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Build</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/secure-agent-runtime" data-track="footer_solution_click" data-track-target="secure-agent-runtime" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Secure agent runtime</a><a href="/website/solutions/grounded-agent-search" data-track="footer_solution_click" data-track-target="grounded-agent-search" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Grounded private search</a><a href="/website/solutions/web-access-for-agents" data-track="footer_solution_click" data-track-target="web-access-for-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Web access for agents</a><a href="/website/solutions/isolated-agent-compute" data-track="footer_solution_click" data-track-target="isolated-agent-compute" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Isolated agent compute</a><a href="/website/solutions/live-data-for-agents" data-track="footer_solution_click" data-track-target="live-data-for-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Live data for agents</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Operate</p><div data-astro-cid-jo6i4kqk><a href="/website/solutions/agent-email-phone" data-track="footer_solution_click" data-track-target="agent-email-phone" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Email, phone and SMS</a><a href="/website/solutions/sales-agent-stack" data-track="footer_solution_click" data-track-target="sales-agent-stack" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Sales agent stack</a><a href="/website/solutions/agent-commerce" data-track="footer_solution_click" data-track-target="agent-commerce" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Agent commerce</a></div></div><div class="foot-solutions-group" data-astro-cid-jo6i4kqk><p data-astro-cid-jo6i4kqk>Enterprise</p><div data-astro-cid-jo6i4kqk><a href="/website/enterprise/autonomous-ai-agents" data-track="footer_enterprise_click" data-track-target="autonomous-ai-agents" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Autonomous agent control</a><a href="/website/enterprise/claude-code-management" data-track="footer_enterprise_click" data-track-target="claude-code-management" data-track-location="footer_directory" data-astro-cid-jo6i4kqk>Claude Code management</a></div></div></div></nav></div></footer><script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var link = document.getElementById('cookie-preferences-link');
+    if (link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (typeof window.__showConsentBanner === 'function') {
+          window.__showConsentBanner();
+        }
+      });
+    }
+  });
+</script><button class="scroll-top" id="scroll-top" aria-label="Scroll to top" data-astro-cid-4ee7rn3o><svg viewBox="0 0 24 24" data-astro-cid-4ee7rn3o><polyline points="18 15 12 9 6 15" data-astro-cid-4ee7rn3o></polyline></svg></button><script type="module">(function(){var e=document.getElementById(`progress-bar`),t=document.getElementById(`scroll-top`);window.addEventListener(`scroll`,function(){var n=document.documentElement.scrollHeight-window.innerHeight,r=n>0?window.scrollY/n*100:0;e&&(e.style.width=r+`%`),t&&(window.scrollY>400?t.classList.add(`visible`):t.classList.remove(`visible`))}),t&&t.addEventListener(`click`,function(){window.scrollTo({top:0,behavior:`smooth`})})})(),(function(){var e=document.getElementById(`reading-time`),t=document.querySelector(`.article`);if(!(!e||!t)){var n=(t.innerText||t.textContent||``).trim().split(/\s+/).length;e.textContent=Math.ceil(n/200)+` min read`}})(),(function(){var e=document.getElementById(`toc-list`),t=document.getElementById(`article-toc`);if(!(!e||!t)){var n=document.querySelectorAll(`.article h2[id]`);if(n.length===0){t.style.display=`none`;return}n.forEach(function(t){var n=document.createElement(`li`),r=document.createElement(`a`);r.href=`#`+t.id,r.textContent=t.textContent,n.appendChild(r),e.appendChild(n)});var r=e.querySelectorAll(`a`),i=new IntersectionObserver(function(t){t.forEach(function(t){if(t.isIntersecting){r.forEach(function(e){e.classList.remove(`active`)});var n=e.querySelector(`a[href="#`+t.target.id+`"]`);n&&n.classList.add(`active`)}})},{rootMargin:`0px 0px -70% 0px`,threshold:0});n.forEach(function(e){i.observe(e)})}})(),(function(){function e(e){return e.split(`
+`).map(function(e){return e.replace(/^(\s*)\$\s(?=\S)/,`$1`)}).join(`
+`).trim()}document.querySelectorAll(`.article pre`).forEach(function(t){var n=document.createElement(`button`);n.className=`copy-btn`,n.type=`button`,n.setAttribute(`aria-label`,`Copy code`),n.textContent=`Copy`,n.addEventListener(`click`,function(){var r=t.querySelector(`code`),i;if(r)i=r.textContent;else{var a=t.cloneNode(!0),o=a.querySelector(`.copy-btn`);o&&o.remove(),i=a.textContent}var s=e(i);navigator.clipboard.writeText(s).then(function(){n.textContent=`Copied`,n.setAttribute(`aria-label`,`Copied`),setTimeout(function(){n.textContent=`Copy`,n.setAttribute(`aria-label`,`Copy code`)},2e3)}).catch(function(){n.textContent=`Copy failed`,n.setAttribute(`aria-label`,`Copy failed`),setTimeout(function(){n.textContent=`Copy`,n.setAttribute(`aria-label`,`Copy code`)},2e3)})}),t.appendChild(n)})})(),(function(){var e=document.querySelectorAll(`.article h2, .article blockquote, .article .callout, .related-card, .blog-nav-link`);if(e.length){var t=new IntersectionObserver(function(e){e.forEach(function(e){e.isIntersecting&&(e.target.classList.add(`visible`),t.unobserve(e.target))})},{threshold:.1});e.forEach(function(e){e.classList.add(`reveal`),t.observe(e)})}})();</script></body></html>

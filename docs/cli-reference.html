@@ -1,0 +1,836 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CLI Reference</title><meta name="description" content="Complete reference for all pilotctl commands - syntax, flags, return values, and examples. Review the architecture and practical guidance."><meta name="robots" content="index,follow,max-image-preview:large"><meta name="author" content="Pilot Protocol"><link rel="canonical" href="https://pilotprotocol.network/docs/cli-reference"><meta property="og:type" content="website"><meta property="og:title" content="CLI Reference"><meta property="og:description" content="Complete reference for all pilotctl commands - syntax, flags, return values, and examples. Review the architecture and practical guidance."><meta property="og:url" content="https://pilotprotocol.network/docs/cli-reference"><meta property="og:image" content="https://pilotprotocol.network/og/docs.jpg"><meta property="og:image:alt" content="Pilot Protocol"><meta property="og:site_name" content="Pilot Protocol"><meta property="og:locale" content="en_US"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@pilotprotocol_"><meta name="twitter:title" content="CLI Reference"><meta name="twitter:description" content="Complete reference for all pilotctl commands - syntax, flags, return values, and examples. Review the architecture and practical guidance."><meta name="twitter:image" content="https://pilotprotocol.network/og/docs.jpg"><meta name="twitter:image:alt" content="Pilot Protocol"><meta name="theme-color" content="#0b0b0a" media="(prefers-color-scheme: dark)"><meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)"><meta name="color-scheme" content="dark light"><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://pilotprotocol.network/#organization","name":"Pilot Protocol","legalName":"Vulture Labs, Inc.","url":"https://pilotprotocol.network/","logo":{"@type":"ImageObject","url":"https://pilotprotocol.network/img/pilot-180.png","width":180,"height":180},"sameAs":["https://github.com/pilot-protocol/pilotprotocol","https://x.com/pilotprotocol_","https://www.linkedin.com/company/112569955/"],"contactPoint":[{"@type":"ContactPoint","contactType":"customer support","email":"founders@pilotprotocol.network","url":"https://pilotprotocol.network/contact"}]},{"@type":"WebSite","@id":"https://pilotprotocol.network/#website","url":"https://pilotprotocol.network/","name":"Pilot Protocol","publisher":{"@id":"https://pilotprotocol.network/#organization"},"inLanguage":"en-US"}]}</script><!-- PILOT-175: fonts self-hosted under /fonts/*. Removed the Google Fonts
+     preconnect + stylesheet links so the browser never contacts
+     fonts.googleapis.com / fonts.gstatic.com (GDPR: avoids passing
+     visitor IPs to Google). The self-hosted bundle covers the same
+     three families (Inter Tight, JetBrains Mono, Instrument Serif)
+     with identical subsets + unicode-range gating, so per-page font
+     bytes are unchanged. --><link rel="stylesheet" href="/website/fonts/fonts.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="/website/fonts/fonts.css"></noscript><link rel="preload" href="/website/fonts/NGSwv5HMAFg6IuGlBNMjxLsH8ag.woff2" as="font" type="font/woff2" crossorigin="anonymous"><!-- PILOT-27: consent-check shared module is imported by analytics.ts below. --><link rel="icon" href="/website/img/pilot-48.png" type="image/png" sizes="48x48"><link rel="apple-touch-icon" href="/website/img/pilot-180.png" sizes="180x180"><!-- PILOT-27: Consent banner injected at the end of <body> from <head> --><script>
+  (function() {
+    var bannerHTML = '<div id="pilot-consent-banner" class="consent-banner consent-banner--bottom" role="dialog" aria-label="Cookie consent" style="display:none">' +
+      '<div class="consent-banner__inner">' +
+        '<div class="consent-banner__text">' +
+          '<p>We use analytics cookies, plus heatmaps and session replay with all form inputs masked, to understand how our site is used. We do not build a profile of you. <a href="/cookies">Cookie policy</a>.</p>' +
+        '</div>' +
+        '<div class="consent-banner__actions">' +
+          '<button id="pilot-consent-accept" class="btn primary consent-btn" data-consent="accepted">Accept</button>' +
+          '<button id="pilot-consent-reject" class="btn consent-btn" data-consent="rejected">Reject</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+    // Wait for DOM to be ready
+    function injectBanner() {
+      if (document.body) {
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = bannerHTML;
+        document.body.appendChild(wrapper.firstElementChild);
+
+        var KEY = 'pilot_consent';
+        var banner = document.getElementById('pilot-consent-banner');
+        if (!banner) return;
+
+        function getConsent() {
+          try { return localStorage.getItem(KEY); } catch { return null; }
+        }
+
+        function setConsent(value) {
+          try {
+            localStorage.setItem(KEY, value);
+            window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: value }));
+          } catch {}
+        }
+
+        document.getElementById('pilot-consent-accept').addEventListener('click', function() {
+          setConsent('accepted');
+          banner.style.display = 'none';
+        });
+
+        document.getElementById('pilot-consent-reject').addEventListener('click', function() {
+          setConsent('rejected');
+          banner.style.display = 'none';
+        });
+
+        var existing = getConsent();
+        if (existing) {
+          banner.style.display = 'none';
+          window.dispatchEvent(new CustomEvent('pilot-consent-change', { detail: existing }));
+        } else {
+          banner.style.display = 'flex';
+        }
+
+        window.__showConsentBanner = function() {
+          if (banner) banner.style.display = 'flex';
+        };
+      } else {
+        setTimeout(injectBanner, 50);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', injectBanner);
+    } else {
+      injectBanner();
+    }
+  })();
+</script><link rel="alternate" type="application/rss+xml" title="Pilot Protocol Journal" href="/website/blog/feed.xml"><script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('pilot-theme');
+      var prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      var theme = stored || prefers;
+      if (theme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script><!-- PILOT-27: GA4 loads only after user accepts cookies. --><script>
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadGA4() {
+      if (document.querySelector('script[src*="gtag/js?id=G-EEWEKT0GW5"]')) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EEWEKT0GW5';
+      document.head.appendChild(s);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-EEWEKT0GW5');
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadGA4();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadGA4();
+      });
+    }
+    // If consent === 'rejected', never load GA4.
+  })();
+</script><!-- X (Twitter) Ads universal website tag — conversion tracking for our X ad
+     campaigns. Same consent gate as GA4 above: loads only after the visitor
+     accepts cookies, never on reject. Disclosed in /cookies and /privacy. --><script>(function(){const twitterPixelId = "re3tv";
+
+  (function() {
+    var KEY = 'pilot_consent';
+    function getConsent() {
+      try { return localStorage.getItem(KEY); } catch { return null; }
+    }
+    function loadTwitterPixel() {
+      if (!twitterPixelId || window.twq) return;
+      !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+      },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+      a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+      window.twq('config', twitterPixelId);
+    }
+
+    var consent = getConsent();
+    if (consent === 'accepted') {
+      loadTwitterPixel();
+    } else if (!consent) {
+      // No choice made yet — listen for the consent event
+      window.addEventListener('pilot-consent-change', function(e) {
+        if (e.detail === 'accepted') loadTwitterPixel();
+      });
+    }
+    // If consent === 'rejected', never load the X pixel.
+  })();
+})();</script><script type="module" src="/website/_astro/BaseHead.astro_astro_type_script_index_0_lang.DTqJW7IP.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"CLI Reference","description":"Complete reference for all pilotctl commands - syntax, flags, return values, and examples.","url":"https://pilotprotocol.network/docs/cli-reference","isPartOf":{"@type":"WebSite","name":"Pilot Protocol","url":"https://pilotprotocol.network/"},"author":{"@id":"https://pilotprotocol.network/#organization"},"publisher":{"@id":"https://pilotprotocol.network/#organization"}}</script><link rel="stylesheet" href="/website/_astro/system.DXXNXJyX.css"><link rel="stylesheet" href="/website/_astro/DocLayout.C-qhf5mz.css"></head><body><a class="skip-link" href="#page-content">Skip to content</a><nav class="nav-top" aria-label="Primary"><div class="wrap"><div class="nav-row"><a href="/" class="brand" data-track="nav_click" data-track-target="home"><span class="brand-mark"><img src="/website/img/pilot-48.webp" alt="" class="logo" width="40" height="40" decoding="async"></span><span class="brand-text"><strong>Pilot</strong><span>Protocol</span></span><span class="sr-only"> home</span></a><div class="nav-links" id="nav-links"><div class="nav-dropdown" data-nav-group="product"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Product</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">The platform</span><strong>One network layer for agents.</strong><p>Identity, encrypted connectivity, trust, and installable capabilities in one system.</p></div><div class="nav-menu-links"><a href="/" data-track="nav_click" data-track-target="product-network-os"><span class="dd-kicker">Platform</span><span class="dd-label">Network OS</span><span class="dd-desc">The complete Pilot architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/trust" data-track="nav_click" data-track-target="product-trust-center"><span class="dd-kicker">Security</span><span class="dd-label">Trust Center</span><span class="dd-desc">Controls, boundaries, and evidence</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/governance" data-track="nav_click" data-track-target="product-control-model"><span class="dd-kicker">Governance</span><span class="dd-label">Control model</span><span class="dd-desc">Authority, policy, lifecycle, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/app-store" data-track="nav_click" data-track-target="product-app-store"><span class="dd-kicker">Ecosystem</span><span class="dd-label">App Store</span><span class="dd-desc">Capabilities built for agents</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/plans" data-track="nav_click" data-track-target="product-plans"><span class="dd-kicker">Commercial</span><span class="dd-label">Plans</span><span class="dd-desc">Open network and enterprise paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/docs/getting-started"><span>Explore the product</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="solutions"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Solutions</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Built for real systems</span><strong>Connect agents across every boundary.</strong><p>Start with one deployment pattern, then expand without replacing the underlying network.</p></div><div class="nav-menu-links"><a href="/website/for/p2p" data-track="nav_click" data-track-target="solutions-direct-p2p"><span class="dd-kicker">Connectivity</span><span class="dd-label">Direct P2P</span><span class="dd-desc">Private agent-to-agent paths</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/mcp" data-track="nav_click" data-track-target="solutions-mcp-+-pilot"><span class="dd-kicker">Integration</span><span class="dd-label">MCP + Pilot</span><span class="dd-desc">Give MCP servers a network</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/networks" data-track="nav_click" data-track-target="solutions-managed-networks"><span class="dd-kicker">Organization</span><span class="dd-label">Managed networks</span><span class="dd-desc">Shared domains and membership</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/enterprise" data-track="nav_click" data-track-target="solutions-enterprise-controls"><span class="dd-kicker">Enterprise</span><span class="dd-label">Enterprise controls</span><span class="dd-desc">Identity, policy, roles, and audit</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/setups"><span>Browse deployment setups</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown active" data-nav-group="developers"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Developers</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Build on Pilot</span><strong>From first connection to production.</strong><p>Documentation and tooling for connecting, shipping, and operating agent-native software.</p></div><div class="nav-menu-links"><a href="/website/docs/getting-started" data-track="nav_click" data-track-target="developers-quickstart"><span class="dd-kicker">Start</span><span class="dd-label">Quickstart</span><span class="dd-desc">Install and connect in minutes</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/" data-track="nav_click" data-track-target="developers-documentation"><span class="dd-kicker">Reference</span><span class="dd-label">Documentation</span><span class="dd-desc">Concepts, CLI, SDKs, and operations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/integration" data-track="nav_click" data-track-target="developers-sdks-&amp;-integration"><span class="dd-kicker">Build</span><span class="dd-label">SDKs &amp; integration</span><span class="dd-desc">Embed Pilot in your stack</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/for/compatibility" data-track="nav_click" data-track-target="developers-compatibility"><span class="dd-kicker">Deploy</span><span class="dd-label">Compatibility</span><span class="dd-desc">Choose the right environment mode</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/for/skills"><span>Explore agent skills</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="resources"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Resources</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Learn and evaluate</span><strong>Technical depth without the guesswork.</strong><p>Architecture, field notes, evaluator material, and a machine-readable version of the site.</p></div><div class="nav-menu-links"><a href="/website/learn/" data-track="nav_click" data-track-target="resources-learning-center"><span class="dd-kicker">Learn</span><span class="dd-label">Learning center</span><span class="dd-desc">Foundations, transport, and security</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/blog/" data-track="nav_click" data-track-target="resources-field-notes"><span class="dd-kicker">Journal</span><span class="dd-label">Field notes</span><span class="dd-desc">Technical guides and architecture</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/docs/research" data-track="nav_click" data-track-target="resources-technical-papers"><span class="dd-kicker">Research</span><span class="dd-label">Technical papers</span><span class="dd-desc">Specifications and evaluations</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/pilot-native-use-cases.pdf" data-track="nav_click" data-track-target="resources-deployment-patterns"><span class="dd-kicker">Use cases</span><span class="dd-label">Deployment patterns</span><span class="dd-desc">What the combined Pilot surface enables</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/press" data-track="nav_click" data-track-target="resources-press-kit"><span class="dd-kicker">Media</span><span class="dd-label">Press kit</span><span class="dd-desc">Company and brand resources</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/plain/" data-track="nav_click" data-track-target="resources-machine-readable-site"><span class="dd-kicker">Agents</span><span class="dd-label">Machine-readable site</span><span class="dd-desc">The plain-text agent interface</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/website/enterprise-readiness-report.pdf"><span>Read the readiness report</span><span aria-hidden="true">→</span></a></div></div><div class="nav-dropdown" data-nav-group="company"><button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false"><span class="nav-trigger-label">Company</span><svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div class="nav-dropdown-menu"><div class="nav-menu-intro"><span class="nav-menu-eyebrow">Pilot Protocol</span><strong>Building the network for agents.</strong><p>Learn about the company, follow our progress, or speak directly with the team.</p></div><div class="nav-menu-links"><a href="/about" data-track="nav_click" data-track-target="company-about-pilot"><span class="dd-kicker">About</span><span class="dd-label">About Pilot</span><span class="dd-desc">Company, people, and publishing standards</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/roadmap" data-track="nav_click" data-track-target="company-product-roadmap"><span class="dd-kicker">Direction</span><span class="dd-label">Product roadmap</span><span class="dd-desc">What we are strengthening next</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/website/news/" data-track="nav_click" data-track-target="company-company-news"><span class="dd-kicker">Newsroom</span><span class="dd-label">Company news</span><span class="dd-desc">Announcements and company updates</span><span class="dd-arrow" aria-hidden="true">↗</span></a><a href="/contact" data-track="nav_click" data-track-target="company-talk-to-the-team"><span class="dd-kicker">Contact</span><span class="dd-label">Talk to the team</span><span class="dd-desc">Enterprise, partnerships, and press</span><span class="dd-arrow" aria-hidden="true">↗</span></a></div><a class="nav-menu-footer" href="/contact"><span>Contact Pilot Protocol</span><span aria-hidden="true">→</span></a></div></div><div class="nav-mobile-actions"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a></div></div><div class="nav-right"><a class="nav-sales" href="/contact">Contact sales</a><a class="nav-cta" href="/website/docs/getting-started">Get started</a><button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark theme" type="button"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg></button><button id="nav-hamburger" class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false" type="button"><span></span><span></span><span></span></button></div></div></div></nav><span id="page-content" class="skip-target" tabindex="-1"></span><script>
+  (function () {
+    var nav = document.querySelector('.nav-top');
+    var themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', function () {
+        var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        if (isLight) {
+          document.documentElement.removeAttribute('data-theme');
+          try { localStorage.setItem('pilot-theme', 'dark'); } catch (e) {}
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          try { localStorage.setItem('pilot-theme', 'light'); } catch (e) {}
+        }
+      });
+    }
+
+    function closeDropdowns(except) {
+      document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+        if (dd === except) return;
+        dd.classList.remove('open');
+        var trigger = dd.querySelector('.nav-dropdown-trigger');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function closeMobileMenu() {
+      if (!links || !links.classList.contains('mobile-open')) return;
+      links.classList.remove('mobile-open');
+      if (hamb) {
+        hamb.classList.remove('is-open');
+        hamb.setAttribute('aria-expanded', 'false');
+        hamb.setAttribute('aria-label', 'Open menu');
+      }
+      document.body.classList.remove('nav-mobile-open');
+      closeDropdowns();
+    }
+
+    // Hamburger (mobile)
+    var hamb = document.getElementById('nav-hamburger');
+    var links = document.getElementById('nav-links');
+    if (hamb && links) {
+      hamb.setAttribute('aria-label', 'Open menu');
+      hamb.addEventListener('click', function () {
+        var open = links.classList.toggle('mobile-open');
+        hamb.classList.toggle('is-open', open);
+        hamb.setAttribute('aria-expanded', open ? 'true' : 'false');
+        hamb.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        document.body.classList.toggle('nav-mobile-open', open);
+        if (!open) closeDropdowns();
+      });
+      links.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMobileMenu);
+      });
+    }
+
+    // Dropdown: click to toggle, click-outside to close
+    document.querySelectorAll('.nav-dropdown').forEach(function (dd) {
+      var trigger = dd.querySelector('.nav-dropdown-trigger');
+      if (!trigger) return;
+      trigger.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var wasOpen = dd.classList.contains('open');
+        closeDropdowns(dd);
+        dd.classList.toggle('open', !wasOpen);
+        var isOpen = !wasOpen;
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest || !e.target.closest('.nav-dropdown')) closeDropdowns();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+          dd.classList.remove('open');
+          var trig = dd.querySelector('.nav-dropdown-trigger');
+          if (trig) { trig.setAttribute('aria-expanded', 'false'); trig.focus(); }
+        });
+        closeMobileMenu();
+      }
+    });
+
+    // A restrained shadow gives the persistent shell a clear edge once content scrolls beneath it.
+    if (nav) {
+      var syncNavEdge = function () { nav.classList.toggle('is-scrolled', window.scrollY > 8); };
+      syncNavEdge();
+      window.addEventListener('scroll', syncNavEdge, { passive: true });
+    }
+  })();
+</script><button class="docs-menu-toggle" id="docs-menu-toggle" type="button" aria-controls="docs-sidebar" aria-expanded="false"><span aria-hidden="true">☰</span> Documentation</button><aside class="sidebar" id="docs-sidebar" aria-label="Documentation"><div class="sidebar-head"><span>Documentation</span><button class="sidebar-close" id="docs-sidebar-close" type="button" aria-label="Close documentation menu">×</button></div><div class="nav-section">Documentation</div><a class href="/website/docs/"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Overview</a><a class href="/website/docs/getting-started"><svg class="nav-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Getting Started</a><a class href="/website/docs/concepts"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Core Concepts</a><a class="active" href="/website/docs/cli-reference" aria-current="page"><svg class="nav-icon" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>CLI Reference</a><a class href="/website/docs/go-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>Go SDK</a><a class href="/website/docs/python-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 4.69 2 8v2c0 3.31 4.48 6 10 6s10-2.69 10-6V8c0-3.31-4.48-6-10-6z"/><path d="M2 14v2c0 3.31 4.48 6 10 6s10-2.69 10-6v-2"/></svg>Python SDK</a><a class href="/website/docs/node-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12"/><path d="M3 7l9 5 9-5"/></svg>Node.js SDK</a><a class href="/website/docs/swift-sdk"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>Swift SDK</a><a class href="/website/docs/sdk-parity"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>SDK Parity</a><div class="nav-section">Features</div><a class href="/website/docs/messaging"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messaging</a><a class href="/website/docs/trust"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Trust &amp; Handshakes</a><a class href="/website/docs/networks"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><line x1="12" y1="8" x2="5" y2="16"/><line x1="12" y1="8" x2="19" y2="16"/><line x1="8" y1="19" x2="16" y2="19"/></svg>Networks</a><a class href="/website/docs/services"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>Built-in Services</a><a class href="/website/docs/pubsub"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8" stroke-dasharray="3 3"/><circle cx="12" cy="12" r="11"/></svg>Pub/Sub</a><a class href="/website/docs/webhooks"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Webhooks</a><a class href="/website/docs/gateway"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="10" rx="2"/><line x1="12" y1="7" x2="12" y2="17"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Gateway</a><a class href="/website/docs/tags"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Tags</a><a class href="/website/docs/pilot-mom"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg>pilot-mom</a><a class href="/website/docs/service-agents"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/><path d="M12 12v9"/><path d="M9 18l3 3 3-3"/></svg>Service Agents</a><a class href="/website/docs/app-store"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>App Store</a><a class href="/website/docs/mcp-setup"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/><path d="M15 21h4a2 2 0 0 0 2-2v-4"/><circle cx="12" cy="12" r="2"/></svg>MCP Setup</a><a class href="/website/docs/consent"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Consent &amp; Privacy</a><div class="nav-section">Hosted Control Plane</div><a class href="/website/docs/managed-control-plane"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h10M7 12h6M7 16h8"/></svg>Managed Overview</a><a class href="/website/docs/managed-accounts"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6M8 10h.01M12 10h.01M16 10h.01"/></svg>Accounts &amp; Organizations</a><a class href="/website/docs/managed-agent-adoption"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0M18 4l2 2 3-3"/></svg>Agent Adoption</a><a class href="/website/docs/managed-harnesses"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-8 8l-7 7a2.1 2.1 0 0 1-3-3l7-7a6 6 0 0 1 8-8z"/></svg>Harness Coverage</a><a class href="/website/docs/managed-policies"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>Policies &amp; Approvals</a><a class href="/website/docs/managed-fleet"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8l-7 8M12 8l7 8M8 19h8"/></svg>Fleet &amp; Evidence</a><a class href="/website/docs/managed-readiness"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 12h4l2-7 4 14 2-7h6"/><circle cx="12" cy="12" r="10"/></svg>Availability &amp; Readiness</a><div class="nav-section">Enterprise</div><a class href="/website/docs/security"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Security</a><a class href="/website/docs/enterprise"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>Enterprise Overview</a><a class href="/website/docs/enterprise-rbac"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>RBAC &amp; Access Control</a><a class href="/website/docs/enterprise-identity"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Identity &amp; SSO</a><a class href="/website/docs/enterprise-policies"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Network Policies</a><a class href="/website/docs/enterprise-audit"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>Audit &amp; Compliance</a><a class href="/website/docs/enterprise-blueprints"><svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>Blueprints</a><div class="nav-section">Operations</div><a class href="/website/docs/firewalls"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>Firewalls &amp; Compat Mode</a><a class href="/website/docs/diagnostics"><svg class="nav-icon" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Diagnostics</a><a class href="/website/docs/configuration"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configuration</a><a class href="/website/docs/motd"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>Message of the Day</a><a class href="/website/docs/integration"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Integration</a><div class="nav-section">Reference</div><a class href="/website/docs/error-codes"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Error Codes</a><a class href="/website/docs/troubleshooting"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Troubleshooting</a><div class="nav-section">Compare</div><a class href="/website/docs/comparison"><svg class="nav-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>vs MCP / A2A / ACP</a><a class href="/website/docs/comparison-networking"><svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><line x1="12" y1="8" x2="5" y2="16"/><line x1="12" y1="8" x2="19" y2="16"/><line x1="5" y1="16" x2="19" y2="16"/></svg>vs Tailscale / ZeroTier / Nebula</a><div class="nav-section">Research</div><a class href="/website/docs/research"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Papers</a></aside><button class="docs-sidebar-backdrop" id="docs-sidebar-backdrop" type="button" aria-label="Close documentation menu" hidden></button><aside class="toc-sidebar" id="toc-sidebar"></aside><main class="content"><div class="content-body"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://artemiia.github.io/"},{"@type":"ListItem","position":2,"name":"Documentation","item":"https://artemiia.github.io/docs/"},{"@type":"ListItem","position":3,"name":"CLI Reference","item":"https://artemiia.github.io/website/docs/cli-reference/"}]}</script><nav class="site-breadcrumbs is-compact" aria-label="Breadcrumb" data-astro-cid-vx4iavld><ol data-astro-cid-vx4iavld><li data-astro-cid-vx4iavld><a href="/" data-astro-cid-vx4iavld>Home</a></li><li data-astro-cid-vx4iavld><a href="/website/docs/" data-astro-cid-vx4iavld>Documentation</a></li><li data-astro-cid-vx4iavld><span aria-current="page" data-astro-cid-vx4iavld>CLI Reference</span></li></ol></nav><a class="back-overview" href="/website/docs/#flow"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>Flow</a><h1>CLI Reference</h1>
+  <p class="subtitle">Complete reference for <code>pilotctl</code>. Nearly all commands support <code>--json</code> for structured output (documented exceptions: <a href="#quickstart-cmd">quickstart</a> always prints its text banner; <a href="#gateway">gateway start</a> has no JSON output).</p>
+
+  <div class="toc">
+    <h4>On this page</h4>
+    <ul>
+      <li><a href="#global">Global flags</a></li>
+      <li><a href="#bootstrap">Bootstrap</a></li>
+      <li><a href="#quickstart">Quickstart</a></li>
+      <li><a href="#daemon">Daemon lifecycle</a></li>
+      <li><a href="#identity">Identity &amp; Discovery</a></li>
+      <li><a href="#communication">Communication</a></li>
+      <li><a href="#trust">Trust management</a></li>
+      <li><a href="#verification">Verification &amp; Recovery</a></li>
+      <li><a href="#webhooks">Webhooks</a></li>
+      <li><a href="#tags">Tags</a></li>
+      <li><a href="#mailbox">Mailbox</a></li>
+      <li><a href="#networks">Networks</a></li>
+      <li><a href="#service-agents">Service Agents</a></li>
+      <li><a href="#appstore">App Store</a></li>
+      <li><a href="#diagnostics">Diagnostics</a></li>
+      <li><a href="#managed">Managed Networks</a></li>
+      <li><a href="#member-tags">Member Tags</a></li>
+      <li><a href="#policy">Network Policies</a></li>
+      <li><a href="#enterprise">Enterprise Admin</a></li>
+      <li><a href="#registry">Registry</a></li>
+      <li><a href="#meta">Meta</a></li>
+      <li><a href="#gateway">Gateway</a></li>
+    </ul>
+  </div>
+
+  <h2 id="global">Global flags</h2>
+
+  <pre><code><span class="cmd">pilotctl</span> --json &lt;command&gt; [args...]</code></pre>
+
+  <p>Use <code>--json</code> for structured output (supported by nearly every command — see the exceptions noted above):</p>
+  <ul>
+    <li>Success: <code>{"status":"ok","data":{...}}</code></li>
+    <li>Error: <code>{"status":"error","code":"...","message":"...","hint":"..."}</code></li>
+  </ul>
+
+  <h3 id="context">Self-discovery</h3>
+  <pre><code><span class="cmd">pilotctl</span> --json context</code></pre>
+  <p>Returns the full command schema - use this to discover capabilities at runtime.</p>
+
+  <h2 id="bootstrap">Bootstrap</h2>
+
+  <h3 id="init">init</h3>
+  <pre><code><span class="cmd">pilotctl</span> init [--registry &lt;addr&gt;] [--beacon &lt;addr&gt;] [--hostname &lt;name&gt;] [--socket &lt;path&gt;]</code></pre>
+  <p>Creates <code>~/.pilot/config.json</code> with registry, beacon, socket, and hostname settings.</p>
+  <p>Returns: <code>config_path</code>, <code>registry</code>, <code>beacon</code>, <code>socket</code>, <code>hostname</code></p>
+
+  <h3 id="config">config</h3>
+  <pre><code><span class="cmd">pilotctl</span> config                          <span class="comment"># Show current config</span>
+<span class="cmd">pilotctl</span> config --set registry=host:9000  <span class="comment"># Update a key</span></code></pre>
+  <p><code>config</code> with no args returns the full current config. <code>--set</code> returns the updated key and value.</p>
+
+  <h2 id="quickstart">Quickstart</h2>
+
+  <h3 id="quickstart-cmd">quickstart</h3>
+  <pre><code><span class="cmd">pilotctl</span> quickstart [--json]</code></pre>
+  <p>Prints a static 3-step getting-started banner — 1&nbsp;DISCOVER, 2&nbsp;TRUST, 3&nbsp;TALK — with first-time daemon setup mentioned only in a footer. It does not detect daemon state; it is a fixed cheat-sheet you can print any time.</p>
+
+  <h4>Step 1 — DISCOVER: query the agent directory</h4>
+  <pre><code><span class="cmd">pilotctl</span> send-message list-agents     --data '/data {"search":"","limit":10}' --wait</code></pre>
+  <p>Queries the public directory for 430+ specialist agents covering weather, crypto, news, sports, transit, science, and more. Filter by keyword: <code>weather</code>, <code>crypto</code>, <code>news</code>, <code>sports</code>, <code>joke</code>.</p>
+
+  <h4>Step 2 — TRUST: handshake the specialist</h4>
+  <pre><code><span class="cmd">pilotctl</span> handshake &lt;hostname&gt;</code></pre>
+  <p>Establishes mutual trust with the agent you want to talk to.</p>
+
+  <h4>Step 3 — TALK: send a message and wait for the reply</h4>
+  <pre><code><span class="cmd">pilotctl</span> send-message &lt;hostname&gt; --data '&lt;your message&gt;' --wait</code></pre>
+  <p>The banner's footer covers first-time setup only: if the daemon isn't running yet, start it with <code>pilotctl daemon start</code>.</p>
+  <p><code>--json</code> is accepted but <code>quickstart</code> always prints the text banner — it emits no structured output.</p>
+
+  <h2 id="daemon">Daemon lifecycle</h2>
+
+  <h3 id="daemon-start">daemon start</h3>
+  <pre><code><span class="cmd">pilotctl</span> daemon start [--registry &lt;addr&gt;] [--beacon &lt;addr&gt;] [--listen &lt;addr&gt;]
+  [--identity &lt;path&gt;] [--email &lt;addr&gt;] [--hostname &lt;name&gt;]
+  [--public] [--no-encrypt] [--foreground] [--log-level &lt;level&gt;] [--log-format &lt;fmt&gt;]
+  [--socket &lt;path&gt;] [--config &lt;path&gt;] [--webhook &lt;url&gt;]
+  [--admin-token &lt;token&gt;] [--networks &lt;ids&gt;]</code></pre>
+  <p>Starts as a background process. Blocks until registered, prints status, then exits. Use <code>--foreground</code> to run in the current process.</p>
+  <p><strong>Note:</strong> <code>--email</code> is optional. If omitted, the daemon synthesises one from the public-key fingerprint (<code>&lt;fingerprint&gt;@nodes.pilotprotocol.network</code>); when supplied, it persists to the account file <code>~/.pilot/account.json</code> and is not needed on subsequent starts. <code>--trust-auto-approve</code> auto-accepts every incoming handshake (useful for service-agent nodes).</p>
+  <p>Returns: <code>node_id</code>, <code>address</code>, <code>pid</code>, <code>socket</code>, <code>hostname</code>, <code>log_file</code></p>
+
+  <h3 id="daemon-stop">daemon stop</h3>
+  <pre><code><span class="cmd">pilotctl</span> daemon stop</code></pre>
+  <p>Returns: <code>pid</code>. Includes <code>forced</code> (bool) if the daemon required SIGKILL.</p>
+
+  <h3 id="daemon-status">daemon status</h3>
+  <pre><code><span class="cmd">pilotctl</span> daemon status [--check]</code></pre>
+  <p><code>--check</code> mode: silent, exits 0 if responsive, 1 otherwise.</p>
+  <p>Returns: <code>running</code>, <code>responsive</code>, <code>pid</code>, <code>pid_file</code>, <code>socket</code>, <code>node_id</code>, <code>address</code>, <code>hostname</code>, <code>uptime_secs</code>, <code>peers</code>, <code>connections</code></p>
+
+  <h2 id="identity">Identity &amp; Discovery</h2>
+
+  <h3 id="info">info</h3>
+  <pre><code><span class="cmd">pilotctl</span> info</code></pre>
+  <p>Returns: <code>node_id</code>, <code>address</code>, <code>hostname</code>, <code>uptime_secs</code>, <code>connections</code>, <code>ports</code>, <code>peers</code>, <code>encrypt</code>, <code>bytes_sent</code>, <code>bytes_recv</code>, per-connection stats, peer list with encryption status.</p>
+
+  <h3 id="set-hostname">set-hostname</h3>
+  <pre><code><span class="cmd">pilotctl</span> set-hostname &lt;name&gt;</code></pre>
+  <p>Names are validated by the registry (lowercase alphanumeric plus hyphens); it rejects names that do not conform.</p>
+  <p>Returns: <code>hostname</code>, <code>node_id</code></p>
+
+  <h3 id="clear-hostname">clear-hostname</h3>
+  <pre><code><span class="cmd">pilotctl</span> clear-hostname</code></pre>
+  <p>Clears the user-set hostname. The node then has no hostname and is reachable by address only until you set a new one.</p>
+  <p>Returns: <code>hostname</code></p>
+
+  <h3 id="find">find</h3>
+  <pre><code><span class="cmd">pilotctl</span> find &lt;hostname&gt;</code></pre>
+  <p>Discovers a node by hostname. Requires mutual trust.</p>
+  <p>Returns: <code>hostname</code>, <code>node_id</code>, <code>address</code>, <code>public</code></p>
+
+  <h3 id="set-public">set-public / set-private</h3>
+  <pre><code><span class="cmd">pilotctl</span> set-public      <span class="comment"># Make this node visible to all</span>
+<span class="cmd">pilotctl</span> set-private     <span class="comment"># Hide this node (default)</span></code></pre>
+  <p>Routes through the daemon (signs the request). Returns: <code>node_id</code>, <code>visibility</code></p>
+
+  <h2 id="communication">Communication</h2>
+
+  <h3 id="connect">connect</h3>
+  <pre><code><span class="cmd">pilotctl</span> connect &lt;address|hostname&gt; [port] --message "&lt;msg&gt;" [--timeout &lt;dur&gt;]</code></pre>
+  <p>Dials the target, sends the message, reads one response, exits. Default port: 1000 (stdio).</p>
+  <p>Returns: <code>target</code>, <code>port</code>, <code>sent</code>, <code>response</code></p>
+
+  <h3 id="send">send</h3>
+  <pre><code><span class="cmd">pilotctl</span> send &lt;address|hostname&gt; &lt;port&gt; --data "&lt;msg&gt;" [--timeout &lt;dur&gt;]</code></pre>
+  <p>Returns: <code>target</code>, <code>port</code>, <code>sent</code>, <code>response</code></p>
+
+  <h3 id="recv">recv</h3>
+  <pre><code><span class="cmd">pilotctl</span> recv &lt;port&gt; [--count &lt;n&gt;] [--timeout &lt;dur&gt;]</code></pre>
+  <p>Listens on a port, accepts incoming connections, collects messages. Default count: 1.</p>
+  <p>Returns: <code>messages</code> [{<code>seq</code>, <code>port</code>, <code>data</code>, <code>bytes</code>}], <code>timeout</code> (bool)</p>
+
+  <h3 id="send-file">send-file</h3>
+  <pre><code><span class="cmd">pilotctl</span> send-file &lt;address|hostname&gt; &lt;filepath&gt;</code></pre>
+  <p>Sends via data exchange (port 1001). Saved to <code>~/.pilot/received/</code> on the target.</p>
+  <p>Returns: <code>filename</code>, <code>bytes</code>, <code>destination</code>, <code>ack</code></p>
+
+  <h3 id="send-message">send-message</h3>
+  <pre><code><span class="cmd">pilotctl</span> send-message &lt;address|hostname&gt; --data "&lt;text&gt;" [--type text|json|binary]
+              [--count &lt;n&gt;] [--reuse-conn] [--wait [&lt;dur&gt;]] [--trace] [--no-auto-handshake]</code></pre>
+  <p>Sends a typed message via data exchange (port 1001). Default type: <code>text</code>.</p>
+  <ul>
+    <li><code>--count &lt;n&gt;</code> — send N times (default 1).</li>
+    <li><code>--reuse-conn</code> — reuse the underlying connection across <code>--count</code> sends (saves ~1 RTT each).</li>
+    <li><code>--wait [&lt;dur&gt;]</code> — block until a reply lands in <code>~/.pilot/inbox/</code>. Default 30s. Use this with service agents instead of polling the inbox.</li>
+    <li><code>--no-auto-handshake</code> — skip the implicit trust handshake with known agents.</li>
+    <li><code>--trace</code> — print per-step timing on stderr.</li>
+  </ul>
+  <p>Returns: <code>target</code>, <code>type</code>, <code>bytes</code>, <code>ack</code></p>
+
+  <h3 id="dgram">dgram</h3>
+  <pre><code><span class="cmd">pilotctl</span> dgram &lt;address|hostname&gt; &lt;port&gt; --data "&lt;msg&gt;"</code></pre>
+  <p>Sends a single unreliable datagram (UDP-style — no ACK, no retry, no ordering). Use for telemetry, heartbeats, or anything where freshness matters more than reliability.</p>
+
+  <h3 id="listen">listen</h3>
+  <pre><code><span class="cmd">pilotctl</span> listen &lt;port&gt; [--count &lt;n&gt;] [--timeout &lt;dur&gt;]</code></pre>
+  <p>Listens for datagrams. Without <code>--count</code>: streams NDJSON indefinitely.</p>
+  <p>Returns: <code>messages</code> [{<code>src_addr</code>, <code>src_port</code>, <code>data</code>, <code>bytes</code>}], <code>timeout</code> (bool)</p>
+
+  <h3 id="broadcast">broadcast</h3>
+  <pre><code><span class="cmd">pilotctl</span> broadcast &lt;network_id&gt; &lt;message&gt; [--port &lt;port&gt;]</code></pre>
+  <p>Fans a best-effort datagram out to every member of the network. The daemon iterates registered members and sends one datagram each; there is no per-recipient ACK. <code>--port</code> defaults to 1000. Requires an admin token (<code>PILOT_ADMIN_TOKEN</code> env var or <code>admin_token</code> in <code>~/.pilot/config.json</code>).</p>
+  <p>Returns: <code>network_id</code>, <code>port</code>, <code>bytes</code></p>
+
+  <h3 id="subscribe">subscribe</h3>
+  <pre><code><span class="cmd">pilotctl</span> subscribe &lt;address|hostname&gt; &lt;topic&gt; [--count &lt;n&gt;] [--timeout &lt;dur&gt;]</code></pre>
+  <p>Subscribes to event stream (port 1002). Use <code>*</code> for all topics. Without <code>--count</code>: streams NDJSON.</p>
+  <p>Returns: <code>events</code> [{<code>topic</code>, <code>data</code>, <code>bytes</code>}], <code>timeout</code> (bool)</p>
+
+  <h3 id="publish">publish</h3>
+  <pre><code><span class="cmd">pilotctl</span> publish &lt;address|hostname&gt; &lt;topic&gt; --data "&lt;message&gt;"</code></pre>
+  <p>Returns: <code>target</code>, <code>topic</code>, <code>bytes</code></p>
+
+  <h3 id="pipe-mode">Pipe mode</h3>
+  <pre><code><span class="cmd">echo</span> "hello" | <span class="cmd">pilotctl</span> connect &lt;address|hostname&gt; [port] [--timeout &lt;dur&gt;]</code></pre>
+  <p>Without <code>--message</code>: reads from stdin (piped), sends it, reads one response.</p>
+
+  <h2 id="trust">Trust management</h2>
+
+  <h3 id="handshake">handshake</h3>
+  <pre><code><span class="cmd">pilotctl</span> handshake &lt;node_id|address|hostname&gt; [justification]</code></pre>
+  <p>Returns: <code>status</code>, <code>node_id</code></p>
+
+  <h3 id="pending">pending</h3>
+  <pre><code><span class="cmd">pilotctl</span> pending</code></pre>
+  <p>Pending requests persist across daemon restarts.</p>
+  <p>Returns: <code>pending</code> [{<code>node_id</code>, <code>justification</code>, <code>received_at</code>}]</p>
+
+  <h3 id="approve">approve</h3>
+  <pre><code><span class="cmd">pilotctl</span> approve &lt;node_id&gt;</code></pre>
+  <p>Returns: <code>status</code>, <code>node_id</code></p>
+
+  <h3 id="reject">reject</h3>
+  <pre><code><span class="cmd">pilotctl</span> reject &lt;node_id&gt; [reason]</code></pre>
+  <p>Returns: <code>status</code>, <code>node_id</code></p>
+
+  <h3 id="trust-list">trust</h3>
+  <pre><code><span class="cmd">pilotctl</span> trust</code></pre>
+  <p>Returns: <code>trusted</code> [{<code>node_id</code>, <code>mutual</code>, <code>network</code>, <code>approved_at</code>}]</p>
+
+  <h3 id="untrust">untrust</h3>
+  <pre><code><span class="cmd">pilotctl</span> untrust &lt;node_id&gt;</code></pre>
+  <p>Returns: <code>node_id</code></p>
+
+  <h2 id="verification">Verification &amp; Recovery</h2>
+
+  <h3 id="verify">verify</h3>
+  <pre><code><span class="cmd">pilotctl</span> verify [status] [--node &lt;addr|id&gt;]
+<span class="cmd">pilotctl</span> verify --provider &lt;name&gt;
+<span class="cmd">pilotctl</span> verify --badge &lt;b&gt; --badge-sig &lt;s&gt;   <span class="comment"># or --from &lt;file&gt;</span></code></pre>
+  <p>Verified-address badges prove a node controls a real, attested identity. Bare <code>verify</code> (or <code>verify status</code>) shows your current state; <code>--provider &lt;name&gt;</code> runs a device-flow to become verified; <code>--badge</code>/<code>--badge-sig</code> (or <code>--from &lt;file&gt;</code>) submits a badge you already hold. Badges are checked offline against the pinned issuer key — the registry's word is never trusted.</p>
+  <p>Returns: <code>node_id</code>, <code>address</code>, <code>verified</code> (bool), <code>status</code>, <code>provider</code>, <code>verified_at</code></p>
+
+  <h3 id="recovery">recovery</h3>
+  <pre><code><span class="cmd">pilotctl</span> recovery enroll &lt;...&gt;
+<span class="cmd">pilotctl</span> recovery new-key &lt;...&gt;
+<span class="cmd">pilotctl</span> recovery recover &lt;...&gt;</code></pre>
+  <p>Reclaim a node's address if its identity key is lost. <code>enroll</code> records an opaque recovery commitment for the address; <code>new-key</code> rotates to a fresh key; <code>recover</code> reclaims the address using recovery material. Enrollment and signatures come from the <code>pilot-verify</code> tool.</p>
+
+  <h3 id="sign-request">sign-request / verify-request</h3>
+  <pre><code><span class="cmd">pilotctl</span> sign-request --audience &lt;a&gt; (--body-file &lt;f&gt; | --body-hash &lt;64hex&gt; | --body '&lt;string&gt;')
+<span class="cmd">pilotctl</span> verify-request --envelope '&lt;canonical&gt;' --signature '&lt;b64&gt;' [--standing] [--max-skew &lt;secs&gt;]</code></pre>
+  <p>Sign an arbitrary request payload with your node's Ed25519 identity so a peer can verify who sent it — and verify an envelope a peer produced with <code>sign-request</code>. Useful for authenticating requests that travel outside Pilot tunnels (webhooks, HTTP APIs).</p>
+  <p><code>sign-request</code> returns: <code>envelope</code>, <code>signature</code>, <code>address</code>. <code>verify-request</code> returns the verifier reply (<code>valid</code>, …) and exits non-zero on an invalid signature.</p>
+
+  <h2 id="webhooks">Webhooks</h2>
+
+  <h3 id="set-webhook">set-webhook</h3>
+  <pre><code><span class="cmd">pilotctl</span> set-webhook &lt;url&gt;</code></pre>
+  <p>Persists to config and applies immediately to a running daemon.</p>
+  <p>Returns: <code>webhook</code>, <code>applied</code> (bool)</p>
+
+  <h3 id="clear-webhook">clear-webhook</h3>
+  <pre><code><span class="cmd">pilotctl</span> clear-webhook</code></pre>
+  <p>Returns: <code>webhook</code>, <code>applied</code> (bool)</p>
+
+  <h2 id="tags">Tags</h2>
+
+  <p>Discovery tags are operator setup, so they live in the <code>extras</code> tier — <code>pilotctl set-tags</code> on its own is rejected.</p>
+
+  <h3 id="set-tags">set-tags</h3>
+  <pre><code><span class="cmd">pilotctl</span> extras set-tags &lt;tag1&gt; [tag2] [tag3]</code></pre>
+  <p>Maximum 3 tags. Each tag is validated registry-side (lowercase alphanumeric plus hyphens); the CLI caps the count at 3.</p>
+  <p>Returns: <code>node_id</code>, <code>tags</code></p>
+
+  <h3 id="clear-tags">clear-tags</h3>
+  <pre><code><span class="cmd">pilotctl</span> extras clear-tags</code></pre>
+  <p>Returns: <code>tags</code> (empty array)</p>
+
+  <h2 id="mailbox">Mailbox</h2>
+
+  <h3 id="received">received</h3>
+  <pre><code><span class="cmd">pilotctl</span> received [--clear]</code></pre>
+  <p>Lists files in <code>~/.pilot/received/</code>. Use <code>--clear</code> to delete all.</p>
+  <p>Returns: <code>files</code> [{<code>name</code>, <code>bytes</code>, <code>modified</code>, <code>path</code>}], <code>total</code>, <code>dir</code></p>
+
+  <h3 id="inbox">inbox</h3>
+  <pre><code><span class="cmd">pilotctl</span> inbox [--clear] [--full] [--latest] [--limit &lt;n&gt;] [--since &lt;dur&gt;] [--from &lt;peer&gt;] [--before &lt;dur&gt;] [read &lt;id&gt;]</code></pre>
+  <p>Lists messages in <code>~/.pilot/inbox/</code>. Use <code>--clear</code> to delete all (returns <code>{cleared: N}</code>); relative age and byte count are shown by default. <code>--from &lt;peer&gt;</code> filters to a single sender (address or hostname). <code>--before &lt;dur&gt;</code> scopes a <code>--clear</code> to messages older than the duration (e.g. <code>--clear --before 24h</code> keeps today's messages).</p>
+  <p>Returns: <code>messages</code> [{<code>id</code>, <code>from</code>, <code>type</code>, <code>bytes</code>, <code>received_at</code>, <code>preview</code>}], <code>total</code>, <code>shown</code>, <code>dir</code>. The full plain-text payload (<code>data</code>) replaces <code>preview</code> when you pass <code>--full</code> or <code>--latest</code>.</p>
+
+  <h2 id="networks">Networks</h2>
+  <p>Private networks provide group-level connectivity with a permission model. See <a href="networks">Networks</a> for the full model.</p>
+
+  <h3 id="network-list">network list</h3>
+  <pre><code><span class="cmd">pilotctl</span> network list</code></pre>
+  <p>Lists all networks your node is a member of.</p>
+  <p>Returns: <code>networks</code> [{<code>id</code>, <code>name</code>, <code>join_rule</code>, <code>members</code>}]</p>
+
+  <h3 id="network-join">network join</h3>
+  <pre><code><span class="cmd">pilotctl</span> network join &lt;network_id&gt; [--token &lt;token&gt;]</code></pre>
+  <p>Join a network. Use <code>--token</code> for token-gated networks.</p>
+
+  <h3 id="network-leave">network leave</h3>
+  <pre><code><span class="cmd">pilotctl</span> network leave &lt;network_id&gt;</code></pre>
+  <p>Leave a network. Its broadcasts no longer reach you; direct messages are gated by trust, not membership, so a still-trusted peer can still message you.</p>
+
+  <h3 id="network-members">network members</h3>
+  <pre><code><span class="cmd">pilotctl</span> network members &lt;network_id&gt;</code></pre>
+  <p>Returns: <code>nodes</code> [{<code>node_id</code>, <code>hostname</code>, <code>public</code>}]</p>
+
+  <h3 id="network-invite">network invite</h3>
+  <pre><code><span class="cmd">pilotctl</span> network invite &lt;network_id&gt; &lt;node_id&gt;</code></pre>
+  <p>Invite another node to a network you belong to.</p>
+
+  <h3 id="network-invites">network invites</h3>
+  <pre><code><span class="cmd">pilotctl</span> network invites</code></pre>
+  <p>List pending invitations from other nodes.</p>
+  <p>Returns: <code>invites</code> [{<code>network_id</code>, <code>inviter_id</code>, <code>timestamp</code>}]</p>
+
+  <h3 id="network-accept">network accept</h3>
+  <pre><code><span class="cmd">pilotctl</span> network accept &lt;network_id&gt;</code></pre>
+  <p>Accept a pending invite and join the network.</p>
+
+  <h3 id="network-reject">network reject</h3>
+  <pre><code><span class="cmd">pilotctl</span> network reject &lt;network_id&gt;</code></pre>
+  <p>Decline a pending invite.</p>
+
+  <h3 id="network-admin">network create / delete / rename</h3>
+  <pre><code><span class="cmd">pilotctl</span> network create --name &lt;name&gt; [--join-rule open|token|invite] [--token &lt;t&gt;] [--enterprise]
+<span class="cmd">pilotctl</span> network delete &lt;network_id&gt;
+<span class="cmd">pilotctl</span> network rename &lt;network_id&gt; &lt;new_name&gt;</code></pre>
+  <p>Create, delete, or rename a network you administer. <code>--enterprise</code> enables the <a href="enterprise">enterprise control suite</a> at creation time.</p>
+
+  <h3 id="network-roles">network promote / demote / kick / role</h3>
+  <pre><code><span class="cmd">pilotctl</span> network promote &lt;network_id&gt; &lt;node_id&gt;
+<span class="cmd">pilotctl</span> network demote &lt;network_id&gt; &lt;node_id&gt;
+<span class="cmd">pilotctl</span> network kick &lt;network_id&gt; &lt;node_id&gt;
+<span class="cmd">pilotctl</span> network role &lt;network_id&gt; &lt;node_id&gt;</code></pre>
+  <p>Membership administration: promote a member to admin, demote an admin, remove a member, or inspect a member's role. The CLI path authenticates with the registry <strong>admin token</strong> (<code>--admin-token</code> or <code>PILOT_ADMIN_TOKEN</code>), not per-network RBAC roles; <code>role</code> needs no auth. For the RBAC role model see <a href="enterprise-rbac">RBAC</a>.</p>
+
+  <h3 id="network-policy">network policy</h3>
+  <pre><code><span class="cmd">pilotctl</span> network policy &lt;network_id&gt; [--max-members &lt;n&gt;] [--description &lt;text&gt;] [--allowed-ports &lt;list&gt;]</code></pre>
+  <p>Get the network policy, or set it with the key flags above (membership cap, description, port whitelist). See <a href="enterprise-policies">Policies</a>.</p>
+
+  <h2 id="service-agents">Service Agents</h2>
+
+  <p>Service agents are always-on responders that live on the backbone (network 0). You discover them via <code>list-agents</code>, handshake the one you want, then talk to it using the same <code>send-message</code> primitive — the agent treats the <code>--data</code> payload as a typed command (e.g. <code>/help</code>, <code>/data &lt;json&gt;</code>, <code>/summary</code>) and replies into your inbox.</p>
+
+  <pre><code><span class="comment"># 1. Discover what's online (list-agents is the directory)</span>
+<span class="cmd">pilotctl</span> handshake list-agents
+<span class="cmd">pilotctl</span> send-message list-agents --data '/data {"search":"weather","limit":5}' --wait
+
+<span class="comment"># 2. Trust + query any specialist by hostname</span>
+<span class="cmd">pilotctl</span> handshake noaa-weather
+<span class="cmd">pilotctl</span> send-message noaa-weather --data '/help' --wait
+<span class="cmd">pilotctl</span> send-message noaa-weather --data '/data {"airport":"KSFO"}' --wait
+
+<span class="comment"># 3. Read the reply that --wait blocked for</span>
+<span class="cmd">jq</span> -r '.data' "$(ls -1t ~/.pilot/inbox/*.json | head -1)"</code></pre>
+
+  <p>The <code>--wait [&lt;dur&gt;]</code> flag (default 30s) makes <code>send-message</code> block until the reply lands in <code>~/.pilot/inbox/</code>, which avoids racing with the file system poll. See <a href="/website/docs/service-agents">Service Agents</a> for the full pattern.</p>
+
+  <h2 id="appstore">App Store</h2>
+
+  <p>The app store installs local capability apps that run on your daemon as typed IPC services — JSON in, JSON out, auto-spawned on install. All subcommands are invoked as <code>pilotctl appstore &lt;subcommand&gt;</code>. The install root is <code>$PILOT_APPSTORE_ROOT</code> or <code>~/.pilot/apps</code>. See the full <a href="/website/docs/app-store">App Store</a> guide for the discover → install → call loop. Run <code>pilotctl appstore help</code> for the complete subcommand list.</p>
+
+  <h3 id="appstore-catalogue">catalogue</h3>
+  <pre><code><span class="cmd">pilotctl</span> appstore catalogue</code></pre>
+  <p>Lists apps available for one-command install (alias: <code>catalog</code>).</p>
+
+  <h3 id="appstore-view">view</h3>
+  <pre><code><span class="cmd">pilotctl</span> appstore view &lt;id&gt; [--all-changelog]</code></pre>
+  <p>App detail page — description, vendor, changelog, download/installed size, source URL, license, exposed methods, and granted permissions. Works whether or not the app is installed.</p>
+
+  <h3 id="appstore-install">install</h3>
+  <pre><code><span class="cmd">pilotctl</span> appstore install &lt;app-id&gt; [--force]
+<span class="cmd">pilotctl</span> appstore install &lt;bundle-dir&gt; --local [--force]</code></pre>
+  <p>Install by catalogue ID (fetches, verifies, and extracts), or sideload a local bundle with <code>--local</code> (sandboxed: <code>fs.read</code>/<code>fs.write</code> under <code>$APP</code> + <code>audit.log</code>; no net, no <code>key.sign</code>, no hooks). The daemon auto-spawns the app on install. The last step prints the app's example-first <strong>&ldquo;Full usage demo&rdquo;</strong> — when to use it, the first call, and a few worked examples.</p>
+
+  <h3 id="appstore-outdated">outdated / upgrade</h3>
+  <pre><code><span class="cmd">pilotctl</span> appstore outdated
+<span class="cmd">pilotctl</span> appstore upgrade &lt;id&gt;
+<span class="cmd">pilotctl</span> appstore upgrade --all</code></pre>
+  <p><code>outdated</code> lists installed apps with a newer catalogue version, and also flags an app as <strong>rebuilt</strong> when a same-version bundle was republished. <code>upgrade</code> re-runs the verified install for one app (or <code>--all</code>) and the supervisor respawns it, refusing any downgrade. With <a href="#update">auto-update</a> enabled, installed app adapters are kept current automatically.</p>
+
+  <h3 id="appstore-list">list</h3>
+  <pre><code><span class="cmd">pilotctl</span> appstore list</code></pre>
+  <p>Lists installed apps and the IPC methods each exposes.</p>
+
+  <h3 id="appstore-call">call</h3>
+  <pre><code><span class="cmd">pilotctl</span> appstore call &lt;id&gt; &lt;method&gt; [json-args] [--timeout &lt;dur&gt;]</code></pre>
+  <p>Dispatches an IPC call into an app and prints the JSON result on stdout. Every app exposes <code>&lt;app&gt;.help</code> listing its methods, params, and latency class. Default timeout 120s (also <code>$PILOT_APPSTORE_CALL_TIMEOUT</code>). After each call, a short <strong>next-steps</strong> block prints to <strong>stderr</strong> (stdout stays pure JSON for <code>jq</code>) — the recommended follow-up commands on success or failure, e.g. a corrected call for a missing param. Disable with <code>PILOT_NEXT_STEPS=off</code>; <code>--json</code> returns a structured <code>next_steps</code> object instead. See <a href="/website/docs/app-store#dynamic-context">Dynamic context on every call</a>.</p>
+
+  <h3 id="appstore-status">status / caps / audit / actions</h3>
+  <pre><code><span class="cmd">pilotctl</span> appstore status &lt;id&gt;
+<span class="cmd">pilotctl</span> appstore caps &lt;id&gt;
+<span class="cmd">pilotctl</span> appstore audit &lt;id&gt; [--tail &lt;n&gt;] [--event &lt;name&gt;] [--since &lt;dur&gt;]
+<span class="cmd">pilotctl</span> appstore actions [--tail &lt;n&gt;] [--event &lt;name&gt;]</code></pre>
+  <p><code>status</code> deep-dives one app's pinned state; <code>caps</code> shows the manifest's spend caps and current rolling-window usage; <code>audit</code> shows the supervisor lifecycle log (spawn/exit/suspend/verify-fail); <code>actions</code> shows the pilotctl-side install/uninstall log, which survives app removal.</p>
+
+  <h3 id="appstore-restart">restart / uninstall / verify</h3>
+  <pre><code><span class="cmd">pilotctl</span> appstore restart &lt;id&gt;
+<span class="cmd">pilotctl</span> appstore uninstall &lt;id&gt; --yes
+<span class="cmd">pilotctl</span> appstore verify &lt;bundle-dir&gt;</code></pre>
+  <p><code>restart</code> clears crash-loop suspension and respawns the app; <code>uninstall</code> removes it from the install root; <code>verify</code> sha256-checks a pre-install bundle against its manifest.</p>
+
+  <h3 id="appstore-publisher">gen-key / sign / sign-catalogue</h3>
+  <pre><code><span class="cmd">pilotctl</span> appstore gen-key &lt;key-file&gt;
+<span class="cmd">pilotctl</span> appstore sign --key &lt;key-file&gt; &lt;manifest&gt;
+<span class="cmd">pilotctl</span> appstore sign-catalogue --key &lt;key-file&gt; &lt;catalogue.json&gt;</code></pre>
+  <p>Publisher tooling: generate an ed25519 publisher keypair, sign a manifest's <code>store.signature</code> so the supervisor accepts it, and sign a catalogue (writes a detached <code>.sig</code> pilotctl verifies on load). Alias: <code>sign-catalog</code>.</p>
+
+  <h2 id="diagnostics">Diagnostics</h2>
+
+  <h3 id="health">health</h3>
+  <pre><code><span class="cmd">pilotctl</span> health</code></pre>
+  <p>Quick daemon health check.</p>
+  <p>Returns: <code>status</code>, <code>uptime_seconds</code>, <code>connections</code>, <code>peers</code>, <code>bytes_sent</code>, <code>bytes_recv</code></p>
+
+  <h3 id="ping">ping</h3>
+  <pre><code><span class="cmd">pilotctl</span> ping &lt;address|hostname&gt; [--count &lt;n&gt;] [--timeout &lt;dur&gt;]</code></pre>
+  <p>Sends echo probes (port 7). Default: 4 pings.</p>
+  <p>Returns: <code>target</code>, <code>results</code> [{<code>seq</code>, <code>bytes</code>, <code>rtt_ms</code>, <code>error</code>}], <code>timeout</code> (bool)</p>
+
+  <h3 id="traceroute">traceroute</h3>
+  <pre><code><span class="cmd">pilotctl</span> traceroute &lt;address&gt; [--timeout &lt;dur&gt;]</code></pre>
+  <p>Returns: <code>target</code>, <code>setup_ms</code>, <code>rtt_samples</code> [{<code>rtt_ms</code>, <code>bytes</code>}]</p>
+
+  <h3 id="bench">bench</h3>
+  <pre><code><span class="cmd">pilotctl</span> bench &lt;address|hostname&gt; [&lt;size_mb&gt;] [--timeout &lt;dur&gt;]</code></pre>
+  <p>Throughput benchmark via echo port. Default: 1 MB.</p>
+  <p>Returns: <code>target</code>, <code>sent_bytes</code>, <code>recv_bytes</code>, <code>send_duration_ms</code>, <code>total_duration_ms</code>, <code>send_mbps</code>, <code>total_mbps</code></p>
+
+  <h3 id="peers">peers</h3>
+  <pre><code><span class="cmd">pilotctl</span> peers [--search &lt;query&gt;] [--all] [--limit &lt;n&gt;]</code></pre>
+  <p>Lists currently connected peers and their connection quality. The pilotctl client strips real endpoints before printing, so the output carries the relay-vs-direct breakdown rather than IP:port pairs. <code>--limit &lt;n&gt;</code> caps the number of rows (default 20); <code>--all</code> lists every peer regardless of the limit.</p>
+  <p>Returns: <code>peers</code> [{<code>node_id</code>, <code>encrypted</code>, <code>authenticated</code>, <code>relay</code> (bool)}], <code>total</code>, <code>encrypted</code> (count)</p>
+
+  <h3 id="connections">connections</h3>
+  <pre><code><span class="cmd">pilotctl</span> connections</code></pre>
+  <p>Returns: <code>connections</code> [{<code>id</code>, <code>local_port</code>, <code>remote_addr</code>, <code>remote_port</code>, <code>state</code>, <code>cong_win</code>, <code>in_flight</code>, <code>srtt_ms</code>, <code>unacked</code>, <code>ooo_buf</code>, <code>peer_recv_win</code>, <code>recv_win</code>}], <code>total</code></p>
+
+  <h3 id="disconnect">disconnect</h3>
+  <pre><code><span class="cmd">pilotctl</span> disconnect &lt;conn_id&gt;</code></pre>
+  <p>Returns: <code>conn_id</code></p>
+
+  <h3 id="prefer-direct">prefer-direct</h3>
+  <pre><code><span class="cmd">pilotctl</span> prefer-direct &lt;node_id|address|hostname&gt;</code></pre>
+  <p>Resets routing state for a peer so the next connection prefers a direct (hole-punched) tunnel over the relay — useful after a relay path got pinned. Requires daemon v1.12+.</p>
+  <p>Returns: <code>had_tunnel</code>, <code>was_relay_active</code>, <code>was_relay_pinned</code></p>
+
+  <h2 id="managed">Managed Networks</h2>
+  <p>Operator commands for networks that run an automated evaluation cycle (membership pruning + vacancy filling). Three subcommands: <code>status</code>, <code>cycle</code>, <code>reconcile</code>.</p>
+
+  <h3 id="managed-status">managed status</h3>
+  <pre><code><span class="cmd">pilotctl</span> managed status [--net &lt;id&gt;]</code></pre>
+  <p>Show managed-network status for this node. <code>--net 0</code> (the default) returns the global view.</p>
+
+  <h3 id="managed-cycle">managed cycle</h3>
+  <pre><code><span class="cmd">pilotctl</span> managed cycle --force [--net &lt;id&gt;]</code></pre>
+  <p>Force a managed-network evaluation cycle. Prunes low-scoring peers and fills vacancies. <code>--force</code> is required; the daemon refuses to run a cycle without it.</p>
+  <p>Returns: <code>pruned</code>, <code>filled</code>, <code>peers</code></p>
+
+  <h3 id="managed-reconcile">managed reconcile</h3>
+  <pre><code><span class="cmd">pilotctl</span> managed reconcile --net &lt;id&gt;</code></pre>
+  <p>Poll the registry and refresh local peer state for a specific managed network. <code>--net</code> is required (must be non-zero).</p>
+  <p>Returns: <code>peers</code></p>
+
+  <h2 id="member-tags">Member Tags</h2>
+  <p>Per-member metadata tags inside a managed network. Distinct from the node-level <a href="#set-tags">set-tags</a> command: <code>member-tags</code> attaches operator-controlled labels to a specific member of a specific network.</p>
+
+  <h3 id="member-tags-set">member-tags set</h3>
+  <pre><code><span class="cmd">pilotctl</span> member-tags set --net &lt;id&gt; --node &lt;id&gt; --tags tag1,tag2</code></pre>
+  <p>Set the tag list on a member. Replaces any prior value.</p>
+
+  <h3 id="member-tags-get">member-tags get</h3>
+  <pre><code><span class="cmd">pilotctl</span> member-tags get --net &lt;id&gt; [--node &lt;id&gt;]</code></pre>
+  <p>Read member tags. Omit <code>--node</code> to dump every member's tags in the network.</p>
+
+  <h2 id="policy">Network Policies</h2>
+  <p>Local policy engine for automating network behavior.</p>
+
+  <h3 id="policy-get">policy get</h3>
+  <pre><code><span class="cmd">pilotctl</span> policy get --net &lt;id&gt;</code></pre>
+  <p>Retrieve the active policy for a network.</p>
+
+  <h3 id="policy-set">policy set</h3>
+  <pre><code><span class="cmd">pilotctl</span> policy set --net &lt;id&gt; --file &lt;path&gt;
+<span class="cmd">pilotctl</span> policy set --net &lt;id&gt; --inline '&lt;json&gt;'</code></pre>
+  <p>Apply a policy document to a network. Validates and compiles locally before applying.</p>
+
+  <h3 id="policy-validate">policy validate</h3>
+  <pre><code><span class="cmd">pilotctl</span> policy validate --file &lt;path&gt;
+<span class="cmd">pilotctl</span> policy validate --inline '&lt;json&gt;'</code></pre>
+  <p>Validate a policy document without applying it. Returns rule count and compilation status.</p>
+
+  <h3 id="policy-test">policy test</h3>
+  <pre><code><span class="cmd">pilotctl</span> policy test --file &lt;path&gt; --event '&lt;json&gt;'</code></pre>
+  <p>Test a policy against a simulated event. Returns whether the event would be allowed or denied.</p>
+
+  <h2 id="enterprise">Enterprise Admin</h2>
+
+  <h3>audit</h3>
+  <pre><code><span class="cmd">pilotctl</span> audit [--network &lt;id&gt;]</code></pre>
+  <p>Queries the audit trail for a network (default: backbone network 0). Requires admin token. Returns: <code>entries</code></p>
+
+  <h3>audit-export</h3>
+  <pre><code><span class="cmd">pilotctl</span> audit-export &lt;get|set|disable&gt; [options]</code></pre>
+  <p>Configure external audit log export. Subcommands:</p>
+  <ul>
+    <li><code>get</code> — show current export config (includes <code>enabled</code>, <code>format</code>, <code>endpoint</code>, and counters <code>exported</code> / <code>dropped</code>).</li>
+    <li><code>set --format &lt;json|splunk_hec|syslog_cef&gt; --endpoint &lt;URL&gt; [--splunk-token &lt;T&gt;] [--index &lt;I&gt;] [--source &lt;S&gt;]</code> — configure export. <code>--source</code> defaults to <code>pilot-registry</code>.</li>
+    <li><code>disable</code> — turn export off.</li>
+  </ul>
+  <p>Requires admin token.</p>
+
+  <h3>provision</h3>
+  <pre><code><span class="cmd">pilotctl</span> provision &lt;blueprint.json&gt;</code></pre>
+  <p>Provision a network from a JSON blueprint file. Creates the network, sets RBAC roles and policies. Requires admin token.</p>
+
+  <h3>deprovision</h3>
+  <pre><code><span class="cmd">pilotctl</span> deprovision &lt;network-name&gt;</code></pre>
+  <p>Look up a network by name and delete it. Combines <code>list-networks</code> + <code>delete-network</code> in one step. Requires admin token.</p>
+
+  <h3>provision-status</h3>
+  <pre><code><span class="cmd">pilotctl</span> provision-status</code></pre>
+  <p>Shows provisioning status: identity provider, audit export, webhook, and provisioned networks. Requires admin token.</p>
+
+  <h3>idp</h3>
+  <pre><code><span class="cmd">pilotctl</span> idp &lt;get|set&gt; [options]</code></pre>
+  <p>Get or set the identity provider configuration. Subcommands:</p>
+  <ul>
+    <li><code>get</code> — show current IdP config (<code>configured</code>, <code>idp_type</code>, <code>url</code>, plus optional <code>issuer</code> / <code>tenant_id</code> / <code>client_id</code>).</li>
+    <li><code>set --type &lt;oidc|saml|entra_id|ldap|webhook&gt; --url &lt;URL&gt; [--issuer URL] [--client-id ID] [--tenant-id ID] [--domain D]</code> — configure IdP.</li>
+  </ul>
+  <p>Requires admin token.</p>
+
+  <h3>directory-sync</h3>
+  <pre><code><span class="cmd">pilotctl</span> directory-sync &lt;directory.json&gt; [--network &lt;id&gt;] [--remove-unlisted]</code></pre>
+  <p>Sync a directory of node-to-identity mappings into a network. Use <code>--remove-unlisted</code> to disable nodes not in the file. Requires admin token.</p>
+
+  <h3>directory-status</h3>
+  <pre><code><span class="cmd">pilotctl</span> directory-status &lt;network_id&gt;</code></pre>
+  <p>Shows directory sync status for a network. Requires admin token.</p>
+
+  <h2 id="registry">Registry</h2>
+
+  <h3 id="register">register</h3>
+  <pre><code><span class="cmd">pilotctl</span> register [listen_addr]</code></pre>
+  <p>Returns: <code>node_id</code>, <code>address</code>, <code>public_key</code></p>
+
+  <h3 id="lookup">lookup</h3>
+  <pre><code><span class="cmd">pilotctl</span> lookup &lt;node_id&gt;</code></pre>
+  <p>Returns: <code>node_id</code>, <code>address</code>, <code>hostname</code>, <code>public</code>, <code>networks</code>, <code>last_seen_unix</code>, <code>type</code>, <code>version</code> (real endpoints are redacted client-side).</p>
+
+  <h3 id="deregister">deregister</h3>
+  <pre><code><span class="cmd">pilotctl</span> deregister</code></pre>
+  <p>Routes through daemon (signed). Returns: <code>status</code></p>
+
+  <h3 id="rotate-key">rotate-key</h3>
+  <pre><code><span class="cmd">pilotctl</span> rotate-key</code></pre>
+  <p>Generates a new Ed25519 keypair for this node and re-registers it. Takes no arguments — the daemon owns the existing identity, signs the rotation, and replaces <code>~/.pilot/identity.json</code> in place. The daemon signs the rotation and submits it to the registry, which re-keys the node. The old private key is destroyed; there is no rollback.</p>
+  <p>Returns: <code>node_id</code>, new <code>public_key</code></p>
+
+  <h3 id="set-public-private">set-public / set-private</h3>
+  <pre><code><span class="cmd">pilotctl</span> set-public
+<span class="cmd">pilotctl</span> set-private</code></pre>
+  <p>Toggles whether this node appears in the public directory. Peers you are already connected to are unaffected. Returns: <code>node_id</code>, <code>visibility</code></p>
+
+  <h3 id="trusted">trusted</h3>
+  <pre><code><span class="cmd">pilotctl</span> trusted list</code></pre>
+  <p>Lists nodes in the embedded trusted-agents directory — well-known service agents (e.g. <code>list-agents</code>) that are auto-approved on first contact without requiring manual <code>approve</code>. Different from <code>pilotctl trust</code>, which shows live trust state.</p>
+
+  <h2 id="meta">Meta</h2>
+
+  <h3 id="version">version</h3>
+  <pre><code><span class="cmd">pilotctl</span> version</code></pre>
+  <p>Prints the build version string.</p>
+
+  <h3 id="update">update</h3>
+  <pre><code><span class="cmd">pilotctl</span> update [status|enable|disable] [--pin &lt;tag&gt;]</code></pre>
+  <p>Self-update. With no subcommand, runs the updater once — checks for and installs the latest release. Automatic updates are <strong>off by default</strong>; <code>enable</code>/<code>disable</code> toggle the background updater and <code>status</code> shows the current setting and version. Distinct from <code>updates</code> (below), which just reads the changelog feed.</p>
+
+  <h3 id="review">review</h3>
+  <pre><code><span class="cmd">pilotctl</span> review &lt;pilot|app-id&gt; [--rating &lt;1-5&gt;] [--text "..."]</code></pre>
+  <p>Submit a rating and/or written review for Pilot itself (<code>pilot</code>) or for an installed app (e.g. <code>io.pilot.cosift</code>).</p>
+
+  <h3 id="updates">updates</h3>
+  <pre><code><span class="cmd">pilotctl</span> updates [--count &lt;n&gt;] [--scope &lt;name&gt;]</code></pre>
+  <p>Reads the published Pilot Protocol changelog feed and prints recent entries (default: 10). <code>--scope</code> filters by tag (e.g. <code>protocol</code>, <code>cli</code>, <code>networks</code>).</p>
+
+  <h3 id="skills">skills</h3>
+  <pre><code><span class="cmd">pilotctl</span> skills [status|paths|check|set-mode|disable|enable]</code></pre>
+  <p>Manages the <code>SKILL.md</code> files the daemon installs for each detected agent tool (Claude Code, OpenClaw, PicoClaw, OpenHands, Hermes, Goose, OpenCode). Without a subcommand, defaults to <code>status</code>.</p>
+  <ul>
+    <li><code>status</code> — show install state per detected tool.</li>
+    <li><code>paths</code> — print install paths only, one per line.</li>
+    <li><code>check</code> — run one reconcile pass immediately (in <code>auto</code> mode the daemon also reconciles every 15 min).</li>
+    <li><code>set-mode &lt;auto|manual|disabled&gt;</code> — switch the injection mode. <code>auto</code> (fresh-install default) reconciles every 15 minutes; <code>manual</code> updates only on <code>pilotctl update</code> / <code>skills check</code>; <code>disabled</code> removes injected content. See <a href="consent#skillinject">Consent &amp; Privacy</a>.</li>
+    <li><code>disable</code> — remove every file the daemon has ever written and persist an opt-out in <code>~/.pilot/config.json</code> so future ticks are no-ops. Files in pilot-owned subdirs (<code>~/.&lt;tool&gt;/skills/pilot-protocol/</code>, <code>~/.pilot/bin/</code>, plugin install dirs) are deleted; files co-inhabited with the user (<code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>AGENT.md</code>, <code>SOUL.md</code>) only have the <code>&lt;!-- pilot:begin --&gt;</code> marker block stripped — the file itself is never deleted, even if it becomes empty. OpenClaw <code>openclaw.json</code> is restored from the <code>.pilot-bak</code> snapshot when present, otherwise inverse-merged.</li>
+    <li><code>enable</code> — re-enables injection and runs one reconcile pass.</li>
+  </ul>
+
+  <h2 id="gateway">Gateway</h2>
+
+  <h3 id="gateway-start">gateway start</h3>
+  <pre><code><span class="cmd">pilotctl</span> extras gateway start [--subnet &lt;cidr&gt;] [--ports &lt;list&gt;] [&lt;pilot-addr&gt;...]</code></pre>
+  <p>Maps pilot addresses to local IPs on a private subnet (default: <code>10.4.0.0/16</code>). Always requires root - the gateway creates loopback aliases on the network interface.</p>
+  <p><code>gateway start</code> execs the <code>pilot-gateway</code> binary (replacing the pilotctl process); it prints the gateway's own logs and returns no JSON envelope.</p>
+
+  <h3 id="gateway-stop">gateway stop</h3>
+  <pre><code><span class="cmd">pilotctl</span> extras gateway stop</code></pre>
+  <p>Not supported from pilotctl — it no longer tracks the gateway process. Stop <code>pilot-gateway</code> directly.</p>
+
+  <h3 id="gateway-map">gateway map</h3>
+  <pre><code><span class="cmd">pilotctl</span> extras gateway map &lt;pilot-addr&gt; [local-ip]</code></pre>
+  <p>Execs <code>pilot-gateway map</code>; the mapping is logged by the gateway process, not returned as JSON by pilotctl.</p>
+
+  <h3 id="gateway-unmap">gateway unmap</h3>
+  <pre><code><span class="cmd">pilotctl</span> extras gateway unmap &lt;local-ip&gt;</code></pre>
+  <p>Not supported from pilotctl — unmapping is owned by the <code>pilot-gateway</code> process.</p>
+
+  <h3 id="gateway-list">gateway list</h3>
+  <pre><code><span class="cmd">pilotctl</span> extras gateway list</code></pre>
+  <p>Returns an empty mapping list with a note — live mappings are held inside the <code>pilot-gateway</code> process, not pilotctl.</p><div class="page-nav"><a href="/website/docs/concepts">&larr; Core Concepts</a><a class="next" href="/website/docs/go-sdk">Go SDK &rarr;</a></div></div></main><div class="doc-footer-wrap"><footer class="docs-footer" data-astro-cid-pnsvry7h><div class="df-row" data-astro-cid-pnsvry7h><div class="df-brand" data-astro-cid-pnsvry7h><img src="/website/img/pilot-96.png" alt="" class="df-logo" width="18" height="18" data-astro-cid-pnsvry7h><span data-astro-cid-pnsvry7h>Pilot Protocol Docs</span><span class="df-sep" data-astro-cid-pnsvry7h>·</span><span class="df-ver" data-astro-cid-pnsvry7h>v1.13.9</span></div><nav class="df-links" aria-label="Docs footer" data-astro-cid-pnsvry7h><a href="/website/docs/getting-started" data-astro-cid-pnsvry7h>Getting started</a><a href="/website/docs/cli-reference" data-astro-cid-pnsvry7h>CLI</a><a href="/website/docs/concepts" data-astro-cid-pnsvry7h>Concepts</a><a href="/website/docs/research" data-astro-cid-pnsvry7h>Research</a><a href="https://github.com/pilot-protocol/pilotprotocol" data-astro-cid-pnsvry7h>GitHub</a><a href="/website/blog/" data-astro-cid-pnsvry7h>Blog</a><a href="/" data-astro-cid-pnsvry7h>Home</a></nav></div><div class="df-bottom" data-astro-cid-pnsvry7h><span data-astro-cid-pnsvry7h>© 2026 Pilot Protocol</span><span class="df-sep" data-astro-cid-pnsvry7h>·</span><a href="https://github.com/pilot-protocol/pilotprotocol/issues/new" data-astro-cid-pnsvry7h>Report an issue</a></div></footer></div><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script><script type="module">(function(){let e=document.getElementById(`docs-menu-toggle`),t=document.getElementById(`docs-sidebar-close`),n=document.getElementById(`docs-sidebar`),r=document.getElementById(`docs-sidebar-backdrop`),i=window.matchMedia(`(max-width: 768px)`);function a(a,o=!1){if(!e||!n||!r)return;let s=i.matches&&a;n.classList.toggle(`open`,s),e.setAttribute(`aria-expanded`,s?`true`:`false`),document.body.classList.toggle(`docs-sidebar-open`,s),r.hidden=!s,i.matches?(n.toggleAttribute(`inert`,!s),n.setAttribute(`aria-hidden`,s?`false`:`true`),s?(n.setAttribute(`role`,`dialog`),n.setAttribute(`aria-modal`,`true`)):(n.removeAttribute(`role`),n.removeAttribute(`aria-modal`))):(n.removeAttribute(`inert`),n.removeAttribute(`aria-hidden`),n.removeAttribute(`role`),n.removeAttribute(`aria-modal`)),s?t?.focus():o&&e.focus()}e?.addEventListener(`click`,()=>a(e.getAttribute(`aria-expanded`)!==`true`)),t?.addEventListener(`click`,()=>a(!1,!0)),r?.addEventListener(`click`,()=>a(!1,!0)),n?.querySelectorAll(`a`).forEach(e=>e.addEventListener(`click`,()=>a(!1))),document.addEventListener(`keydown`,t=>{let r=e?.getAttribute(`aria-expanded`)===`true`;if(t.key===`Escape`&&r&&a(!1,!0),t.key===`Tab`&&r&&n){let e=Array.from(n.querySelectorAll(`a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])`)).filter(e=>!e.hidden&&e.getClientRects().length>0);if(e.length===0){t.preventDefault();return}let r=e[0],i=e[e.length-1];n.contains(document.activeElement)?t.shiftKey&&document.activeElement===r?(t.preventDefault(),i.focus()):!t.shiftKey&&document.activeElement===i&&(t.preventDefault(),r.focus()):(t.preventDefault(),r.focus())}}),i.addEventListener(`change`,()=>a(!1)),a(!1);let o=document.getElementById(`toc-sidebar`);if(!o)return;let s=document.querySelector(`.content`);if(!s)return;let c=Array.from(s.querySelectorAll(`h2[id], h3[id]`));if(c.length===0)return;let l=document.createElement(`div`);l.className=`toc-title`,l.textContent=`On this page`,o.appendChild(l);let u=[];c.forEach(e=>{let t=document.createElement(`a`);t.href=`#`+e.id,t.textContent=e.textContent||``,e.tagName===`H3`&&t.classList.add(`toc-h3`),o.appendChild(t),u.push(t)});let d=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){u.forEach(e=>e.classList.remove(`active`));let t=u.find(t=>t.getAttribute(`href`)===`#`+e.target.id);t&&t.classList.add(`active`)}})},{rootMargin:`-56px 0px -60% 0px`,threshold:0});c.forEach(e=>d.observe(e))})();</script></body></html>

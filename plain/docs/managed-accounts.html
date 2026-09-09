@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Managed Accounts and Organizations — Pilot Protocol (plain)</title><meta name="description" content="Current signup availability, account lifecycle, roles, organization isolation, launch entitlements, and multi-organization behavior in Pilot hosted management."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/docs/">&larr; Docs index</a></p><h1>Accounts and organizations</h1>
+  <p class="subtitle">How people, service accounts, organizations, tenants, sessions, and adopted agents are separated.</p>
+
+  <div class="callout"><strong>Can a new user create an account today?</strong> No, not through a public self-service flow. As verified on 8 August 2026, <code>/v1/auth/signup</code> returns <code>404 {"error":"signup_unavailable"}</code>. The live login page is available, but accounts must already exist or be created through an invitation or operator-assisted provisioning path.</div>
+
+  <div class="toc"><h4>On this page</h4><ul>
+    <li><a href="#today">Access today</a></li>
+    <li><a href="#intended-flow">Intended public signup flow</a></li>
+    <li><a href="#isolation">Organization and tenant isolation</a></li>
+    <li><a href="#multi-org">Multiple organizations</a></li>
+    <li><a href="#identity">Identity and roles</a></li>
+    <li><a href="#plans">Launch entitlements and metering</a></li>
+    <li><a href="#lifecycle">Lifecycle boundaries</a></li>
+  </ul></div>
+
+  <h2 id="today">Access today</h2>
+  <p>The deployed management service serves a preconfigured demonstration organization and supports an ordinary login flow. It is not an open registration service. A person needs a valid existing account or an unexpired, single-use invitation issued by an organization administrator. This is intentional: the development-only open signup route is forbidden in production configuration.</p>
+  <p>After account creation, the first-party identity path supports local password login, password reset, logout, session inventory and revocation, TOTP multifactor authentication, recovery codes, member suspension, and optional OIDC federation. OIDC is an integration, not a prerequisite.</p>
+
+  <h2 id="intended-flow">Intended public signup flow</h2>
+  <p>The public SaaS code implements the following workflow, but that provisioner is not deployed on the live service:</p>
+  <ol>
+    <li>Enter a work email, organization name, workspace slug, and region.</li>
+    <li>Verify the email through a short-lived signed claim.</li>
+    <li>Reserve a unique organization ID, tenant ID, and account subdomain.</li>
+    <li>Provision tenant signing keys, policy, storage bindings, quotas, and either pooled or dedicated placement.</li>
+    <li>Create a single-use owner invitation on the tenant-scoped identity service.</li>
+    <li>Create the owner password directly on the account host, then continue to agent adoption.</li>
+  </ol>
+  <p>No password should pass through the global signup service. It verifies and provisions the workspace, then hands the browser to the isolated account origin.</p>
+
+  <h2 id="isolation">Organization and tenant isolation</h2>
+  <p>Each authority binds one organization to one cryptographic tenant. Browser sessions obtain tenant scope from the authenticated account context; a <code>tenant_id</code> query parameter cannot switch the user into another organization. Object stores and repository keys repeat tenant ownership checks, while signed node artifacts carry the same tenant identity.</p>
+  <p>Enrollment tokens, node credentials, trust bundles, policies, decisions, receipts, fleet reports, exchanges, audit records, and usage units are tenant-bound. A token issued by Organization A cannot produce an Organization B identity. Separate authority cells are the recommended hard boundary for unrelated customers; pooled placement additionally requires database- and credential-level isolation before general release.</p>
+
+  <h2 id="multi-org">Multiple organizations</h2>
+  <p>The product model supports many organizations, each with its own slug, tenant, authority, members, policies, nodes, and evidence. The current live deployment does not yet expose that public multi-organization provisioning layer.</p>
+  <ul>
+    <li>One adopted agent identity belongs to exactly one tenant.</li>
+    <li>The default managed attachment path supports one adopted identity per operating-system user home.</li>
+    <li>Separate users, containers, or isolated homes can hold separate identities on the same physical host.</li>
+    <li>The installer refuses to consume a second enrollment token while a managed attachment already exists.</li>
+    <li>Moving an agent between organizations requires retiring or revoking the old identity and performing a fresh adoption. A polished self-service transfer workflow is not available today.</li>
+    <li>A human who belongs to multiple organizations will require an explicit organization choice or separate host-bound sessions; URL parameter substitution is never a switch mechanism.</li>
+  </ul>
+
+  <h2 id="identity">Identity and roles</h2>
+  <p>Permissions separate account administration, policy writing, independent policy approval, consent voting, trust and mandate administration, fleet commands, integration management, evidence access, and audit administration. Browser mutations require a session-bound CSRF token and same-origin validation.</p>
+  <table><thead><tr><th>Identity</th><th>Use</th><th>Lifecycle</th></tr></thead><tbody>
+    <tr><td>Organization owner/admin</td><td>Members, roles, security configuration, and delegated administration.</td><td>Protected against removing the final administrator.</td></tr>
+    <tr><td>Member</td><td>Role-scoped console and API access.</td><td>Invite, activate, suspend, reactivate, remove.</td></tr>
+    <tr><td>Service account</td><td>Non-browser automation with explicit permissions.</td><td>Create, rotate API keys, disable, revoke.</td></tr>
+    <tr><td>Node identity</td><td>Signs agent intents, reports, acknowledgements, results, and receipts.</td><td>Adopt, rotate, quarantine, retire, revoke, re-adopt.</td></tr>
+  </tbody></table>
+
+  <h2 id="plans">Launch entitlements and metering</h2>
+  <p>Plans are disabled for the initial public launch. Every organization receives the same launch entitlement; users do not select a tier, enter payment details, see upgrade prompts, or pass through Stripe. Billing and plan-management routes must remain hidden or return a clear disabled state.</p>
+  <p>Planless does not mean unbounded. Every tenant still needs hard node, request, semantic-token, storage, retention, and event limits plus rate limiting and abuse controls. Semantic/model usage is attributed by tenant, agent, evaluator, model call, and token counts through an idempotent usage ledger for cost visibility and future product decisions, but it is not invoiced.</p>
+  <p>The data model may retain internal entitlement fields so plans can be introduced later without a tenant migration. Those fields are operational defaults, not a customer-visible commercial contract while plan mode is disabled. A metering or quota failure must never expand action authority.</p>
+
+  <h2 id="lifecycle">Lifecycle boundaries</h2>
+  <p>Invitations, sessions, API keys, members, and nodes have explicit terminal states rather than destructive deletion where evidence must remain verifiable. Organization rename, export, deletion, suspension, owner transfer, legal holds, final-admin protection, node revocation, subdomain cleanup, and usage-ledger closure must behave atomically before public SaaS launch. Those complete organization-lifecycle tests remain a release gate.</p>
+
+  <div class="notice"><strong>Practical answer.</strong> Existing invited users can log in and use the deployed demonstration organization. A new unrelated company cannot yet self-register, receive its own subdomain, and adopt an agent without operator assistance.</div><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

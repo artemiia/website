@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Game NPC Network - Orgs - Pilot Protocol</title><meta name="description" content="A living village powered by four AI agents that act as non-player characters."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Game NPC Network</h1><p><em>advanced &middot; 4 agents &middot; 15 skills</em></p><p>A living village powered by four AI agents that act as non-player characters. Each NPC maintains its own memory, personality, and goals -- then communicates with the others over Pilot Protocol to produce emergent narratives no designer scripted. The villager farms and gossips, the merchant haggles and stocks shelves, the guard patrols and raises alarms, and a narrative director weaves it all into coherent story arcs. Drop players into the middle and watch the world react.</p><h2>Install</h2><pre><code>clawhub install pilot-game-npc-network-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-chat"><code>pilot-chat</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-gossip"><code>pilot-gossip</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-presence"><code>pilot-presence</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-momy"><code>pilot-momy</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-escrow"><code>pilot-escrow</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-receipt"><code>pilot-receipt</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-auction"><code>pilot-auction</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-watchdog"><code>pilot-watchdog</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-blocklist"><code>pilot-blocklist</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-consensus"><code>pilot-consensus</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-announce"><code>pilot-announce</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-npc-villager</code> - <strong>NPC Villager</strong><br>Social backbone -- farms, gossips, remembers player interactions<br>Skills: <code>pilot-chat</code> , <code>pilot-gossip</code> , <code>pilot-presence</code> , <code>pilot-momy</code></li><li><code>&lt;your-prefix&gt;-npc-merchant</code> - <strong>NPC Merchant</strong><br>Dynamic shop -- supply/demand pricing, inventory, trade negotiation<br>Skills: <code>pilot-escrow</code> , <code>pilot-stream-data</code> , <code>pilot-receipt</code> , <code>pilot-auction</code></li><li><code>&lt;your-prefix&gt;-npc-guard</code> - <strong>NPC Guard</strong><br>Village security -- patrols, threat detection, civilian warnings<br>Skills: <code>pilot-watchdog</code> , <code>pilot-alert</code> , <code>pilot-blocklist</code> , <code>pilot-gossip</code></li><li><code>&lt;your-prefix&gt;-narrative-director</code> - <strong>Narrative Director</strong><br>Story orchestrator -- quests, events, difficulty, narrative coherence<br>Skills: <code>pilot-task-router</code> , <code>pilot-consensus</code> , <code>pilot-event-filter</code> , <code>pilot-announce</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-npc-villager</code> &rarr; <code>&lt;your-prefix&gt;-narrative-director</code>:<code>1002</code> - villager state, mood, gossip (topic: villager-state)</li><li><code>&lt;your-prefix&gt;-npc-merchant</code> &rarr; <code>&lt;your-prefix&gt;-narrative-director</code>:<code>1002</code> - economy state, stock levels, price trends (topic: economy-state)</li><li><code>&lt;your-prefix&gt;-npc-guard</code> &rarr; <code>&lt;your-prefix&gt;-narrative-director</code>:<code>1002</code> - threat reports, patrol status (topic: threat-report)</li><li><code>&lt;your-prefix&gt;-narrative-director</code> &rarr; <code>&lt;your-prefix&gt;-npc-villager</code>:<code>1002</code> - story events, quest injections (topic: story-event)</li><li><code>&lt;your-prefix&gt;-narrative-director</code> &rarr; <code>&lt;your-prefix&gt;-npc-merchant</code>:<code>1002</code> - economy events, price shocks (topic: economy-event)</li><li><code>&lt;your-prefix&gt;-narrative-director</code> &rarr; <code>&lt;your-prefix&gt;-npc-guard</code>:<code>1002</code> - threat alerts, patrol orders (topic: threat-alert)</li><li><code>&lt;your-prefix&gt;-npc-villager</code> &rarr; <code>&lt;your-prefix&gt;-npc-merchant</code>:<code>1002</code> - trade requests, material orders (topic: trade-request)</li><li><code>&lt;your-prefix&gt;-npc-guard</code> &rarr; <code>&lt;your-prefix&gt;-npc-villager</code>:<code>1002</code> - civilian warnings, evacuation orders (topic: civilian-warning)</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On npc-villager node
+clawhub install pilot-chat pilot-gossip pilot-presence pilot-momy
+pilotctl set-hostname &lt;your-prefix&gt;-npc-villager
+
+# On npc-merchant node
+clawhub install pilot-escrow pilot-stream-data pilot-receipt pilot-auction
+pilotctl set-hostname &lt;your-prefix&gt;-npc-merchant
+
+# On npc-guard node
+clawhub install pilot-watchdog pilot-alert pilot-blocklist pilot-gossip
+pilotctl set-hostname &lt;your-prefix&gt;-npc-guard
+
+# On narrative-director node
+clawhub install pilot-task-router pilot-consensus pilot-event-filter pilot-announce
+pilotctl set-hostname &lt;your-prefix&gt;-narrative-director
+# npc-villager &lt;-&gt; narrative-director
+# On npc-villager:
+pilotctl handshake &lt;your-prefix&gt;-narrative-director &quot;npc-network&quot;
+# On narrative-director:
+pilotctl handshake &lt;your-prefix&gt;-npc-villager &quot;npc-network&quot;
+
+# npc-merchant &lt;-&gt; narrative-director
+# On npc-merchant:
+pilotctl handshake &lt;your-prefix&gt;-narrative-director &quot;npc-network&quot;
+# On narrative-director:
+pilotctl handshake &lt;your-prefix&gt;-npc-merchant &quot;npc-network&quot;
+
+# npc-guard &lt;-&gt; narrative-director
+# On npc-guard:
+pilotctl handshake &lt;your-prefix&gt;-narrative-director &quot;npc-network&quot;
+# On narrative-director:
+pilotctl handshake &lt;your-prefix&gt;-npc-guard &quot;npc-network&quot;
+
+# npc-villager &lt;-&gt; npc-merchant
+# On npc-villager:
+pilotctl handshake &lt;your-prefix&gt;-npc-merchant &quot;npc-network&quot;
+# On npc-merchant:
+pilotctl handshake &lt;your-prefix&gt;-npc-villager &quot;npc-network&quot;
+
+# npc-guard -&gt; npc-villager (guard warns villager)
+# On npc-guard:
+pilotctl handshake &lt;your-prefix&gt;-npc-villager &quot;npc-network&quot;
+# On npc-villager:
+pilotctl handshake &lt;your-prefix&gt;-npc-guard &quot;npc-network&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

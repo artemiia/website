@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Energy Grid Optimizer - Orgs - Pilot Protocol</title><meta name="description" content="A multi-agent energy management system that coordinates real-time sensor aggregation, demand forecas"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Energy Grid Optimizer</h1><p><em>advanced &middot; 4 agents &middot; 12 skills</em></p><p>A multi-agent energy management system that coordinates real-time sensor aggregation, demand forecasting, grid optimization, and device control across four specialized agents. The sensor mesh collects readings from smart meters, solar panels, batteries, and grid sensors. The forecaster predicts energy demand using weather, time-of-day, and historical patterns. The optimizer balances load across sources and schedules battery charge/discharge cycles. The controller sends commands to inverters, batteries, HVAC systems, and EV chargers, then confirms execution.</p><h2>Install</h2><pre><code>clawhub install pilot-energy-grid-optimizer-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-gossip"><code>pilot-gossip</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-dataset"><code>pilot-dataset</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-consensus"><code>pilot-consensus</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-receipt"><code>pilot-receipt</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-sensor-mesh</code> - <strong>Sensor Mesh</strong><br>Aggregates real-time grid sensor readings<br>Skills: <code>pilot-stream-data</code> , <code>pilot-metrics</code> , <code>pilot-gossip</code></li><li><code>&lt;your-prefix&gt;-forecaster</code> - <strong>Load Forecaster</strong><br>Predicts energy demand from weather and history<br>Skills: <code>pilot-dataset</code> , <code>pilot-task-router</code> , <code>pilot-cron</code></li><li><code>&lt;your-prefix&gt;-optimizer</code> - <strong>Grid Optimizer</strong><br>Balances load, schedules battery cycles<br>Skills: <code>pilot-consensus</code> , <code>pilot-event-filter</code> , <code>pilot-audit-log</code></li><li><code>&lt;your-prefix&gt;-controller</code> - <strong>Device Controller</strong><br>Sends device commands, confirms execution<br>Skills: <code>pilot-webhook-bridge</code> , <code>pilot-receipt</code> , <code>pilot-alert</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-sensor-mesh</code> &rarr; <code>&lt;your-prefix&gt;-forecaster</code>:<code>1002</code> - grid readings with voltage, current, and power metrics</li><li><code>&lt;your-prefix&gt;-forecaster</code> &rarr; <code>&lt;your-prefix&gt;-optimizer</code>:<code>1002</code> - demand forecasts with confidence intervals</li><li><code>&lt;your-prefix&gt;-optimizer</code> &rarr; <code>&lt;your-prefix&gt;-controller</code>:<code>1002</code> - dispatch commands for device setpoints</li><li><code>&lt;your-prefix&gt;-controller</code> &rarr; <code>&lt;your-prefix&gt;-sensor-mesh</code>:<code>1002</code> - device acknowledgments with execution status</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On sensor aggregation server
+clawhub install pilot-stream-data pilot-metrics pilot-gossip
+pilotctl set-hostname &lt;your-prefix&gt;-sensor-mesh
+
+# On forecasting server
+clawhub install pilot-dataset pilot-task-router pilot-cron
+pilotctl set-hostname &lt;your-prefix&gt;-forecaster
+
+# On optimization server
+clawhub install pilot-consensus pilot-event-filter pilot-audit-log
+pilotctl set-hostname &lt;your-prefix&gt;-optimizer
+
+# On device control server
+clawhub install pilot-webhook-bridge pilot-receipt pilot-alert
+pilotctl set-hostname &lt;your-prefix&gt;-controller
+# sensor-mesh &lt;-&gt; forecaster (grid readings)
+# On sensor-mesh:
+pilotctl handshake &lt;your-prefix&gt;-forecaster &quot;setup: energy-grid-optimizer&quot;
+# On forecaster:
+pilotctl handshake &lt;your-prefix&gt;-sensor-mesh &quot;setup: energy-grid-optimizer&quot;
+
+# forecaster &lt;-&gt; optimizer (demand forecasts)
+# On forecaster:
+pilotctl handshake &lt;your-prefix&gt;-optimizer &quot;setup: energy-grid-optimizer&quot;
+# On optimizer:
+pilotctl handshake &lt;your-prefix&gt;-forecaster &quot;setup: energy-grid-optimizer&quot;
+
+# optimizer &lt;-&gt; controller (dispatch commands)
+# On optimizer:
+pilotctl handshake &lt;your-prefix&gt;-controller &quot;setup: energy-grid-optimizer&quot;
+# On controller:
+pilotctl handshake &lt;your-prefix&gt;-optimizer &quot;setup: energy-grid-optimizer&quot;
+
+# controller &lt;-&gt; sensor-mesh (device acknowledgments)
+# On controller:
+pilotctl handshake &lt;your-prefix&gt;-sensor-mesh &quot;setup: energy-grid-optimizer&quot;
+# On sensor-mesh:
+pilotctl handshake &lt;your-prefix&gt;-controller &quot;setup: energy-grid-optimizer&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>
