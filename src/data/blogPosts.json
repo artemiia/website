@@ -1477,5 +1477,15 @@
   "tags": ["shell-online", "terminal-sharing", "vscode", "pair-debugging", "ci"],
   "banner": "banners/vs-code-1-137-runs-agent-sessions-in-their-own-process-terminal-sharing-without.svg",
   "iso_date": "2026-09-10"
+ },
+ {
+  "slug": "a-read-only-terminal-link-for-a-training-run-you-check-from-your-phone",
+  "title": "A Read-Only Terminal Link for a Training Run You Check From Your Phone",
+  "description": "Share a training run with a read-only terminal link: one command, a phone-sized grid, relay-enforced no-input, E2EE, and what happens when the network drops.",
+  "date": "Sep 11",
+  "category": "Guide",
+  "tags": ["shell-online", "read-only-terminal", "training-runs", "remote-monitoring", "mobile-terminal"],
+  "banner": "banners/a-read-only-terminal-link-for-a-training-run-you-check-from-your-phone.svg",
+  "iso_date": "2026-09-11"
  }
 ]
