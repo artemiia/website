@@ -1487,5 +1487,15 @@
   "tags": ["shell-online", "read-only-terminal", "training-runs", "remote-monitoring", "mobile-terminal"],
   "banner": "banners/a-read-only-terminal-link-for-a-training-run-you-check-from-your-phone.svg",
   "iso_date": "2026-09-11"
+ },
+ {
+  "slug": "self-hosted-terminal-sharing-on-one-docker-box-the-shell-online-relay-without-a",
+  "title": "Self-Hosted Terminal Sharing on One Docker Box: the shell.online Relay Without a Cloudflare Account",
+  "description": "shell.online v0.12.2 adds self-hosted terminal sharing: a standalone relay on any Docker host, Caddy TLS, no Cloudflare account, same E2EE.",
+  "date": "Sep 12",
+  "category": "Operations",
+  "tags": ["shell-online", "self-hosting", "docker", "terminal-sharing", "end-to-end-encryption"],
+  "banner": "banners/self-hosted-terminal-sharing-on-one-docker-box-the-shell-online-relay-without-a.svg",
+  "iso_date": "2026-09-12"
  }
 ]
