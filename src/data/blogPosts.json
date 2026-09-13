@@ -1605,5 +1605,15 @@
   "tags": ["shell-online", "self-hosting", "docker", "terminal-sharing", "end-to-end-encryption"],
   "banner": "banners/self-hosted-terminal-sharing-on-one-docker-box-the-shell-online-relay-without-a.svg",
   "iso_date": "2026-09-12"
+ },
+ {
+  "slug": "share-a-terminal-session-in-the-browser-without-handing-over-the-filesystem-shel",
+  "title": "Share a Terminal Session in the Browser Without Handing Over the Filesystem: shell.online v0.14 File Access",
+  "description": "shell.online v0.14 adds opt-in, rooted file access, so you can share a terminal session in the browser and open only the files you chose.",
+  "date": "Sep 13",
+  "category": "Security",
+  "tags": ["shell-online", "terminal-sharing", "coding-agents", "sandbox", "end-to-end-encryption"],
+  "banner": "banners/share-a-terminal-session-in-the-browser-without-handing-over-the-filesystem-shel.svg",
+  "iso_date": "2026-09-13"
  }
 ]
