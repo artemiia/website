@@ -1615,5 +1615,15 @@
   "tags": ["shell-online", "terminal-sharing", "coding-agents", "sandbox", "end-to-end-encryption"],
   "banner": "banners/share-a-terminal-session-in-the-browser-without-handing-over-the-filesystem-shel.svg",
   "iso_date": "2026-09-13"
+ },
+ {
+  "slug": "connect-an-ai-agent-to-a-live-terminal-without-giving-it-the-machine-shell-onlin",
+  "title": "Connect an AI Agent to a Live Terminal Without Giving It the Machine: shell.online v0.15 Agent Handoffs",
+  "description": "How to connect an AI agent to a live terminal with shell.online v0.15: a revocable invitation, explicit completion evidence, and a process that stays yours.",
+  "date": "Sep 14",
+  "category": "Engineering",
+  "tags": ["shell-online", "ai-agents", "terminal", "refstream", "openai"],
+  "banner": "banners/connect-an-ai-agent-to-a-live-terminal-without-giving-it-the-machine-shell-onlin.svg",
+  "iso_date": "2026-09-14"
  }
 ]
