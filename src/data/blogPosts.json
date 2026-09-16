@@ -1635,5 +1635,15 @@
   "tags": ["shell-online", "ros2", "robotics", "remote-access", "terminal-sharing"],
   "banner": "banners/a-browser-terminal-on-a-ros-2-robot-without-a-vpn-and-why-it-should-be-read-only.svg",
   "iso_date": "2026-09-15"
+ },
+ {
+  "slug": "track-terminal-sessions-across-machines-by-name-shell-online-v0-16-adds-name-and",
+  "title": "Track Terminal Sessions Across Machines by Name: shell.online v0.16 Adds --name and shell ls",
+  "description": "shell.online v0.16.0 lets you name a session at start and list terminal sessions across machines with shell ls, as agents move into remote sandboxes.",
+  "date": "Sep 16",
+  "category": "Engineering",
+  "tags": ["shell-online", "terminal-sharing", "coding-agents", "cli", "remote-development"],
+  "banner": "banners/track-terminal-sessions-across-machines-by-name-shell-online-v0-16-adds-name-and.svg",
+  "iso_date": "2026-09-16"
  }
 ]
