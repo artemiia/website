@@ -1645,5 +1645,15 @@
   "tags": ["shell-online", "terminal-sharing", "coding-agents", "cli", "remote-development"],
   "banner": "banners/track-terminal-sessions-across-machines-by-name-shell-online-v0-16-adds-name-and.svg",
   "iso_date": "2026-09-16"
+ },
+ {
+  "slug": "end-to-end-encrypted-terminal-sharing-what-the-relay-can-still-do-after-shell-on",
+  "title": "End-to-End Encrypted Terminal Sharing: What the Relay Can Still Do After shell.online v0.16.1",
+  "description": "What end-to-end encrypted terminal sharing hides from a relay, what it never hid, and how shell.online v0.16.1 stops replayed keystrokes.",
+  "date": "Sep 17",
+  "category": "Security",
+  "tags": ["shell-online", "end-to-end-encryption", "terminal-sharing", "aes-gcm", "replay-protection"],
+  "banner": "banners/end-to-end-encrypted-terminal-sharing-what-the-relay-can-still-do-after-shell-on.svg",
+  "iso_date": "2026-09-17"
  }
 ]
