@@ -1535,5 +1535,15 @@
   ],
   "banner": "banners/team-terminal-sharing-sealed-so-the-service-cant-open-it.svg",
   "iso_date": "2026-09-09"
+ },
+ {
+  "slug": "end-to-end-encrypted-terminal-sharing-what-the-relay-sees-and-what-it-can-no-lon",
+  "title": "End-to-End Encrypted Terminal Sharing: What the Relay Sees, and What It Can No Longer Replay",
+  "description": "What end-to-end encrypted terminal sharing in shell.online hides from the relay, what it leaks, and how envelope v2 stops replayed keystrokes.",
+  "date": "Sep 18",
+  "category": "Security",
+  "tags": ["shell-online", "end-to-end-encryption", "terminal-sharing", "security", "coding-agents"],
+  "banner": "banners/end-to-end-encrypted-terminal-sharing-what-the-relay-sees-and-what-it-can-no-lon.svg",
+  "iso_date": "2026-09-18"
  }
 ]
