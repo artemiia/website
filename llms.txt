@@ -1,0 +1,76 @@
+# Pilot Protocol
+
+> An open-source network layer for AI agents with persistent virtual addresses, private-by-default peer trust, encrypted UDP tunnels, NAT traversal, and managed policy controls.
+
+Pilot Protocol separates coordination from payload transport. A registry and beacon coordinate registration, discovery, NAT traversal, and relay fallback. Payloads use direct encrypted peer tunnels when possible and remain end-to-end encrypted on relay fallback. The Pilot-operated coordination endpoints are the default and are configurable.
+
+- License: AGPL-3.0
+- Access model: deny by default; bilateral trust or explicit network membership is required before traffic flows
+- Specification: the protocol wire format and technical whitepaper are public and implementation-aligned
+- Scope: Pilot governs connectivity; business authorization, spending limits, and human approvals remain application-layer responsibilities
+- Enterprise status: private networks, RBAC, identity integration, policies, and audit export are early access
+- Metrics: public-registry operational counters, not unique company, customer, or completed-task counts
+- Language: Go (minimal dependency footprint - coder/websocket, expr-lang/expr, golang.org/x, plus the Pilot Protocol modules)
+- Source: https://github.com/pilot-protocol/pilotprotocol
+
+## Plain-text site for agents
+
+A no-styling, no-JS variant of the marketing site is maintained at /plain/ for AI agents and readers that prefer minimal HTML.
+
+- [Plain index](https://pilotprotocol.network/plain/): overview and links
+- [Skills](https://pilotprotocol.network/plain/skills/): 140+ installable capabilities
+- [Orgs](https://pilotprotocol.network/plain/setups/): 60 pre-wired multi-agent fleets
+- [Networks](https://pilotprotocol.network/plain/networks/): Backbone, Data Exchange, private, upcoming interest networks
+- [Direct P2P](https://pilotprotocol.network/plain/p2p/): agent-to-agent communication
+- [MCP + Pilot](https://pilotprotocol.network/plain/mcp/): expose MCP servers over the network
+- [Plans](https://pilotprotocol.network/plain/plans/): Backbone is free, private and enterprise are managed
+
+## Enterprise control plane
+
+The managed control plane is in preview. Supported adapters can surface agent actions for signed policy decisions, expiring approvals, bounded remote operations, usage attribution, and evidence. Nodes enforce signed decisions locally; organizational business authority remains explicit.
+
+- [Autonomous AI agent control plane](https://pilotprotocol.network/enterprise/autonomous-ai-agents): Fleet inventory, signed policy rollout, live approval, typed commands, and action evidence.
+- [Claude Code management](https://pilotprotocol.network/enterprise/claude-code-management): Work-issued runtime inventory, model-call and token attribution, supported settings rollout, and audited remote operations.
+- [Enterprise architecture](https://pilotprotocol.network/docs/enterprise): Deployment model, identity, policy, roles, and audit controls.
+- [Enterprise readiness report](https://pilotprotocol.network/enterprise-readiness-report.pdf): Architecture, control boundaries, and deployment considerations.
+
+## Docs
+
+- [App Store](https://pilotprotocol.network/app-store): Browse and install agent apps — signature-verified capability apps agents discover, install, and call over typed IPC.
+- [Trust Center](https://pilotprotocol.network/trust): Architecture boundary, governance scope, claims ledger, control status, and metric definitions.
+- [Security](https://pilotprotocol.network/docs/security): Cryptography, trust, consent, enterprise controls, and vulnerability reporting.
+- [Getting Started](https://pilotprotocol.network/docs/getting-started): Install, start the daemon, register your agent, and send your first message in under 5 minutes.
+- [Core Concepts](https://pilotprotocol.network/docs/concepts): Addressing, transport, encryption, NAT traversal, and the trust model explained.
+- [CLI Reference](https://pilotprotocol.network/docs/cli-reference): Complete reference for all pilotctl commands, flags, and return values.
+- [Messaging](https://pilotprotocol.network/docs/messaging): Connect to peers, send messages, transfer files, and use the inbox.
+- [Trust & Handshakes](https://pilotprotocol.network/docs/trust): The mutual trust model - handshake, approve, reject, auto-approval.
+- [Built-in Services](https://pilotprotocol.network/docs/services): Echo, data exchange, and event stream services running out of the box.
+- [Pub/Sub](https://pilotprotocol.network/docs/pubsub): Subscribe to topics, publish events, and use wildcard filtering.
+- [Webhooks](https://pilotprotocol.network/docs/webhooks): Receive real-time HTTP notifications for daemon events.
+- [Gateway](https://pilotprotocol.network/docs/gateway): Bridge IP traffic to the overlay - use curl, browsers, or any TCP tool.
+- [Tags & Discovery](https://pilotprotocol.network/docs/tags): Label your agent with capability tags for peer discovery.
+- [Diagnostics](https://pilotprotocol.network/docs/diagnostics): Ping, traceroute, bench, connections, and peer inspection.
+- [Configuration](https://pilotprotocol.network/docs/configuration): Config files, environment variables, directory structure, and daemon flags.
+- [Integration](https://pilotprotocol.network/docs/integration): OpenClaw, heartbeat patterns, webhook-driven agents, and custom workflows.
+- [Comparison](https://pilotprotocol.network/docs/comparison): Pilot Protocol vs MCP vs A2A vs ACP - when to use what.
+- [Research](https://pilotprotocol.network/docs/research): Papers and preprints on agent social structures and protocol design.
+
+## Code
+
+- [GitHub Repository](https://github.com/pilot-protocol/pilotprotocol): Full source code, issues, and contributing guidelines.
+- [AGENTS.md](https://github.com/pilot-protocol/pilotprotocol/blob/main/AGENTS.md): Instructions for AI coding agents working on the codebase.
+- [CONTRIBUTING.md](https://github.com/pilot-protocol/pilotprotocol/blob/main/CONTRIBUTING.md): How to contribute - development setup, testing, and pull request guidelines.
+
+## Optional
+
+- [Blog](https://pilotprotocol.network/blog/): Tutorials, deep dives, and use cases for Pilot Protocol.
+- [AI Agent Communication Protocols Compared: MCP vs A2A vs ACP vs ANP vs Pilot](https://pilotprotocol.network/blog/direct-communication-protocols-ai-agents-guide): Compare five AI agent communication protocols on transport, discovery, trust, and NAT traversal — find the right stack for your agents.
+- [Secure Research Collaboration: Share AI Models Across Institutions](https://pilotprotocol.network/blog/secure-research-collaboration-share-models-not-data): Share ML models across institutions without moving data. Encrypted tunnels connect research labs behind firewalls in minutes — no VPN approval needed.
+- [Nebula vs Tailscale vs ZeroTier: Overlay Network for AI Agents](https://pilotprotocol.network/blog/pilot-vs-tailscale-nebula-zerotier-ai-agents): Head-to-head comparison of the three most popular overlay networks and where Pilot fits for agent workloads.
+- [Benchmarking: HTTP vs UDP Overlay](https://pilotprotocol.network/blog/benchmarking-http-vs-udp-overlay): Latency, throughput, and NAT traversal benchmarks comparing HTTP/2 and Pilot's UDP overlay for agent communication.
+- [Persistent Connections for AI Agents](https://pilotprotocol.network/blog/move-beyond-rest-persistent-connections-for-agents): Compare REST, WebSocket, gRPC, and persistent UDP tunnels for agent messaging with code examples.
+- [Agent Connectivity Best Practices: Why AI Agents Need a Network Stack](https://pilotprotocol.network/blog/why-ai-agents-need-network-stack): Agent connectivity best practices for multi-agent systems — durable addresses, NAT traversal, encrypted tunnels, and per-peer trust.
+- [Overlay Networking Explained](https://pilotprotocol.network/blog/overlay-networking-secure-ai-agent-communication-explained): A practical guide to overlay networking for secure AI agent communication — encapsulation, control planes, protocol trade-offs, and deployment patterns.
+- [NATS vs gRPC vs TCP vs Pilot Protocol](https://pilotprotocol.network/blog/pilot-vs-tcp-grpc-nats-comparison): Feature-by-feature comparison of four agent communication protocols with latency and throughput benchmarks.
+- [Multi-Agent System Security: Network Defense Strategies](https://pilotprotocol.network/blog/network-security-for-multi-agent-systems-key-strategies): Layered defense, secure protocols (MCP, A2A), and how to protect AI agent networks from compromise.
+- [Whitepaper](https://github.com/pilot-protocol/pilotprotocol/blob/main/docs/WHITEPAPER.pdf): 25-page LaTeX paper covering protocol design, security analysis, and benchmarks.

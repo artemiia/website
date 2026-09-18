@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Managed Policies and Approvals — Pilot Protocol (plain)</title><meta name="description" content="Create deterministic and natural-language agent policies, use hosted semantic narrowing, request expiring approval, and deploy signed revisions."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/docs/">&larr; Docs index</a></p><h1>Policies and approvals</h1>
+  <p class="subtitle">Pilot separates operator intent, executable policy, semantic interpretation, consent, rollout, and post-action response.</p>
+
+  <div class="toc"><h4>On this page</h4><ul>
+    <li><a href="#surfaces">Choose a control surface</a></li>
+    <li><a href="#actions">Governed actions</a></li>
+    <li><a href="#language">Natural-language policy workflow</a></li>
+    <li><a href="#structured">Structured policy workflow</a></li>
+    <li><a href="#order">Runtime order and composition</a></li>
+    <li><a href="#approval">Approval and continuation</a></li>
+    <li><a href="#examples">Examples</a></li>
+    <li><a href="#test">Prove enforcement</a></li>
+  </ul></div>
+
+  <h2 id="surfaces">Choose a control surface</h2>
+  <table><thead><tr><th>Surface</th><th>Use it for</th><th>Runtime effect</th></tr></thead><tbody>
+    <tr><td>Signed policy rule</td><td>Exact node, action, resource, risk, disclosure, amount, destination, or approval behavior.</td><td>The first matching rule establishes the deterministic ceiling.</td></tr>
+    <tr><td>Policy statement</td><td>Human-readable restrictions such as “Do not accept trust from anyone.”</td><td>Compiles into reviewed deterministic rules and/or semantic clauses; no effect until rollout activation.</td></tr>
+    <tr><td>Semantic clause</td><td>Meaning that cannot be resolved from exact metadata, such as confidential content leaving the company.</td><td>A hosted evaluator may deny or request the pinned approval plan; it never grants above the base answer.</td></tr>
+    <tr><td>Approval plan</td><td>Eligible approvers, quorum, validity, approved outcome, and constraints.</td><td>May create one payload-bound, single-use continuation after quorum.</td></tr>
+    <tr><td>Procedure</td><td>Alert, investigate, quarantine, refresh, export, or notify after an outcome.</td><td>Runs after durable activity and cannot modify the original authorization.</td></tr>
+  </tbody></table>
+
+  <h2 id="actions">Governed actions</h2>
+  <p>The managed action vocabulary covers browser navigation; process execution; arbitrary tool invocation; HTTP and webhook requests; data read, export, and text/JSON/binary send; file read, write, delete, and share; event publication; trust request, accept, auto-accept, reject, revoke; wallet payment; and custom registered actions.</p>
+  <p>Policies also bind the target resource, risk, recipient, purpose, labels, content type, residency, retention class, transaction value, destination, and node scope where relevant. An adapter must report an action before Pilot can govern it. Publishing a rule does not create interception.</p>
+
+  <h2 id="language">Natural-language policy workflow</h2>
+  <ol>
+    <li>Create or select an approval-plan revision first if the desired semantic outcome is approval.</li>
+    <li>Open <strong>Policy statements</strong> and create a statement with an explicit node scope. <code>*</code> means all nodes in the tenant.</li>
+    <li>Enter the ordinary-language instruction. Add entity-to-resource bindings when a human name must map to a canonical target.</li>
+    <li>Select exact action hints for content-sensitive meaning. Semantic fallback is opt-in and limited to the reviewed deny or approval outcome.</li>
+    <li>Compile the statement. Inspect the source hash, compiler version, deterministic rules, semantic clauses, failure posture, warnings, and unresolved phrases.</li>
+    <li>Edit and recompile until the interpretation is exact. Unresolved compilation cannot enter review.</li>
+    <li>Submit review, approve the source, create a signed rollout draft, inspect its diff and simulations, publish it, obtain signed node acknowledgements, and activate it.</li>
+  </ol>
+  <p>A prose sentence is never sent directly to a model as unrestricted authority. It remains a revisioned source object bound to the reviewed compilation and active signed policy revision.</p>
+
+  <h2 id="structured">Structured policy workflow</h2>
+  <ol>
+    <li>Select the target node or fleet scope.</li>
+    <li>Choose registered actions, resource prefixes, and applicable risk classes.</li>
+    <li>Select deny, allow, allow with constraints, or approval required.</li>
+    <li>For constraints, set maximum value, allowed destinations, and typed disclosure requirements.</li>
+    <li>For approval, select the exact immutable approval-plan revision.</li>
+    <li>Enter a title and auditable reason; choose full-fleet or canary rollout and acknowledgement thresholds.</li>
+    <li>Create the inactive candidate, run diff and deterministic simulation, obtain required independent approval, publish, then activate.</li>
+  </ol>
+  <p>Editing produces a higher immutable revision. Removing a rule is also a reviewed signed change. Rollback creates a new higher revision rather than lowering a node's rollback floor.</p>
+
+  <h2 id="order">Runtime order and composition</h2>
+  <ol>
+    <li>Locally pinned trust and mandate define the hard maximum.</li>
+    <li>The active signed policy evaluates deterministic rules in document order. The first match wins; no match means deny.</li>
+    <li>An eligible active semantic clause may inspect exact hosted content. Semantic allow preserves the base result; deny or approval may narrow it. A base deny remains deny.</li>
+    <li>Conflicting semantic approval plans fail closed. Evaluator, model, prompt, policy, clause, timeout, failure mode, and usage metadata are journaled.</li>
+    <li>The node verifies the final signed result before releasing or blocking the side effect.</li>
+  </ol>
+  <p>No active semantic clause means no model call and no semantic usage charge. High- and critical-risk failure posture should be explicitly fail closed when the business requirement cannot tolerate an unevaluated action.</p>
+
+  <h2 id="approval">Approval and continuation</h2>
+  <p>An approval plan is tenant-scoped and immutable by revision. It lists purpose-limited approver keys, required quorum, validity duration, approved outcome, and optional constraints. A transaction binds the exact signed intent and payload hash. Distinct eligible signatures count toward quorum.</p>
+  <p>Approval is not a reusable exception. Quorum creates one single-use continuation for the same request. Rejection, cancellation, expiry, payload mismatch, agent mismatch, plan mismatch, or replay remains blocked. The node stores payload-free continuation state with exclusive creation and a restart-safe lease so at most one resume attempt can occur.</p>
+
+  <h2 id="examples">Examples</h2>
+  <table><thead><tr><th>Operator statement</th><th>Compiled or runtime meaning</th></tr></thead><tbody>
+    <tr><td>Don't accept trust from anyone.</td><td>Deterministic deny for <code>trust.accept</code> and <code>trust.auto_accept</code> on the selected nodes.</td></tr>
+    <tr><td>Do not transact with Acme.</td><td>After binding Acme to a canonical merchant resource, deny matching <code>wallet.pay</code> actions.</td></tr>
+    <tr><td>Do not send confidential material outside the company.</td><td>Explicit send/share scope plus a reviewed hosted semantic clause that may deny or request security approval.</td></tr>
+    <tr><td>Finance may pay approved-vendor up to 1,000 USD.</td><td>Structured node/action/resource rule with amount and destination constraints.</td></tr>
+  </tbody></table>
+
+  <h2 id="test">Prove enforcement</h2>
+  <ol>
+    <li>Confirm the target node reports a blocking capability for the governed action.</li>
+    <li>Activate the exact signed policy revision and wait for the node acknowledgement.</li>
+    <li>Run one allowed action and inspect its complete exchange and post-hook result.</li>
+    <li>Run a violation with a distinctive inert marker.</li>
+    <li>Confirm the decision cites the expected deterministic rule or semantic clause.</li>
+    <li>Confirm the external side effect or marker does not exist.</li>
+    <li>Test approval, expiry, cancellation, replay, evaluator outage, and hook timeout separately.</li>
+  </ol>
+
+  <div class="notice"><strong>Policy presence is not enforcement proof.</strong> Pilot's coverage report combines the signed connector capability, action inventory, blocking/approval support, receipts, and recent runtime evidence. Uncovered targets require an explicit audited exception.</div><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

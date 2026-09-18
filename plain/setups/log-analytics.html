@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Log Analytics - Orgs - Pilot Protocol</title><meta name="description" content="Deploy a log analytics system with 4 agents that collect, parse, alert on, and visualize log data."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Log Analytics</h1><p><em>intermediate &middot; 4 agents &middot; 12 skills</em></p><p>Deploy a log analytics system with 4 agents that collect, parse, alert on, and visualize log data. A collector aggregates logs from servers, containers, and applications, a parser extracts structured fields and identifies error patterns, an alerter detects anomalies and fires notifications, and a dashboard provides search and visualization with drill-down capabilities.</p><h2>Install</h2><pre><code>clawhub install pilot-log-analytics-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-archive"><code>pilot-archive</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-compress"><code>pilot-compress</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-dataset"><code>pilot-dataset</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-slack-bridge"><code>pilot-slack-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-announce"><code>pilot-announce</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-collector</code> - <strong>Log Collector</strong><br>Aggregates logs from servers, containers, and applications. Normalizes formats.<br>Skills: <code>pilot-stream-data</code> , <code>pilot-archive</code> , <code>pilot-compress</code></li><li><code>&lt;your-prefix&gt;-parser</code> - <strong>Log Parser</strong><br>Extracts structured fields, parses stack traces, identifies error patterns.<br>Skills: <code>pilot-event-filter</code> , <code>pilot-task-router</code> , <code>pilot-dataset</code></li><li><code>&lt;your-prefix&gt;-alerter</code> - <strong>Anomaly Alerter</strong><br>Detects log spikes, error rate anomalies, and novel error patterns. Fires alerts.<br>Skills: <code>pilot-alert</code> , <code>pilot-metrics</code> , <code>pilot-cron</code></li><li><code>&lt;your-prefix&gt;-dashboard</code> - <strong>Log Dashboard</strong><br>Provides search, visualization, and drill-down into log data. Generates reports.<br>Skills: <code>pilot-webhook-bridge</code> , <code>pilot-slack-bridge</code> , <code>pilot-announce</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-collector</code> &rarr; <code>&lt;your-prefix&gt;-parser</code>:<code>1002</code> - raw-log events from all sources</li><li><code>&lt;your-prefix&gt;-parser</code> &rarr; <code>&lt;your-prefix&gt;-alerter</code>:<code>1002</code> - parsed-event with structured fields and severity</li><li><code>&lt;your-prefix&gt;-alerter</code> &rarr; <code>&lt;your-prefix&gt;-dashboard</code>:<code>1002</code> - anomaly-alert with context and baselines</li><li><code>&lt;your-prefix&gt;-dashboard</code> &rarr; <code>external</code>:<code>443</code> - log-report via webhooks and Slack</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On server 1 (log collector)
+clawhub install pilot-stream-data pilot-archive pilot-compress
+pilotctl set-hostname &lt;your-prefix&gt;-collector
+
+# On server 2 (log parser)
+clawhub install pilot-event-filter pilot-task-router pilot-dataset
+pilotctl set-hostname &lt;your-prefix&gt;-parser
+
+# On server 3 (anomaly alerter)
+clawhub install pilot-alert pilot-metrics pilot-cron
+pilotctl set-hostname &lt;your-prefix&gt;-alerter
+
+# On server 4 (log dashboard)
+clawhub install pilot-webhook-bridge pilot-slack-bridge pilot-announce
+pilotctl set-hostname &lt;your-prefix&gt;-dashboard
+# collector &lt;-&gt; parser
+# On collector:
+pilotctl handshake &lt;your-prefix&gt;-parser &quot;setup: log-analytics&quot;
+# On parser:
+pilotctl handshake &lt;your-prefix&gt;-collector &quot;setup: log-analytics&quot;
+
+# parser &lt;-&gt; alerter
+# On parser:
+pilotctl handshake &lt;your-prefix&gt;-alerter &quot;setup: log-analytics&quot;
+# On alerter:
+pilotctl handshake &lt;your-prefix&gt;-parser &quot;setup: log-analytics&quot;
+
+# alerter &lt;-&gt; dashboard
+# On alerter:
+pilotctl handshake &lt;your-prefix&gt;-dashboard &quot;setup: log-analytics&quot;
+# On dashboard:
+pilotctl handshake &lt;your-prefix&gt;-alerter &quot;setup: log-analytics&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Hosted Availability and Readiness — Pilot Protocol (plain)</title><meta name="description" content="Honest current availability, production-readiness status, validated control-plane functionality, remaining launch blockers, and deployment guidance."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/docs/">&larr; Docs index</a></p><h1>Availability and production readiness</h1>
+  <p class="subtitle">What is live, what has been proved, and what still prevents a general production launch.</p>
+
+  <div class="callout"><strong>Verdict as of 8 August 2026.</strong> The hosted management deployment is online and its central enforcement path has been validated with real adopted agents. It is <strong>not production-grade as a public multi-tenant SaaS</strong>. It should be described as a production-hosted pre-release or design-partner environment, not generally available production service.</div>
+
+  <div class="toc"><h4>On this page</h4><ul>
+    <li><a href="#status">Current live status</a></li>
+    <li><a href="#proved">What has been proved</a></li>
+    <li><a href="#not-ready">Actual public SaaS blockers</a></li>
+    <li><a href="#grade">Production-grade criteria</a></li>
+    <li><a href="#use">Where it is appropriate today</a></li>
+  </ul></div>
+
+  <h2 id="status">Current live status</h2>
+  <table><thead><tr><th>Capability</th><th>Status</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>Management login</td><td>Live</td><td>The HTTPS login page is reachable and existing accounts can authenticate.</td></tr>
+    <tr><td>Public account signup</td><td>Not deployed</td><td><code>/v1/auth/signup</code> returns <code>signup_unavailable</code>; new unrelated organizations cannot self-register.</td></tr>
+    <tr><td>Organization availability</td><td>Single preconfigured tenant</td><td>The live service currently serves the Pilot demonstration organization.</td></tr>
+    <tr><td>Managed node adoption</td><td>Live for the configured tenant</td><td>Short-lived one-time enrollment, verified delegated identity, bootstrap policy, and signed first report work.</td></tr>
+    <tr><td>Policy and semantic denial</td><td>Validated</td><td>A real Gemini-driven adopted agent was denied before executing a prohibited command; the expected filesystem side effect was absent.</td></tr>
+    <tr><td>Policy, approval, fleet, state, audit UI</td><td>Validated pre-release</td><td>Primary CRUD/lifecycle paths and 31 management pages have passed production-host UI sweeps.</td></tr>
+    <tr><td>Harness adapters</td><td>Mixed by harness</td><td>Several native paths are verified; partial and fail-open connectors remain explicitly labelled.</td></tr>
+    <tr><td>Plans and payments</td><td>Disabled by product decision</td><td>Public launch has one common entitlement, no checkout, no upgrade UI, and no customer charging. Usage remains measured for cost control.</td></tr>
+    <tr><td>Public multi-tenant platform</td><td>Not deployed</td><td>The SaaS provisioner, pooled runtime, account subdomains, and workspace controller are implemented/tested locally but not installed in the hosted GCP environment.</td></tr>
+  </tbody></table>
+
+  <h2 id="proved">What has been proved</h2>
+  <ul>
+    <li>HTTPS management health, invitation-oriented login, tenant-scoped browser access, and cross-tenant query rejection.</li>
+    <li>One-time managed adoption with server-assigned identity, signed trust and policy verification, secure local attachment, and fresh signed check-in.</li>
+    <li>Structured policy creation, review, activation, semantic-clause evaluation, signed denial, post-hook evidence, and deletion/retirement paths.</li>
+    <li>A real agent model proposed a prohibited <code>process.execute</code> action; Pilot denied it and the intended file was not created.</li>
+    <li>Fleet detail, desired state, commands, acknowledgements, safe <code>.pilot</code> state create/read/history/delete, monitoring, traffic, approvals, audit, investigations, integrations, and readiness pages.</li>
+    <li>Tenant-attributed evaluator usage and idempotent usage-ledger behavior in local full-stack and Kubernetes acceptance environments.</li>
+    <li>Version-pinned adapter packaging and regression coverage, including compatibility for the removed legacy heartbeat hook command.</li>
+  </ul>
+  <p>These proofs establish that the core security concept works. They do not establish the operational, organizational, and provider controls required for a generally available SaaS.</p>
+
+  <h2 id="not-ready">Actual public SaaS blockers</h2>
+  <p>There are seven launch gates. Plans and Stripe are deliberately disabled and are not an eighth gate.</p>
+  <ol>
+    <li><strong>Signup and provisioning:</strong> deploy and prove the full email verification, workspace reservation, owner creation, exact account subdomain, first session, adoption, retry, rollback, and cleanup journey without operator intervention.</li>
+    <li><strong>Tenant isolation:</strong> add a database-enforced boundary such as PostgreSQL RLS with mandatory tenant context or separate credentials/schema, then prove host routing, secrets, workers, caches, exports, logs, metrics, and backups cannot cross organizations.</li>
+    <li><strong>GCP KMS and storage integration:</strong> exercise native Cloud KMS signing/content-key wrapping and native Cloud Storage conditional writes, locked retention, legal hold, rotation, restore, outage, and cross-tenant denial through workload identity.</li>
+    <li><strong>Quotas and abuse controls:</strong> enforce distributed signup defenses plus hard node, request, event, content, storage, retention, queue, and semantic-spend ceilings, noisy-neighbor isolation, reservation cleanup, and operator response.</li>
+    <li><strong>Organization lifecycle:</strong> prove audited rename, owner transfer, suspension/resume, export, deletion, legal hold, node and credential revocation, usage closure, subdomain cleanup, retry, and partial-failure recovery.</li>
+    <li><strong>Load and disaster-recovery evidence:</strong> retain the declared workload envelope, latency/error/saturation and soak results, backup/PITR and object restore, key recovery, failover, provider outage, rolling upgrade, rollback, and measured RPO/RTO.</li>
+    <li><strong>Security assurance:</strong> complete independent penetration and architecture review, close findings, approve the pooled-tenancy, hosted-content/LLM, hook-bypass, privileged-support, supply-chain, recovery, and abuse threat models, and retain exact-release security evidence.</li>
+  </ol>
+
+  <h2 id="grade">What production-grade means here</h2>
+  <p>A service being deployed on a production hostname is not enough. General production readiness requires all of the following:</p>
+  <ul>
+    <li>new account to isolated tenant to real-agent denial works without operator intervention;</li>
+    <li>cross-tenant reads, writes, host routing, secrets, usage, and backups fail closed under adversarial tests;</li>
+    <li>every marketed harness claim is version-pinned and has allowed, denied, approval, timeout, and bypass evidence;</li>
+    <li>provider credentials, keys, content, logs, evidence, and backups have reviewed retention and recovery controls;</li>
+    <li>quota and usage-metering failures cannot expand authority or create unbounded model or infrastructure spend;</li>
+    <li>documented SLOs, support, incident response, vulnerability handling, deployment rollback, and change management are staffed and exercised.</li>
+  </ul>
+
+  <h2 id="use">Where it is appropriate today</h2>
+  <table><thead><tr><th>Use case</th><th>Recommendation</th></tr></thead><tbody>
+    <tr><td>Internal demonstration with the existing tenant</td><td>Yes. The live environment and permanent proof agents support this use.</td></tr>
+    <tr><td>Supervised design-partner evaluation</td><td>Yes, with a written scope, connector boundary, data/retention agreement, and operational owner.</td></tr>
+    <tr><td>Single-organization production pilot</td><td>Conditional. Perform organization-specific threat modelling, capacity tests, backup/restore, key custody, and incident readiness first.</td></tr>
+    <tr><td>Open public self-service SaaS</td><td>No. Signup, provisioning, multi-tenant hardening, planless cost controls, and cloud platform gates remain.</td></tr>
+    <tr><td>Regulated or safety-critical autonomous production</td><td>No general approval. It requires independent assurance, exact harness certification, retention/legal review, and customer-specific controls.</td></tr>
+  </tbody></table>
+
+  <div class="notice"><strong>Status discipline.</strong> This page records a dated deployment assessment, not a permanent guarantee. Reassess it after every authority, adapter, cloud, identity, evaluator, entitlement, or quota release.</div><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

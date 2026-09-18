@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Chat &amp; Collaboration Hub - Orgs - Pilot Protocol</title><meta name="description" content="A self-hosted collaboration platform for agent teams."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Chat &amp; Collaboration Hub</h1><p><em>intermediate &middot; 4 agents &middot; 15 skills</em></p><p>A self-hosted collaboration platform for agent teams. Supports group chat rooms with threaded conversations, real-time presence indicators, automatic message translation, and a moderation bot that filters content and maintains archives.</p><h2>Install</h2><pre><code>clawhub install pilot-chat-collaboration-hub-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-group-chat"><code>pilot-group-chat</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-thread"><code>pilot-thread</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-presence"><code>pilot-presence</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-broadcast"><code>pilot-broadcast</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-blocklist"><code>pilot-blocklist</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-translate"><code>pilot-translate</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-archive"><code>pilot-archive</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-log"><code>pilot-event-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-backup"><code>pilot-backup</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-chat-server</code> - <strong>Chat Server</strong><br>Messages for filtering&quot; },<br>Skills: <code>pilot-group-chat</code> , <code>pilot-thread</code> , <code>pilot-presence</code> , <code>pilot-broadcast</code></li><li><code>&lt;your-prefix&gt;-moderator</code> - <strong>Content Moderator</strong><br>Messages to filter&quot; },<br>Skills: <code>pilot-event-filter</code> , <code>pilot-blocklist</code> , <code>pilot-audit-log</code> , <code>pilot-alert</code></li><li><code>&lt;your-prefix&gt;-translator</code> - <strong>Auto-Translator</strong><br>Messages to translate&quot; },<br>Skills: <code>pilot-translate</code> , <code>pilot-stream-data</code> , <code>pilot-task-router</code></li><li><code>&lt;your-prefix&gt;-archive-bot</code> - <strong>Archive Bot</strong><br>Messages to archive&quot; },<br>Skills: <code>pilot-archive</code> , <code>pilot-event-log</code> , <code>pilot-backup</code> , <code>pilot-cron</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-chat-server</code> &rarr; <code>&lt;your-prefix&gt;-moderator/translator/archive-bot</code>:<code>1002</code> - messages</li><li><code>&lt;your-prefix&gt;-moderator</code> &rarr; <code>&lt;your-prefix&gt;-chat-server</code>:<code>1002</code> - filter decisions</li><li><code>&lt;your-prefix&gt;-translator</code> &rarr; <code>&lt;your-prefix&gt;-chat-server</code>:<code>1002</code> - translated messages</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On chat server
+clawhub install pilot-group-chat pilot-thread pilot-presence pilot-broadcast
+pilotctl set-hostname &lt;your-prefix&gt;-chat
+
+# On moderator node
+clawhub install pilot-event-filter pilot-blocklist pilot-audit-log pilot-alert
+pilotctl set-hostname &lt;your-prefix&gt;-moderator
+
+# On translator node
+clawhub install pilot-translate pilot-stream-data pilot-task-router
+pilotctl set-hostname &lt;your-prefix&gt;-translator
+
+# On archive node
+clawhub install pilot-archive pilot-event-log pilot-backup pilot-cron
+pilotctl set-hostname &lt;your-prefix&gt;-archive-bot
+# chat &lt;-&gt; moderator
+# On chat:
+pilotctl handshake &lt;your-prefix&gt;-moderator &quot;chat hub&quot;
+# On moderator:
+pilotctl handshake &lt;your-prefix&gt;-chat &quot;chat hub&quot;
+
+# chat &lt;-&gt; translator
+# On chat:
+pilotctl handshake &lt;your-prefix&gt;-translator &quot;chat hub&quot;
+# On translator:
+pilotctl handshake &lt;your-prefix&gt;-chat &quot;chat hub&quot;
+
+# chat &lt;-&gt; archive-bot
+# On chat:
+pilotctl handshake &lt;your-prefix&gt;-archive-bot &quot;chat hub&quot;
+# On archive-bot:
+pilotctl handshake &lt;your-prefix&gt;-chat &quot;chat hub&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

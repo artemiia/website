@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Managed Harness Coverage — Pilot Protocol (plain)</title><meta name="description" content="Exact Pilot interception boundaries, attachment commands, failure modes, and production validation requirements for supported agent harnesses."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/docs/">&larr; Docs index</a></p><h1>Harness coverage</h1>
+  <p class="subtitle">A connector is only as complete as the native action boundary its harness actually exposes.</p>
+
+  <div class="callout"><strong>Core node management is harness-independent.</strong> Adoption, signed reporting, policy rollout, typed commands, and safe state synchronization belong to core Pilot. The optional harness adapter adds in-flight control only around the tool, message, or SDK events listed here.</div>
+
+  <h2 id="matrix">Coverage matrix</h2>
+  <table><thead><tr><th>Harness</th><th>Current boundary</th><th>Important limitation</th></tr></thead><tbody>
+    <tr><td>Claude Code</td><td>Live-verified <code>PreToolUse</code>, <code>PostToolUse</code>, and failure events for built-in and MCP tools.</td><td>A Bash hook sees the proposed command, not every syscall made by its child process.</td></tr>
+    <tr><td>Codex CLI</td><td>Native pre/post tool hooks plus Pilot MCP.</td><td>User hooks require review/trust; specialized hosted paths may opt out unless managed requirements cover them.</td></tr>
+    <tr><td>Gemini CLI</td><td>Native <code>BeforeTool</code>/<code>AfterTool</code>; real allow, result, and denial paths exercised.</td><td>Model-request interception is separate, and identical parallel calls have limited post-call correlation.</td></tr>
+    <tr><td>GitHub Copilot CLI</td><td>Local and repository <code>preToolUse</code>/<code>postToolUse</code> contracts.</td><td>Documented timeouts fail open; cloud agents need committed repository hooks and reachable ingress.</td></tr>
+    <tr><td>OpenHands</td><td>Claude-compatible pre/post hooks per repository.</td><td>User-home configuration is not fleet-wide; distribute the repository contract to every workspace.</td></tr>
+    <tr><td>OpenClaw</td><td>Bundled plugin for built-in tools, results, and outbound messages.</td><td>Only OpenClaw-owned paths are covered; retain sandbox and egress controls.</td></tr>
+    <tr><td>Hermes Agent</td><td>Native CLI/Gateway pre/post tool hooks; pinned wire protocol verified.</td><td>Malformed output, process death, and timeout behavior requires additional containment because upstream failure modes may be fail open.</td></tr>
+    <tr><td>Cline</td><td>Global <code>PreToolUse</code>/<code>PostToolUse</code> scripts for desktop and SDK-hosted tools.</td><td>Hook crashes and timeouts are documented as fail open; existing global hooks must be composed explicitly.</td></tr>
+    <tr><td>Cursor</td><td>Native pre/post tool hooks with fail-closed Pilot preflights.</td><td>User hooks do not reach cloud agents; use repository, team, or enterprise distribution there.</td></tr>
+    <tr><td>JetBrains Junie</td><td>Pilot MCP plus Junie's action allowlist.</td><td>Native Junie actions remain outside Pilot evaluation without a supported interception API.</td></tr>
+    <tr><td>PicoClaw</td><td>JSON-RPC process hooks for <code>before_tool</code>/<code>after_tool</code>.</td><td>The upstream runtime is pre-1.0. Pin and certify an exact build; it is not production-certified.</td></tr>
+    <tr><td>Any MCP client</td><td>Complete arguments and results for calls to the Pilot MCP server.</td><td>Installing Pilot MCP does not intercept other MCP servers or built-in shell, browser, or file tools.</td></tr>
+    <tr><td>Custom SDK host</td><td>Potentially complete <code>BeforeAction</code>/<code>AfterAction</code> wrapping around host-owned side effects.</td><td>Unwrapped adapters remain outside control; the host must attest and test the complete action inventory.</td></tr>
+  </tbody></table>
+
+  <h2 id="attach">Attach after adoption</h2>
+  <p>Use the version-pinned command shown by the onboarding page. Examples:</p>
+  <pre><code>npx -y pilotprotocol-mcp@0.2.13 attach --claude
+npx -y pilotprotocol-mcp@0.2.13 attach --codex
+npx -y pilotprotocol-mcp@0.2.13 attach --gemini
+npx -y pilotprotocol-mcp@0.2.13 attach --openclaw
+npx -y pilotprotocol-mcp@0.2.13 attach --hermes</code></pre>
+  <p>The adapter verifies that <code>$HOME/.pilot/managed/enterprise-control.json</code> is a regular owner-owned file with owner-only permissions. It merges supported hook configuration without deliberately replacing an unrelated existing hook. Some harnesses require an explicit restart, trust review, repository-level file, or first-use command approval; follow the connector-specific instructions displayed in the console.</p>
+
+  <h2 id="events">What Pilot receives</h2>
+  <p>Where the harness supplies it, a pre-hook sends the canonical action, called tool, complete parameters, explicit file bytes, destination, session and working-directory correlation, permission mode, and timing metadata. A post-hook adds the result, response content, duration, or failure. The hosted exchange makes those fields visible alongside the signed policy and decision.</p>
+  <p>Coverage must be stated per event. An outbound-message hook can govern message delivery even when it is not a general tool hook. MCP coverage means Pilot sees calls to Pilot MCP, not the entire agent. A shell hook is not kernel mediation.</p>
+
+  <h2 id="failure">Failure posture</h2>
+  <p>Pilot can emit a valid deny when the hosted decision service is reachable but rejects or times out according to policy. It cannot prevent a harness from killing or bypassing its hook process if the harness itself defines that path as fail open. For high-risk actions, choose harnesses and deployment controls that can enforce the required failure posture.</p>
+  <ul>
+    <li>Use managed hook requirements or repository-distributed hooks where user configuration is optional.</li>
+    <li>Keep host sandboxing and outbound network policy for child-process containment.</li>
+    <li>Do not give the Pilot adapter unrelated model-provider or application secrets.</li>
+    <li>Version-pin both the harness and adapter, then retest after either changes.</li>
+  </ul>
+
+  <h2 id="certification">Production certification checklist</h2>
+  <ol>
+    <li>Inventory every side-effect path: process, file, browser, HTTP, MCP, messages, transfers, trust, events, and payments.</li>
+    <li>Prove an allowed action runs and produces a completed exchange.</li>
+    <li>Prove a denied action leaves no external artifact.</li>
+    <li>Prove approval, exact continuation, expiry, cancellation, and replay rejection.</li>
+    <li>Prove failed tool and post-hook evidence is terminal and non-replaying.</li>
+    <li>Kill and time out the hook to confirm the actual failure posture.</li>
+    <li>Disable the attachment and verify the original unmanaged behavior returns.</li>
+  </ol>
+
+  <div class="notice"><strong>Do not infer coverage from a logo.</strong> The connector's signed capability report and recent runtime evidence determine what a policy can truthfully claim to enforce.</div><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

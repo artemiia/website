@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Disaster Response - Orgs - Pilot Protocol</title><meta name="description" content="A multi-agent emergency management system that coordinates sensor aggregation, disaster assessment,"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Disaster Response</h1><p><em>advanced &middot; 4 agents &middot; 12 skills</em></p><p>A multi-agent emergency management system that coordinates sensor aggregation, disaster assessment, resource allocation, and public communications across four specialized agents. The sensor hub aggregates feeds from weather stations, seismic sensors, flood gauges, and satellite imagery. The coordinator assesses disaster severity and activates response protocols. The resource allocator manages inventory of emergency supplies, vehicles, and personnel. The communications hub broadcasts public alerts and coordinates with agencies.</p><h2>Install</h2><pre><code>clawhub install pilot-disaster-response-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-gossip"><code>pilot-gossip</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-consensus"><code>pilot-consensus</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-dataset"><code>pilot-dataset</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-escrow"><code>pilot-escrow</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-announce"><code>pilot-announce</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-slack-bridge"><code>pilot-slack-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-sensor-hub</code> - <strong>Sensor Hub</strong><br>Aggregates weather, seismic, and flood sensor feeds<br>Skills: <code>pilot-stream-data</code> , <code>pilot-metrics</code> , <code>pilot-gossip</code></li><li><code>&lt;your-prefix&gt;-coordinator</code> - <strong>Response Coordinator</strong><br>Assesses severity, activates response protocols<br>Skills: <code>pilot-task-router</code> , <code>pilot-consensus</code> , <code>pilot-audit-log</code></li><li><code>&lt;your-prefix&gt;-resource-allocator</code> - <strong>Resource Allocator</strong><br>Manages supplies, vehicles, personnel deployment<br>Skills: <code>pilot-dataset</code> , <code>pilot-event-filter</code> , <code>pilot-escrow</code></li><li><code>&lt;your-prefix&gt;-comms</code> - <strong>Communications Hub</strong><br>Broadcasts alerts, coordinates with agencies<br>Skills: <code>pilot-announce</code> , <code>pilot-slack-bridge</code> , <code>pilot-webhook-bridge</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-sensor-hub</code> &rarr; <code>&lt;your-prefix&gt;-coordinator</code>:<code>1002</code> - disaster alerts with severity and geographic data</li><li><code>&lt;your-prefix&gt;-coordinator</code> &rarr; <code>&lt;your-prefix&gt;-resource-allocator</code>:<code>1002</code> - resource requests with priority and location</li><li><code>&lt;your-prefix&gt;-coordinator</code> &rarr; <code>&lt;your-prefix&gt;-comms</code>:<code>1002</code> - public alerts with severity and instructions</li><li><code>&lt;your-prefix&gt;-resource-allocator</code> &rarr; <code>&lt;your-prefix&gt;-comms</code>:<code>1002</code> - deployment status and resource availability</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On sensor aggregation server
+clawhub install pilot-stream-data pilot-metrics pilot-gossip
+pilotctl set-hostname &lt;your-prefix&gt;-sensor-hub
+
+# On coordination server
+clawhub install pilot-task-router pilot-consensus pilot-audit-log
+pilotctl set-hostname &lt;your-prefix&gt;-coordinator
+
+# On resource management server
+clawhub install pilot-dataset pilot-event-filter pilot-escrow
+pilotctl set-hostname &lt;your-prefix&gt;-resource-allocator
+
+# On communications server
+clawhub install pilot-announce pilot-slack-bridge pilot-webhook-bridge
+pilotctl set-hostname &lt;your-prefix&gt;-comms
+# sensor-hub &lt;-&gt; coordinator (disaster alerts)
+# On sensor-hub:
+pilotctl handshake &lt;your-prefix&gt;-coordinator &quot;setup: disaster-response&quot;
+# On coordinator:
+pilotctl handshake &lt;your-prefix&gt;-sensor-hub &quot;setup: disaster-response&quot;
+
+# coordinator &lt;-&gt; resource-allocator (resource requests)
+# On coordinator:
+pilotctl handshake &lt;your-prefix&gt;-resource-allocator &quot;setup: disaster-response&quot;
+# On resource-allocator:
+pilotctl handshake &lt;your-prefix&gt;-coordinator &quot;setup: disaster-response&quot;
+
+# coordinator &lt;-&gt; comms (public alerts)
+# On coordinator:
+pilotctl handshake &lt;your-prefix&gt;-comms &quot;setup: disaster-response&quot;
+# On comms:
+pilotctl handshake &lt;your-prefix&gt;-coordinator &quot;setup: disaster-response&quot;
+
+# resource-allocator &lt;-&gt; comms (deployment status)
+# On resource-allocator:
+pilotctl handshake &lt;your-prefix&gt;-comms &quot;setup: disaster-response&quot;
+# On comms:
+pilotctl handshake &lt;your-prefix&gt;-resource-allocator &quot;setup: disaster-response&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Fraud Detection Pipeline - Orgs - Pilot Protocol</title><meta name="description" content="A real-time fraud detection pipeline that processes transaction streams through four escalation stag"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Fraud Detection Pipeline</h1><p><em>advanced &middot; 4 agents &middot; 12 skills</em></p><p>A real-time fraud detection pipeline that processes transaction streams through four escalation stages. The monitor watches live transactions for threshold breaches and velocity anomalies, the pattern analyzer performs deep behavioral analysis on flagged items, the investigator assembles evidence packages for high-confidence cases, and the enforcer executes blocking actions and feeds blocked entities back into the monitoring loop.</p><h2>Install</h2><pre><code>clawhub install pilot-fraud-detection-pipeline-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-archive"><code>pilot-archive</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-priority-queue"><code>pilot-priority-queue</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-dataset"><code>pilot-dataset</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-blocklist"><code>pilot-blocklist</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-monitor</code> - <strong>Transaction Monitor</strong><br>Transactions exceeding risk thresholds&quot; },<br>Skills: <code>pilot-stream-data</code> , <code>pilot-event-filter</code> , <code>pilot-cron</code> , <code>pilot-metrics</code></li><li><code>&lt;your-prefix&gt;-pattern-analyzer</code> - <strong>Pattern Analyzer</strong><br>Flagged transactions to analyze&quot; },<br>Skills: <code>pilot-event-filter</code> , <code>pilot-archive</code> , <code>pilot-priority-queue</code></li><li><code>&lt;your-prefix&gt;-investigator</code> - <strong>Case Investigator</strong><br>Cases requiring investigation&quot; },<br>Skills: <code>pilot-task-router</code> , <code>pilot-audit-log</code> , <code>pilot-dataset</code></li><li><code>&lt;your-prefix&gt;-enforcer</code> - <strong>Fraud Enforcer</strong><br>Verdicts to enforce&quot; },<br>Skills: <code>pilot-blocklist</code> , <code>pilot-webhook-bridge</code> , <code>pilot-audit-log</code> , <code>pilot-alert</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-monitor</code> &rarr; <code>&lt;your-prefix&gt;-pattern-analyzer</code>:<code>1002</code> - flagged transactions exceeding risk thresholds</li><li><code>&lt;your-prefix&gt;-pattern-analyzer</code> &rarr; <code>&lt;your-prefix&gt;-investigator</code>:<code>1002</code> - high-risk cases with behavioral analysis</li><li><code>&lt;your-prefix&gt;-investigator</code> &rarr; <code>&lt;your-prefix&gt;-enforcer</code>:<code>1002</code> - fraud verdicts with recommended actions</li><li><code>&lt;your-prefix&gt;-enforcer</code> &rarr; <code>&lt;your-prefix&gt;-monitor</code>:<code>1002</code> - blocked entities to update detection rules</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On transaction monitoring server
+clawhub install pilot-stream-data pilot-event-filter pilot-cron pilot-metrics
+pilotctl set-hostname &lt;your-prefix&gt;-monitor
+
+# On pattern analysis server
+clawhub install pilot-event-filter pilot-archive pilot-priority-queue
+pilotctl set-hostname &lt;your-prefix&gt;-pattern-analyzer
+
+# On investigation server
+clawhub install pilot-task-router pilot-audit-log pilot-dataset
+pilotctl set-hostname &lt;your-prefix&gt;-investigator
+
+# On enforcement server
+clawhub install pilot-blocklist pilot-webhook-bridge pilot-audit-log pilot-alert
+pilotctl set-hostname &lt;your-prefix&gt;-enforcer
+# monitor &lt;-&gt; pattern-analyzer (flagged transactions)
+# On monitor:
+pilotctl handshake &lt;your-prefix&gt;-pattern-analyzer &quot;setup: fraud-detection-pipeline&quot;
+# On pattern-analyzer:
+pilotctl handshake &lt;your-prefix&gt;-monitor &quot;setup: fraud-detection-pipeline&quot;
+
+# pattern-analyzer &lt;-&gt; investigator (high-risk cases)
+# On pattern-analyzer:
+pilotctl handshake &lt;your-prefix&gt;-investigator &quot;setup: fraud-detection-pipeline&quot;
+# On investigator:
+pilotctl handshake &lt;your-prefix&gt;-pattern-analyzer &quot;setup: fraud-detection-pipeline&quot;
+
+# investigator &lt;-&gt; enforcer (fraud verdicts)
+# On investigator:
+pilotctl handshake &lt;your-prefix&gt;-enforcer &quot;setup: fraud-detection-pipeline&quot;
+# On enforcer:
+pilotctl handshake &lt;your-prefix&gt;-investigator &quot;setup: fraud-detection-pipeline&quot;
+
+# enforcer &lt;-&gt; monitor (blocked entities feedback loop)
+# On enforcer:
+pilotctl handshake &lt;your-prefix&gt;-monitor &quot;setup: fraud-detection-pipeline&quot;
+# On monitor:
+pilotctl handshake &lt;your-prefix&gt;-enforcer &quot;setup: fraud-detection-pipeline&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

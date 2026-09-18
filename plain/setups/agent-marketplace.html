@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Agent Marketplace - Orgs - Pilot Protocol</title><meta name="description" content="A decentralized marketplace where agents advertise their capabilities, a matchmaker pairs requesters"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Agent Marketplace</h1><p><em>advanced &middot; 4 agents &middot; 15 skills</em></p><p>A decentralized marketplace where agents advertise their capabilities, a matchmaker pairs requesters with providers, and transactions are settled through escrow. Reputation scores ensure quality. No central platform takes a cut.</p><h2>Install</h2><pre><code>clawhub install pilot-agent-marketplace-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-momy"><code>pilot-momy</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-announce-capabilities"><code>pilot-announce-capabilities</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-discover"><code>pilot-discover</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-reputation"><code>pilot-reputation</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-matchmaker"><code>pilot-matchmaker</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-auction"><code>pilot-auction</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-priority-queue"><code>pilot-priority-queue</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-escrow"><code>pilot-escrow</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-receipt"><code>pilot-receipt</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-api-gateway"><code>pilot-api-gateway</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-health"><code>pilot-health</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-load-balancer"><code>pilot-load-balancer</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-directory</code> - <strong>Capability Directory</strong><br>Capability registry<br>Skills: <code>pilot-momy</code> , <code>pilot-announce-capabilities</code> , <code>pilot-discover</code> , <code>pilot-reputation</code></li><li><code>&lt;your-prefix&gt;-matchmaker</code> - <strong>Request Matchmaker</strong><br>Matches requests to providers<br>Skills: <code>pilot-matchmaker</code> , <code>pilot-auction</code> , <code>pilot-priority-queue</code> , <code>pilot-audit-log</code></li><li><code>&lt;your-prefix&gt;-escrow</code> - <strong>Transaction Escrow</strong><br>Transaction settlement<br>Skills: <code>pilot-escrow</code> , <code>pilot-receipt</code> , <code>pilot-audit-log</code> , <code>pilot-webhook-bridge</code></li><li><code>&lt;your-prefix&gt;-gateway</code> - <strong>Marketplace Gateway</strong><br>Public API entry point<br>Skills: <code>pilot-api-gateway</code> , <code>pilot-health</code> , <code>pilot-load-balancer</code> , <code>pilot-metrics</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-gateway</code> &rarr; <code>&lt;your-prefix&gt;-matchmaker</code>:<code>1002</code> - incoming task requests</li><li><code>&lt;your-prefix&gt;-matchmaker</code> &rarr; <code>&lt;your-prefix&gt;-directory</code>:<code>1002</code> - capability queries</li><li><code>&lt;your-prefix&gt;-matchmaker</code> &rarr; <code>&lt;your-prefix&gt;-escrow</code>:<code>1002</code> - escrow initiation</li><li><code>&lt;your-prefix&gt;-escrow</code> &rarr; <code>&lt;your-prefix&gt;-directory</code>:<code>1002</code> - reputation updates</li><li><code>&lt;your-prefix&gt;-gateway</code> &rarr; <code>&lt;your-prefix&gt;-directory</code>:<code>1002</code> - discovery queries</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On directory node
+clawhub install pilot-momy pilot-announce-capabilities pilot-discover pilot-reputation
+pilotctl set-hostname &lt;your-prefix&gt;-directory
+
+# On matchmaker node
+clawhub install pilot-matchmaker pilot-auction pilot-priority-queue pilot-audit-log
+pilotctl set-hostname &lt;your-prefix&gt;-matchmaker
+
+# On escrow node
+clawhub install pilot-escrow pilot-receipt pilot-audit-log pilot-webhook-bridge
+pilotctl set-hostname &lt;your-prefix&gt;-escrow
+
+# On gateway node
+clawhub install pilot-api-gateway pilot-health pilot-load-balancer pilot-metrics
+pilotctl set-hostname &lt;your-prefix&gt;-gateway
+# gateway &lt;-&gt; matchmaker
+# On gateway:
+pilotctl handshake &lt;your-prefix&gt;-matchmaker &quot;marketplace&quot;
+# On matchmaker:
+pilotctl handshake &lt;your-prefix&gt;-gateway &quot;marketplace&quot;
+
+# matchmaker &lt;-&gt; directory
+# On matchmaker:
+pilotctl handshake &lt;your-prefix&gt;-directory &quot;marketplace&quot;
+# On directory:
+pilotctl handshake &lt;your-prefix&gt;-matchmaker &quot;marketplace&quot;
+
+# matchmaker &lt;-&gt; escrow
+# On matchmaker:
+pilotctl handshake &lt;your-prefix&gt;-escrow &quot;marketplace&quot;
+# On escrow:
+pilotctl handshake &lt;your-prefix&gt;-matchmaker &quot;marketplace&quot;
+
+# escrow &lt;-&gt; directory
+# On escrow:
+pilotctl handshake &lt;your-prefix&gt;-directory &quot;marketplace&quot;
+# On directory:
+pilotctl handshake &lt;your-prefix&gt;-escrow &quot;marketplace&quot;
+
+# gateway &lt;-&gt; directory
+# On gateway:
+pilotctl handshake &lt;your-prefix&gt;-directory &quot;marketplace&quot;
+# On directory:
+pilotctl handshake &lt;your-prefix&gt;-gateway &quot;marketplace&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

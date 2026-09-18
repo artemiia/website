@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Digital Twin - Orgs - Pilot Protocol</title><meta name="description" content="A digital twin platform that mirrors physical assets in real time, predicts failures before they occ"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Digital Twin</h1><p><em>advanced &middot; 4 agents &middot; 12 skills</em></p><p>A digital twin platform that mirrors physical assets in real time, predicts failures before they occur, detects anomalous behavior, and schedules proactive maintenance. The sensor bridge ingests live telemetry, the model engine maintains a physics-based simulation, the anomaly detector compares real versus predicted behavior, and the action planner recommends and schedules interventions.</p><h2>Install</h2><pre><code>clawhub install pilot-digital-twin-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-gossip"><code>pilot-gossip</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-dataset"><code>pilot-dataset</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-consensus"><code>pilot-consensus</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-alert"><code>pilot-alert</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-slack-bridge"><code>pilot-slack-bridge</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-sensor-bridge</code> - <strong>Sensor Bridge</strong><br>Ingests real-time telemetry from physical assets<br>Skills: <code>pilot-stream-data</code> , <code>pilot-metrics</code> , <code>pilot-gossip</code></li><li><code>&lt;your-prefix&gt;-model-engine</code> - <strong>Model Engine</strong><br>Real-time sensor data&quot; },<br>Skills: <code>pilot-dataset</code> , <code>pilot-task-router</code> , <code>pilot-consensus</code></li><li><code>&lt;your-prefix&gt;-anomaly-detector</code> - <strong>Anomaly Detector</strong><br>Model predictions to compare&quot; },<br>Skills: <code>pilot-event-filter</code> , <code>pilot-alert</code> , <code>pilot-audit-log</code></li><li><code>&lt;your-prefix&gt;-action-planner</code> - <strong>Action Planner</strong><br>Anomaly alerts to act on&quot; },<br>Skills: <code>pilot-webhook-bridge</code> , <code>pilot-cron</code> , <code>pilot-slack-bridge</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-sensor-bridge</code> &rarr; <code>&lt;your-prefix&gt;-model-engine</code>:<code>1002</code> - real-time telemetry from physical assets</li><li><code>&lt;your-prefix&gt;-model-engine</code> &rarr; <code>&lt;your-prefix&gt;-anomaly-detector</code>:<code>1002</code> - predictions and expected behavior baselines</li><li><code>&lt;your-prefix&gt;-anomaly-detector</code> &rarr; <code>&lt;your-prefix&gt;-action-planner</code>:<code>1002</code> - anomaly alerts with severity and root cause</li><li><code>&lt;your-prefix&gt;-action-planner</code> &rarr; <code>external</code>:<code>443</code> - maintenance orders to field team systems</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On sensor bridge node
+clawhub install pilot-stream-data pilot-metrics pilot-gossip
+pilotctl set-hostname &lt;your-prefix&gt;-sensor-bridge
+
+# On model engine node
+clawhub install pilot-dataset pilot-task-router pilot-consensus
+pilotctl set-hostname &lt;your-prefix&gt;-model-engine
+
+# On anomaly detector node
+clawhub install pilot-event-filter pilot-alert pilot-audit-log
+pilotctl set-hostname &lt;your-prefix&gt;-anomaly-detector
+
+# On action planner node
+clawhub install pilot-webhook-bridge pilot-cron pilot-slack-bridge
+pilotctl set-hostname &lt;your-prefix&gt;-action-planner
+# sensor-bridge &lt;-&gt; model-engine (telemetry)
+# On sensor-bridge:
+pilotctl handshake &lt;your-prefix&gt;-model-engine &quot;setup: digital-twin&quot;
+# On model-engine:
+pilotctl handshake &lt;your-prefix&gt;-sensor-bridge &quot;setup: digital-twin&quot;
+
+# model-engine &lt;-&gt; anomaly-detector (predictions)
+# On model-engine:
+pilotctl handshake &lt;your-prefix&gt;-anomaly-detector &quot;setup: digital-twin&quot;
+# On anomaly-detector:
+pilotctl handshake &lt;your-prefix&gt;-model-engine &quot;setup: digital-twin&quot;
+
+# anomaly-detector &lt;-&gt; action-planner (anomaly alerts)
+# On anomaly-detector:
+pilotctl handshake &lt;your-prefix&gt;-action-planner &quot;setup: digital-twin&quot;
+# On action-planner:
+pilotctl handshake &lt;your-prefix&gt;-anomaly-detector &quot;setup: digital-twin&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

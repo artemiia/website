@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Hosted Agent Control Plane — Pilot Protocol (plain)</title><meta name="description" content="Architecture, operating modes, security boundaries, and data flow for the optional Pilot hosted agent management and policy platform."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/docs/">&larr; Docs index</a></p><h1>Hosted agent control plane</h1>
+  <p class="subtitle">An optional Pilot-hosted federation, policy, approval, monitoring, and command plane for one agent or a managed fleet.</p>
+
+  <div class="callout"><strong>Current availability.</strong> A live pre-release deployment exists at <a href="https://management.pilotprotocol.network/v1/auth/login">management.pilotprotocol.network</a>. It is invitation-only and currently serves the preconfigured Pilot demonstration organization. Public organization signup is not available. See <a href="/website/docs/managed-readiness">Availability &amp; readiness</a> for the exact launch boundary.</div>
+
+  <div class="toc"><h4>On this page</h4><ul>
+    <li><a href="#contract">Product contract</a></li>
+    <li><a href="#modes">Optional operating modes</a></li>
+    <li><a href="#flow">Decision and evidence flow</a></li>
+    <li><a href="#location">What runs where</a></li>
+    <li><a href="#data">Content and data handling</a></li>
+    <li><a href="#features">Feature map</a></li>
+  </ul></div>
+
+  <h2 id="contract">Product contract</h2>
+  <p>The hosted control plane lets an organization describe what its agents may do, evaluate proposed actions before execution, request human or service approval, inspect actions and exchanged content, operate nodes remotely, and retain signed evidence. It is adjacent to the open Pilot node and protocol: installing Pilot does not automatically place an agent under hosted control.</p>
+  <p>Four boundaries are fundamental:</p>
+  <ol>
+    <li>An unmanaged node continues to behave as it did before the hosted platform existed.</li>
+    <li>The management service cannot expand a node's locally pinned trust, mandate, or signed policy ceiling.</li>
+    <li>Semantic analysis can preserve or narrow an executable decision; it cannot turn a deterministic deny into an allow.</li>
+    <li>A configured pre-hook blocks or suspends the side effect before execution. A post-hook records the observed result; it does not retroactively authorize the action.</li>
+  </ol>
+
+  <h2 id="modes">Optional operating modes</h2>
+  <table><thead><tr><th>Mode</th><th>Behavior</th><th>Hosted dependency</th></tr></thead><tbody>
+    <tr><td><code>off</code> / no hook</td><td>The original agent and node behavior is unchanged.</td><td>None</td></tr>
+    <tr><td><code>observe</code></td><td>Selected actions are recorded without blocking them.</td><td>Optional</td></tr>
+    <tr><td><code>local_enforce</code></td><td>Signed deterministic rules may deny or constrain locally.</td><td>No per-action hosted decision</td></tr>
+    <tr><td><code>managed_enforce</code></td><td>Selected actions wait for the hosted deterministic, semantic, and approval path.</td><td>Required for governed actions</td></tr>
+  </tbody></table>
+  <p>Action interception and <code>.pilot</code> state synchronization are separate toggles. Signed fleet reporting is required for a managed adoption because it is how the service verifies the allocated node and returns typed control operations. A newly released action is not silently governed: enforcement profiles use an explicit action inventory or a visible wildcard.</p>
+
+  <h2 id="flow">Decision and evidence flow</h2>
+  <ol>
+    <li>The agent harness proposes an action with its action name, target resource, risk, request body, session identity, and available context.</li>
+    <li>The native pre-hook or custom SDK wrapper signs the intent with the adopted node identity and sends it to that organization's federation endpoint.</li>
+    <li>The active deterministic policy establishes the maximum authority. The first matching rule wins; the mandatory fallback is deny.</li>
+    <li>If an active reviewed semantic clause applies, Pilot's hosted evaluator receives the exact eligible content and may only preserve or narrow the base result.</li>
+    <li>If consent is required, the action remains suspended in an expiring transaction bound to the exact intent and payload hash. A successful quorum creates a single-use continuation.</li>
+    <li>The node verifies the signed result. It releases, constrains, suspends, or blocks the side effect locally.</li>
+    <li>The post-hook reports the actual result. Pilot correlates intent, policy, semantic evaluation, approval, continuation, result, receipt, fleet activity, and procedure runs.</li>
+  </ol>
+
+  <h2 id="location">What runs where</h2>
+  <table><thead><tr><th>Component</th><th>Location</th><th>Responsibility</th></tr></thead><tbody>
+    <tr><td>Pilot node runtime</td><td>Agent host</td><td>Node identity, trust pins, signed policy, enforcement, receipts, fleet reporting, and state reconciliation.</td></tr>
+    <tr><td>Harness adapter</td><td>Agent host</td><td>Optional native pre/post hooks or MCP bridge around the action boundary exposed by the harness.</td></tr>
+    <tr><td>Management service</td><td>Pilot-hosted</td><td>Accounts, organizations, policies, approvals, fleet desired state, procedures, audit, evidence, monitoring, and integrations.</td></tr>
+    <tr><td>Federation service</td><td>Pilot-hosted, tenant routed</td><td>Receives signed action intents and exact eligible exchange content; returns a signed narrowed decision.</td></tr>
+    <tr><td>Semantic evaluator</td><td>Pilot-hosted</td><td>Evaluates only active reviewed clauses, records model/version/usage evidence, and never grants above deterministic policy.</td></tr>
+  </tbody></table>
+
+  <h2 id="data">Content and data handling</h2>
+  <p>In managed enforcement, Pilot may receive the complete tool arguments, message body, explicit file-share bytes, HTTP body, transaction details, and reported result when the selected adapter exposes them. The exchange record binds exact content to the called resource, hashes, policy revision, decision, and retention metadata. Authorized operators can inspect a bounded preview and audit access to complete retained content.</p>
+  <p>No hidden local semantic inspector is installed. If content must be interpreted semantically, the eligible exchange is routed through the Pilot-hosted federation boundary. With no active semantic clause, deterministic evaluation completes without a model call. Actions configured as local-only remain metadata-governed unless an adapter deliberately federates inspectable content.</p>
+  <p>Private keys, enrollment seeds, account passwords, and root signing material are not rendered in the management interface. The <code>.pilot</code> state view fingerprints protected artifacts and permits mutation only for the explicitly safe, revision-checked subset.</p>
+
+  <h2 id="features">Feature map</h2>
+  <ul>
+    <li><a href="/website/docs/managed-accounts"><strong>Accounts &amp; organizations</strong></a> — local identity, optional OIDC, roles, invitations, launch entitlements, and tenant isolation.</li>
+    <li><a href="/website/docs/managed-agent-adoption"><strong>Agent adoption</strong></a> — one-time tenant-bound enrollment and signed first report.</li>
+    <li><a href="/website/docs/managed-harnesses"><strong>Harness coverage</strong></a> — exact native hook boundaries and known failure modes.</li>
+    <li><a href="/website/docs/managed-policies"><strong>Policies &amp; approvals</strong></a> — structured rules, ordinary-language statements, semantic narrowing, rollout, and consent.</li>
+    <li><a href="/website/docs/managed-fleet"><strong>Fleet, evidence &amp; operations</strong></a> — inventory, desired state, typed commands, exchanges, procedures, audit, and integrations.</li>
+    <li><a href="/website/docs/managed-readiness"><strong>Availability &amp; readiness</strong></a> — what works today and what still blocks general production release.</li>
+  </ul>
+
+  <div class="notice"><strong>Shared responsibility.</strong> A harness hook observes the operation proposed through that harness. It is not an operating-system reference monitor. Keep the harness sandbox, workload identity, egress policy, endpoint controls, secret management, and ordinary host hardening.</div><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

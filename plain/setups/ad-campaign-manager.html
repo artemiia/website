@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ad Campaign Manager - Orgs - Pilot Protocol</title><meta name="description" content="Deploy an ad campaign management system with 4 agents that automate campaign strategy, creative prod"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Ad Campaign Manager</h1><p><em>intermediate &middot; 4 agents &middot; 12 skills</em></p><p>Deploy an ad campaign management system with 4 agents that automate campaign strategy, creative production, real-time bidding, and performance analytics. A strategist defines audiences and budgets, a creative producer generates ad variations, a bid manager optimizes spend across channels, and a performance analyst tracks conversions and ROAS. The feedback loop from analyst back to strategist enables continuous campaign optimization.</p><h2>Install</h2><pre><code>clawhub install pilot-ad-campaign-manager-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-dataset"><code>pilot-dataset</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-share"><code>pilot-share</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-parallel"><code>pilot-task-parallel</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-receipt"><code>pilot-receipt</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-escrow"><code>pilot-escrow</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-slack-bridge"><code>pilot-slack-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-strategist</code> - <strong>Campaign Strategist</strong><br>Defines audiences, budgets, channel mix, and KPIs<br>Skills: <code>pilot-task-router</code> , <code>pilot-dataset</code> , <code>pilot-cron</code></li><li><code>&lt;your-prefix&gt;-creative</code> - <strong>Creative Producer</strong><br>Generates ad copy, headlines, and A/B test variations<br>Skills: <code>pilot-share</code> , <code>pilot-task-parallel</code> , <code>pilot-receipt</code></li><li><code>&lt;your-prefix&gt;-bidder</code> - <strong>Bid Manager</strong><br>Manages real-time bidding and spend optimization<br>Skills: <code>pilot-metrics</code> , <code>pilot-stream-data</code> , <code>pilot-escrow</code></li><li><code>&lt;your-prefix&gt;-analyst</code> - <strong>Performance Analyst</strong><br>Tracks conversions, ROAS, CTR; feeds insights back to strategist<br>Skills: <code>pilot-event-filter</code> , <code>pilot-slack-bridge</code> , <code>pilot-webhook-bridge</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-strategist</code> &rarr; <code>&lt;your-prefix&gt;-creative</code>:<code>1002</code> - campaign-brief</li><li><code>&lt;your-prefix&gt;-creative</code> &rarr; <code>&lt;your-prefix&gt;-bidder</code>:<code>1002</code> - creative-asset</li><li><code>&lt;your-prefix&gt;-bidder</code> &rarr; <code>&lt;your-prefix&gt;-analyst</code>:<code>1002</code> - bid-result</li><li><code>&lt;your-prefix&gt;-analyst</code> &rarr; <code>&lt;your-prefix&gt;-strategist</code>:<code>1002</code> - performance-insight</li><li><code>&lt;your-prefix&gt;-analyst</code> &rarr; <code>external</code>:<code>443</code> - campaign-report via webhook</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On server 1 (campaign strategist)
+clawhub install pilot-task-router pilot-dataset pilot-cron
+pilotctl set-hostname &lt;your-prefix&gt;-strategist
+
+# On server 2 (creative producer)
+clawhub install pilot-share pilot-task-parallel pilot-receipt
+pilotctl set-hostname &lt;your-prefix&gt;-creative
+
+# On server 3 (bid manager)
+clawhub install pilot-metrics pilot-stream-data pilot-escrow
+pilotctl set-hostname &lt;your-prefix&gt;-bidder
+
+# On server 4 (performance analyst)
+clawhub install pilot-event-filter pilot-slack-bridge pilot-webhook-bridge
+pilotctl set-hostname &lt;your-prefix&gt;-analyst
+# strategist &lt;-&gt; creative
+# On strategist:
+pilotctl handshake &lt;your-prefix&gt;-creative &quot;setup: ad-campaign-manager&quot;
+# On creative:
+pilotctl handshake &lt;your-prefix&gt;-strategist &quot;setup: ad-campaign-manager&quot;
+
+# creative &lt;-&gt; bidder
+# On creative:
+pilotctl handshake &lt;your-prefix&gt;-bidder &quot;setup: ad-campaign-manager&quot;
+# On bidder:
+pilotctl handshake &lt;your-prefix&gt;-creative &quot;setup: ad-campaign-manager&quot;
+
+# bidder &lt;-&gt; analyst
+# On bidder:
+pilotctl handshake &lt;your-prefix&gt;-analyst &quot;setup: ad-campaign-manager&quot;
+# On analyst:
+pilotctl handshake &lt;your-prefix&gt;-bidder &quot;setup: ad-campaign-manager&quot;
+
+# analyst &lt;-&gt; strategist (feedback loop)
+# On analyst:
+pilotctl handshake &lt;your-prefix&gt;-strategist &quot;setup: ad-campaign-manager&quot;
+# On strategist:
+pilotctl handshake &lt;your-prefix&gt;-analyst &quot;setup: ad-campaign-manager&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Smart Home Coordinator - Orgs - Pilot Protocol</title><meta name="description" content="A decentralized smart home system where sensors, a central brain, device actuators, and a dashboard"><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Smart Home Coordinator</h1><p><em>intermediate &middot; 4 agents &middot; 10 skills</em></p><p>A decentralized smart home system where sensors, a central brain, device actuators, and a dashboard collaborate to maintain comfort and efficiency. The brain resolves conflicts between goals (comfort vs. energy savings), actuators execute commands on physical devices, and the dashboard provides real-time visibility to the homeowner.</p><h2>Install</h2><pre><code>clawhub install pilot-smart-home-coordinator-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-stream-data"><code>pilot-stream-data</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-cron"><code>pilot-cron</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-metrics"><code>pilot-metrics</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-event-filter"><code>pilot-event-filter</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-task-router"><code>pilot-task-router</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-consensus"><code>pilot-consensus</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-receipt"><code>pilot-receipt</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-audit-log"><code>pilot-audit-log</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-webhook-bridge"><code>pilot-webhook-bridge</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-slack-bridge"><code>pilot-slack-bridge</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-sensor-hub</code> - <strong>Sensor Hub</strong><br>Collects and normalizes sensor readings<br>Skills: <code>pilot-stream-data</code> , <code>pilot-cron</code> , <code>pilot-metrics</code></li><li><code>&lt;your-prefix&gt;-brain</code> - <strong>Home Brain</strong><br>Resolves goals, issues device commands<br>Skills: <code>pilot-event-filter</code> , <code>pilot-task-router</code> , <code>pilot-consensus</code></li><li><code>&lt;your-prefix&gt;-actuator</code> - <strong>Device Actuator</strong><br>Executes commands on devices, reports results<br>Skills: <code>pilot-task-router</code> , <code>pilot-receipt</code> , <code>pilot-audit-log</code></li><li><code>&lt;your-prefix&gt;-dashboard</code> - <strong>Home Dashboard</strong><br>Displays home status, sends daily summaries<br>Skills: <code>pilot-metrics</code> , <code>pilot-webhook-bridge</code> , <code>pilot-slack-bridge</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-sensor-hub</code> &rarr; <code>&lt;your-prefix&gt;-brain</code>:<code>1002</code> - sensor readings</li><li><code>&lt;your-prefix&gt;-brain</code> &rarr; <code>&lt;your-prefix&gt;-actuator</code>:<code>1002</code> - device commands</li><li><code>&lt;your-prefix&gt;-actuator</code> &rarr; <code>&lt;your-prefix&gt;-brain</code>:<code>1002</code> - action confirmations</li><li><code>&lt;your-prefix&gt;-brain</code> &rarr; <code>&lt;your-prefix&gt;-dashboard</code>:<code>1002</code> - home state updates</li><li><code>&lt;your-prefix&gt;-dashboard</code> &rarr; <code>external</code>:<code>443</code> - daily summary via Slack/email</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On server 1 (sensor hub)
+clawhub install pilot-stream-data pilot-cron pilot-metrics
+pilotctl set-hostname &lt;your-prefix&gt;-sensor-hub
+
+# On server 2 (home brain)
+clawhub install pilot-event-filter pilot-task-router pilot-consensus
+pilotctl set-hostname &lt;your-prefix&gt;-brain
+
+# On server 3 (device actuator)
+clawhub install pilot-task-router pilot-receipt pilot-audit-log
+pilotctl set-hostname &lt;your-prefix&gt;-actuator
+
+# On server 4 (home dashboard)
+clawhub install pilot-metrics pilot-webhook-bridge pilot-slack-bridge
+pilotctl set-hostname &lt;your-prefix&gt;-dashboard
+# sensor-hub &lt;-&gt; brain (sensor data flow)
+# On sensor-hub:
+pilotctl handshake &lt;your-prefix&gt;-brain &quot;setup: smart-home-coordinator&quot;
+# On brain:
+pilotctl handshake &lt;your-prefix&gt;-sensor-hub &quot;setup: smart-home-coordinator&quot;
+
+# brain &lt;-&gt; actuator (device commands and confirmations)
+# On brain:
+pilotctl handshake &lt;your-prefix&gt;-actuator &quot;setup: smart-home-coordinator&quot;
+# On actuator:
+pilotctl handshake &lt;your-prefix&gt;-brain &quot;setup: smart-home-coordinator&quot;
+
+# brain &lt;-&gt; dashboard (home state updates)
+# On brain:
+pilotctl handshake &lt;your-prefix&gt;-dashboard &quot;setup: smart-home-coordinator&quot;
+# On dashboard:
+pilotctl handshake &lt;your-prefix&gt;-brain &quot;setup: smart-home-coordinator&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Multi-Region Content Sync - Orgs - Pilot Protocol</title><meta name="description" content="Distribute content from a central origin to edge nodes across multiple regions."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/setups/">&larr; All orgs</a></p><h1>Multi-Region Content Sync</h1><p><em>intermediate &middot; 4 agents &middot; 5 skills</em></p><p>Distribute content from a central origin to edge nodes across multiple regions. The origin broadcasts updates and edges sync automatically. Heartbeat monitoring ensures every edge is alive, with automatic alerting when a region goes dark.</p><h2>Install</h2><pre><code>clawhub install pilot-multi-region-content-sync-setup</code></pre><h2>Skills used</h2><ul><li><a href="https://clawhub.ai/teoslayer/pilot-sync"><code>pilot-sync</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-share"><code>pilot-share</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-broadcast"><code>pilot-broadcast</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-heartbeat-monitor"><code>pilot-heartbeat-monitor</code></a></li><li><a href="https://clawhub.ai/teoslayer/pilot-health"><code>pilot-health</code></a></li></ul><h2>Agents</h2><ul><li><code>&lt;your-prefix&gt;-origin</code> - <strong>Content Origin</strong><br>Source of truth for all content. Broadcasts updates to all edge nodes.<br>Skills: <code>pilot-sync</code> , <code>pilot-share</code> , <code>pilot-broadcast</code> , <code>pilot-heartbeat-monitor</code></li><li><code>&lt;your-prefix&gt;-edge-us</code> - <strong>&lt;Region&gt; Edge Node</strong><br>Serves content for the &lt;region&gt; region. Syncs from origin and reports health.<br>Skills: <code>pilot-sync</code> , <code>pilot-share</code> , <code>pilot-health</code> , <code>pilot-heartbeat-monitor</code></li><li><code>&lt;your-prefix&gt;-edge-eu</code> - <strong>EU regional edge</strong><br>EU regional edge<br>Skills: <code>pilot-sync</code> , <code>pilot-share</code> , <code>pilot-health</code> , <code>pilot-heartbeat-monitor</code></li><li><code>&lt;your-prefix&gt;-edge-asia</code> - <strong>Asia regional edge</strong><br>Asia regional edge<br>Skills: <code>pilot-sync</code> , <code>pilot-share</code> , <code>pilot-health</code> , <code>pilot-heartbeat-monitor</code></li></ul><h2>Data flows</h2><ul><li><code>&lt;your-prefix&gt;-origin</code> &rarr; <code>&lt;your-prefix&gt;-edge-*</code>:<code>1001</code> - content updates</li><li><code>&lt;your-prefix&gt;-edge-*</code> &rarr; <code>&lt;your-prefix&gt;-origin</code>:<code>1002</code> - heartbeat and sync confirmation</li></ul><h2>Quick start</h2><pre><code># Replace &lt;your-prefix&gt; with a unique name for your deployment (e.g. acme)
+# On origin server
+clawhub install pilot-sync pilot-share pilot-broadcast
+pilotctl set-hostname &lt;your-prefix&gt;-origin
+
+# On US edge server
+clawhub install pilot-sync pilot-share pilot-health pilot-heartbeat-monitor
+pilotctl set-hostname &lt;your-prefix&gt;-edge-us
+
+# On EU edge server
+clawhub install pilot-sync pilot-share pilot-health pilot-heartbeat-monitor
+pilotctl set-hostname &lt;your-prefix&gt;-edge-eu
+
+# On Asia edge server
+clawhub install pilot-sync pilot-share pilot-health pilot-heartbeat-monitor
+pilotctl set-hostname &lt;your-prefix&gt;-edge-asia
+# On edge-asia:
+pilotctl handshake &lt;your-prefix&gt;-origin &quot;setup: multi-region-content-sync&quot;
+# On origin:
+pilotctl handshake &lt;your-prefix&gt;-edge-asia &quot;setup: multi-region-content-sync&quot;
+# On edge-eu:
+pilotctl handshake &lt;your-prefix&gt;-origin &quot;setup: multi-region-content-sync&quot;
+# On origin:
+pilotctl handshake &lt;your-prefix&gt;-edge-eu &quot;setup: multi-region-content-sync&quot;
+# On edge-us:
+pilotctl handshake &lt;your-prefix&gt;-origin &quot;setup: multi-region-content-sync&quot;
+# On origin:
+pilotctl handshake &lt;your-prefix&gt;-edge-us &quot;setup: multi-region-content-sync&quot;
+pilotctl trust</code></pre><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Managed Agent Adoption — Pilot Protocol (plain)</title><meta name="description" content="Step-by-step managed node adoption, one-time enrollment security, optional control toggles, signed verification, and organization reassignment."><link rel="canonical" href="https://artemiia.github.io/"><meta name="robots" content="noindex,follow"><meta name="pilot-variant" content="plain"><!-- No analytics on the plain variant: it is a JS-stripped surface for agents
+       and screen readers, so no GA4 / cookies are loaded (nothing to consent to). --></head><body><p style="text-align:right"><a href="/">[ Switch to styled version &rarr; ]</a></p><nav><a href="/website/plain/">home</a> ·<a href="/website/plain/skills/">skills</a> ·<a href="/website/plain/p2p/">p2p</a> ·<a href="/website/plain/mcp/">mcp</a> ·<a href="/website/plain/plans/">plans</a> ·<a href="/website/plain/trust/">trust</a> ·<a href="/website/plain/governance/">governance</a> ·<a href="/website/plain/roadmap/">roadmap</a> ·<a href="/website/plain/news/">news</a> ·<a href="/website/plain/docs/">docs</a></nav><hr><p><a href="/website/plain/docs/">&larr; Docs index</a></p><h1>Managed agent adoption</h1>
+  <p class="subtitle">Adopt the core Pilot node first; attach a harness action boundary only when in-flight control is wanted.</p>
+
+  <div class="toc"><h4>On this page</h4><ul>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#workflow">Adoption workflow</a></li>
+    <li><a href="#claim">What the one-time claim installs</a></li>
+    <li><a href="#options">Optional controls</a></li>
+    <li><a href="#verification">How Pilot verifies adoption</a></li>
+    <li><a href="#move">Moving or replacing a node</a></li>
+    <li><a href="#compatibility">Unmanaged compatibility</a></li>
+  </ul></div>
+
+  <h2 id="prerequisites">Prerequisites</h2>
+  <ul>
+    <li>An existing account in the target organization.</li>
+    <li>The administrator or <code>fleet.command</code> role.</li>
+    <li>A supported host for <code>pilotctl</code> and <code>pilot-daemon</code>.</li>
+    <li>Outbound HTTPS access to the organization's management and federation origins.</li>
+    <li>Access to the operating-system user that will own the agent runtime. Do not run the installer as root.</li>
+  </ul>
+
+  <h2 id="workflow">Adoption workflow</h2>
+  <ol>
+    <li>Open <strong>Connect an agent</strong> in the management console.</li>
+    <li>Select the real harness that runs the agent. The selection records the expected capability boundary; it does not pretend every harness has universal interception.</li>
+    <li>Enter a node display name and choose action interception and <code>.pilot</code> state synchronization. Fleet reporting is required.</li>
+    <li>Select <strong>Create one-time command</strong>. Pilot allocates the agent ID server-side and returns a high-entropy claim that expires after 15 minutes and is consumed once.</li>
+    <li>Run the displayed command on the agent host:</li>
+  </ol>
+  <pre><code>curl -fsSL https://pilotprotocol.network/install.sh |   PILOT_ENROLLMENT_TOKEN='&lt;one-time token&gt;' sh -s --   --managed-url https://management.pilotprotocol.network</code></pre>
+  <ol start="6">
+    <li>If action interception is enabled, run the separate, version-pinned harness attachment command shown by the console, for example <code>npx -y pilotprotocol-mcp@0.2.13 attach --gemini</code>.</li>
+    <li>Return to the waiting page. Pilot accepts completion only after the allocated identity sends a fresh signed report carrying the exact harness and onboarding-run marker.</li>
+    <li>Create and activate a language policy, then attempt a real violating action. The guided flow completes only after it observes a semantic denial for that exact agent before the side effect.</li>
+  </ol>
+  <p>The token is a short-lived bearer secret. Do not put the generated command in tickets, chat, source control, shared shell history, process supervisors, or screenshots.</p>
+
+  <h2 id="claim">What the one-time claim installs</h2>
+  <p>The installer downloads the management-authority-pinned managed runtime, then calls <code>pilotctl enterprise adopt</code>. The service returns exactly one delegated node identity plus the public root pin, signed trust bundle, signed bootstrap policy, organization endpoints, adoption options, and run identity. The browser never creates a node key.</p>
+  <p>The client verifies that the credential, key, trust bundle, policy, tenant, agent ID, and HTTPS authority origins agree. It then atomically writes an owner-only attachment under <code>$HOME/.pilot/managed/</code>:</p>
+  <ul>
+    <li><code>enterprise-control.json</code> — tenant, endpoints, policy paths, action inventory, rollout, reporting, and state-sync configuration;</li>
+    <li><code>trust.json</code> and <code>policy.json</code> — verified signed bootstrap artifacts;</li>
+    <li><code>agent.seed</code> — the delegated node seed, stored with owner-only permissions;</li>
+    <li>restart-safe receipt, continuation, and state directories.</li>
+  </ul>
+  <p>The enrollment token is stored server-side only as a hash, consumed before private credential material is released, removed from the process environment, and never reused. Unknown, expired, and consumed tokens return the same generic error.</p>
+
+  <h2 id="options">Optional controls</h2>
+  <table><thead><tr><th>Option</th><th>When enabled</th><th>When disabled</th></tr></thead><tbody>
+    <tr><td>Fleet connection</td><td>Signed health, desired state, rollout, and typed commands.</td><td>Not a managed adoption; this option is required.</td></tr>
+    <tr><td>In-flight action control</td><td>Selected harness actions wait for signed hosted decisions and produce receipts.</td><td>Ordinary harness actions remain unchanged.</td></tr>
+    <tr><td><code>.pilot</code> state visibility</td><td>Safe state manifests and revision-checked mutations synchronize over the fleet channel.</td><td>No state tree or remote state mutation.</td></tr>
+  </tbody></table>
+  <p>Core adoption installs the node runtime; it does not install <code>pilot-mcp</code>. Harness attachment is a separate opt-in integration that reads the existing managed attachment. See <a href="/website/docs/managed-harnesses">Harness coverage</a>.</p>
+
+  <h2 id="verification">How Pilot verifies adoption</h2>
+  <p>The console does not trust a client-side success message. It checks:</p>
+  <ul>
+    <li>the report signature against the exact delegated key in tenant trust;</li>
+    <li>the server-allocated agent ID;</li>
+    <li>the exact harness and one-time onboarding run marker;</li>
+    <li>a fresh observation time after the command was issued;</li>
+    <li>the policy revision the node reports as active;</li>
+    <li>for the guided proof, a durable hosted exchange with a semantic-clause denial for the same agent.</li>
+  </ul>
+
+  <h2 id="move">Moving or replacing a node</h2>
+  <p>A managed identity is not portable between organizations. The installer deliberately refuses a new enrollment token when <code>$HOME/.pilot/managed/enterprise-control.json</code> already exists. To replace or move a node, an administrator must retire or revoke the old identity, preserve required evidence, remove the old managed attachment through an approved local decommissioning procedure, and issue a fresh organization-bound adoption. There is no public self-service cross-organization transfer workflow today.</p>
+  <p>Do not copy <code>agent.seed</code> or the complete managed directory to clone a node. Each runtime instance should receive a distinct delegated identity and appear separately in fleet inventory.</p>
+
+  <h2 id="compatibility">Unmanaged compatibility</h2>
+  <p>Running the ordinary Pilot installer without <code>--managed-url</code> and without an enrollment token preserves unmanaged behavior. Installing a harness adapter without a valid owner-only managed attachment is a zero-side-effect pass-through. Disabling or removing an optional harness boundary should restore the harness's original execution path, subject to that harness's own configuration.</p>
+
+  <div class="notice"><strong>Before calling a node governed:</strong> prove an allowed action, a denied action with no side effect, an approval that resumes only the exact request, an expired approval that stays blocked, a failed tool with terminal evidence, and the documented hook-timeout behavior.</div><hr><footer><p>Pilot Protocol - plain text variant for AI agents and screen readers. <a href="/">Switch to styled version</a>.</p><p><small>We actually made a page for agents. &ldquo;Plain text&rdquo; here doesn't just mean no images - this is the styled marketing site with CSS and JavaScript stripped out. What you see is what your parser gets: semantic HTML, nothing else. No layout shifts, no hydration, no JS frameworks mediating between you and the content.</small></p><p><small>We make every effort to keep this plain variant in sync with the styled site, but it may lag. Treat live numbers (agent counts, network stats, pricing) with a grain of salt and verify against the canonical sources when precision matters: <a href="https://raw.githubusercontent.com/TeoSlayer/pilot-skills/main/skills.json">skills.json</a>.</small></p></footer></body></html>
