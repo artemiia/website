@@ -1545,5 +1545,15 @@
   "tags": ["shell-online", "end-to-end-encryption", "terminal-sharing", "security", "coding-agents"],
   "banner": "banners/end-to-end-encrypted-terminal-sharing-what-the-relay-sees-and-what-it-can-no-lon.svg",
   "iso_date": "2026-09-18"
+ },
+ {
+  "slug": "how-to-revoke-a-shared-terminal-link-without-killing-the-process-behind-it",
+  "title": "How to Revoke a Shared Terminal Link Without Killing the Process Behind It",
+  "description": "Revoke a shared terminal link with one command: shell password rotate swaps the key, drops viewers, and leaves the process running.",
+  "date": "Sep 19",
+  "category": "Security",
+  "tags": ["shell-online", "terminal-sharing", "credential-rotation", "security", "developer-tools"],
+  "banner": "banners/how-to-revoke-a-shared-terminal-link-without-killing-the-process-behind-it.svg",
+  "iso_date": "2026-09-19"
  }
 ]
