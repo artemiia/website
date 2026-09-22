@@ -1,11 +1,31 @@
 [
  {
+  "slug": "cosift-a-collaborative-index-agents-build-as-they-work",
+  "title": "Cosift: A Collaborative Index Agents Build As They Work",
+  "description": "Cosift is a free, open-source index agents fill in as they browse. Fetch a page once, index it, and every other agent retrieves it instead of refetching.",
+  "date": "Sep 18",
+  "category": "Blog",
+  "tags": [
+   "cosift",
+   "agents",
+   "collaborative-index",
+   "mcp",
+   "open-source"
+  ],
+  "banner": "banners/cosift-a-collaborative-index-agents-build-as-they-work.svg",
+  "iso_date": "2026-09-18"
+ },
+ {
   "slug": "connect-claude-code-to-pilot-protocol",
   "title": "Connect Claude Code to Pilot Protocol with MCP Tools",
   "description": "Add Pilot agent discovery, messaging, and policy hooks to Claude Code without replacing existing MCP servers or settings.",
   "date": "Sep 5",
   "category": "Integration",
-  "tags": ["claude-code", "mcp", "integration"],
+  "tags": [
+   "claude-code",
+   "mcp",
+   "integration"
+  ],
   "banner": "banners/pilot-harness-integrations.svg",
   "iso_date": "2026-09-05"
  },
@@ -15,7 +35,11 @@
   "description": "Configure Pilot MCP and fail-closed native tool hooks in Cursor while preserving the rest of your user configuration.",
   "date": "Sep 5",
   "category": "Integration",
-  "tags": ["cursor", "mcp", "integration"],
+  "tags": [
+   "cursor",
+   "mcp",
+   "integration"
+  ],
   "banner": "banners/pilot-harness-integrations.svg",
   "iso_date": "2026-09-05"
  },
@@ -25,7 +49,11 @@
   "description": "Connect Cline to Pilot MCP, install its native tool hooks, and preserve existing servers and user-owned hook scripts.",
   "date": "Sep 5",
   "category": "Integration",
-  "tags": ["cline", "mcp", "integration"],
+  "tags": [
+   "cline",
+   "mcp",
+   "integration"
+  ],
   "banner": "banners/pilot-harness-integrations.svg",
   "iso_date": "2026-09-05"
  },
@@ -35,7 +63,11 @@
   "description": "Add Pilot MCP and native pre- and post-tool hooks to Hermes CLI and Gateway sessions with one configuration command.",
   "date": "Sep 5",
   "category": "Integration",
-  "tags": ["hermes", "mcp", "integration"],
+  "tags": [
+   "hermes",
+   "mcp",
+   "integration"
+  ],
   "banner": "banners/pilot-harness-integrations.svg",
   "iso_date": "2026-09-05"
  },
@@ -45,7 +77,11 @@
   "description": "Enable Pilot MCP and PicoClaw’s process-hook boundary for lightweight agents running on constrained devices.",
   "date": "Sep 5",
   "category": "Integration",
-  "tags": ["picoclaw", "mcp", "integration"],
+  "tags": [
+   "picoclaw",
+   "mcp",
+   "integration"
+  ],
   "banner": "banners/pilot-harness-integrations.svg",
   "iso_date": "2026-09-05"
  },
@@ -55,7 +91,11 @@
   "description": "Configure Pilot for OpenHands at user scope and add project-scoped tool hooks without changing unrelated settings.",
   "date": "Sep 5",
   "category": "Integration",
-  "tags": ["openhands", "mcp", "integration"],
+  "tags": [
+   "openhands",
+   "mcp",
+   "integration"
+  ],
   "banner": "banners/pilot-harness-integrations.svg",
   "iso_date": "2026-09-05"
  },
@@ -65,7 +105,11 @@
   "description": "Add Pilot MCP and local tool hooks to Codex CLI while preserving existing TOML configuration and hook groups.",
   "date": "Sep 5",
   "category": "Integration",
-  "tags": ["codex-cli", "mcp", "integration"],
+  "tags": [
+   "codex-cli",
+   "mcp",
+   "integration"
+  ],
   "banner": "banners/pilot-harness-integrations.svg",
   "iso_date": "2026-09-05"
  },
@@ -75,7 +119,11 @@
   "description": "Connect Gemini CLI to Pilot MCP and install sequential BeforeTool and AfterTool hooks in its user settings.",
   "date": "Sep 5",
   "category": "Integration",
-  "tags": ["gemini-cli", "mcp", "integration"],
+  "tags": [
+   "gemini-cli",
+   "mcp",
+   "integration"
+  ],
   "banner": "banners/pilot-harness-integrations.svg",
   "iso_date": "2026-09-05"
  },
@@ -85,7 +133,11 @@
   "description": "Add Pilot MCP to Junie CLI and use the same standard server definition in JetBrains AI Assistant settings.",
   "date": "Sep 5",
   "category": "Integration",
-  "tags": ["junie", "mcp", "integration"],
+  "tags": [
+   "junie",
+   "mcp",
+   "integration"
+  ],
   "banner": "banners/pilot-harness-integrations.svg",
   "iso_date": "2026-09-05"
  },
@@ -95,7 +147,11 @@
   "description": "Configure Pilot MCP and cross-platform tool hooks for GitHub Copilot CLI without rewriting unrelated user settings.",
   "date": "Sep 5",
   "category": "Integration",
-  "tags": ["github-copilot", "mcp", "integration"],
+  "tags": [
+   "github-copilot",
+   "mcp",
+   "integration"
+  ],
   "banner": "banners/pilot-harness-integrations.svg",
   "iso_date": "2026-09-05"
  },
@@ -132,7 +188,7 @@
  {
   "slug": "build-agent-app-turn-api-into-tool",
   "title": "How to Build an Agent App: Turn Your API Into an Agent-Native Tool",
-  "description": "Turn an existing API into an installable agent app on Pilot Protocol \u2014 the discover, install, call loop, what to prepare, and how to publish.",
+  "description": "Turn an existing API into an installable agent app on Pilot Protocol — the discover, install, call loop, what to prepare, and how to publish.",
   "date": "Jul 5",
   "category": "Blog",
   "tags": [
@@ -162,7 +218,7 @@
  {
   "slug": "overlay-network-ai-agents",
   "title": "Overlay Network for AI Agents: Architecture and Trust Model",
-  "description": "What an overlay network for AI agents needs \u2014 persistent addressing, NAT traversal, encrypted transport, and per-peer trust \u2014 and how Pilot Protocol implements it.",
+  "description": "What an overlay network for AI agents needs — persistent addressing, NAT traversal, encrypted transport, and per-peer trust — and how Pilot Protocol implements it.",
   "date": "Jul 1",
   "category": "Blog",
   "tags": [
@@ -1454,7 +1510,13 @@
   "description": "Claude Code 2.1.259 runs headless with no prompts. Here is how to watch a coding agent remotely from a phone with a read-only, end-to-end encrypted link.",
   "date": "Sep 8",
   "category": "Guide",
-  "tags": ["shell-online", "claude-code", "coding-agents", "read-only-terminal", "remote-monitoring"],
+  "tags": [
+   "shell-online",
+   "claude-code",
+   "coding-agents",
+   "read-only-terminal",
+   "remote-monitoring"
+  ],
   "banner": "banners/how-to-watch-a-coding-agent-remotely-after-you-turn-off-its-permission-prompts.svg",
   "iso_date": "2026-09-08"
  },
@@ -1464,8 +1526,54 @@
   "description": "Share terminal sessions with your team on shell.online: organizations, handoffs, remote start, and session passwords the accounts service cannot read.",
   "date": "Sep 9",
   "category": "Security",
-  "tags": ["shell-online", "terminal-sharing", "end-to-end-encryption", "oauth", "team-collaboration"],
+  "tags": [
+   "shell-online",
+   "terminal-sharing",
+   "end-to-end-encryption",
+   "oauth",
+   "team-collaboration"
+  ],
   "banner": "banners/team-terminal-sharing-sealed-so-the-service-cant-open-it.svg",
   "iso_date": "2026-09-09"
+ },
+ {
+  "slug": "end-to-end-encrypted-terminal-sharing-what-the-relay-sees-and-what-it-can-no-lon",
+  "title": "End-to-End Encrypted Terminal Sharing: What the Relay Sees, and What It Can No Longer Replay",
+  "description": "What end-to-end encrypted terminal sharing in shell.online hides from the relay, what it leaks, and how envelope v2 stops replayed keystrokes.",
+  "date": "Sep 18",
+  "category": "Security",
+  "tags": ["shell-online", "end-to-end-encryption", "terminal-sharing", "security", "coding-agents"],
+  "banner": "banners/end-to-end-encrypted-terminal-sharing-what-the-relay-sees-and-what-it-can-no-lon.svg",
+  "iso_date": "2026-09-18"
+ },
+ {
+  "slug": "how-to-revoke-a-shared-terminal-link-without-killing-the-process-behind-it",
+  "title": "How to Revoke a Shared Terminal Link Without Killing the Process Behind It",
+  "description": "Revoke a shared terminal link with one command: shell password rotate swaps the key, drops viewers, and leaves the process running.",
+  "date": "Sep 19",
+  "category": "Security",
+  "tags": ["shell-online", "terminal-sharing", "credential-rotation", "security", "developer-tools"],
+  "banner": "banners/how-to-revoke-a-shared-terminal-link-without-killing-the-process-behind-it.svg",
+  "iso_date": "2026-09-19"
+ },
+ {
+  "slug": "a-read-only-terminal-link-for-your-coding-agent-after-plugin4shell",
+  "title": "A Read-Only Terminal Link for Your Coding Agent, After Plugin4Shell",
+  "description": "Plugin4Shell showed how much a coding agent can reach. A read-only terminal link lets a reviewer watch that agent without holding a credential that types.",
+  "date": "Sep 20",
+  "category": "Security",
+  "tags": ["shell-online", "read-only-terminal", "coding-agents", "plugin4shell", "terminal-sharing"],
+  "banner": "banners/a-read-only-terminal-link-for-your-coding-agent-after-plugin4shell.svg",
+  "iso_date": "2026-09-20"
+ },
+ {
+  "slug": "mcp-terminal-access-for-an-ai-agent-scoped-grants-that-expire-and-revoke",
+  "title": "MCP Terminal Access for an AI Agent: Scoped Grants That Expire and Revoke",
+  "description": "How shell.online v0.21 gives an AI agent MCP terminal access through scoped, expiring, revocable grants, and what that costs you in end-to-end encryption.",
+  "date": "Sep 21",
+  "category": "Security",
+  "tags": ["shell-online", "mcp", "ai-agents", "terminal-sharing", "security"],
+  "banner": "banners/mcp-terminal-access-for-an-ai-agent-scoped-grants-that-expire-and-revoke.svg",
+  "iso_date": "2026-09-21"
  }
 ]
