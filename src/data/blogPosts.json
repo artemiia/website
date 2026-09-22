@@ -1625,5 +1625,15 @@
   "tags": ["shell-online", "ai-agents", "terminal", "refstream", "openai"],
   "banner": "banners/connect-an-ai-agent-to-a-live-terminal-without-giving-it-the-machine-shell-onlin.svg",
   "iso_date": "2026-09-14"
+ },
+ {
+  "slug": "a-browser-terminal-on-a-ros-2-robot-without-a-vpn-and-why-it-should-be-read-only",
+  "title": "A Browser Terminal on a ROS 2 Robot Without a VPN, and Why It Should Be Read-Only by Default",
+  "description": "How to get a browser terminal on a ROS 2 robot with shell.online: one command, no VPN, read-only links, reconnects, and persistent URLs across reboots.",
+  "date": "Sep 15",
+  "category": "Guide",
+  "tags": ["shell-online", "ros2", "robotics", "remote-access", "terminal-sharing"],
+  "banner": "banners/a-browser-terminal-on-a-ros-2-robot-without-a-vpn-and-why-it-should-be-read-only.svg",
+  "iso_date": "2026-09-15"
  }
 ]
