@@ -1665,5 +1665,15 @@
   "tags": ["shell-online", "coding-agents", "terminal-sharing", "observability", "claude-code"],
   "banner": "banners/which-agent-session-needs-you-shell-online-v0-22-adds-a-passive-pulse-to-monitor.svg",
   "iso_date": "2026-09-22"
+ },
+ {
+  "slug": "share-a-terminal-session-password-with-a-teammate-without-the-service-seeing-it",
+  "title": "Share a Terminal Session Password With a Teammate Without the Service Seeing It: shell.online v0.23.1 Password Requests",
+  "description": "shell.online v0.23.1 lets a teammate ask a session owner for its password; the copy is sealed in the owner's browser and the service never holds it.",
+  "date": "Sep 23",
+  "category": "Security",
+  "tags": ["shell-online", "terminal-sharing", "end-to-end-encryption", "coding-agents", "team-collaboration"],
+  "banner": "banners/share-a-terminal-session-password-with-a-teammate-without-the-service-seeing-it.svg",
+  "iso_date": "2026-09-23"
  }
 ]
