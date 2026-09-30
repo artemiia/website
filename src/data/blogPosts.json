@@ -1758,5 +1758,15 @@
   "tags": ["shell-online", "agent-skills", "coding-agents", "terminal-sharing", "claude-code"],
   "banner": "banners/let-a-coding-agent-share-its-own-terminal-session-in-the-browser-the-shell-onlin.svg",
   "iso_date": "2026-09-29"
+ },
+ {
+  "slug": "end-to-end-encrypted-terminal-sharing-has-a-second-secret-on-the-host-shell-onli",
+  "title": "End-to-End Encrypted Terminal Sharing Has a Second Secret on the Host: shell.online v0.24.1 Takes the Session Password Out of Process Environments",
+  "description": "What end-to-end encrypted terminal sharing hides from the relay, and why shell.online v0.24.1 moved the session password out of process environments.",
+  "date": "Sep 30",
+  "category": "Security",
+  "tags": ["shell-online", "security", "end-to-end-encryption", "coding-agents", "secrets"],
+  "banner": "banners/end-to-end-encrypted-terminal-sharing-has-a-second-secret-on-the-host-shell-onli.svg",
+  "iso_date": "2026-09-30"
  }
 ]
