@@ -1778,5 +1778,15 @@
   "tags": ["shell-online", "coding-agents", "confidential-computing", "prompt-injection", "terminal-sharing"],
   "banner": "banners/see-what-a-coding-agent-is-doing-without-opening-its-terminal-owner-only-session.svg",
   "iso_date": "2026-10-01"
+ },
+ {
+  "slug": "a-browser-terminal-for-a-docker-container-that-keeps-one-link-across-restarts-af",
+  "title": "A Browser Terminal for a Docker Container That Keeps One Link Across Restarts, After the Unsloth Studio RCE",
+  "description": "A browser terminal for a Docker container with shell.online: one encrypted link across restarts, no SSH keys inside, and why the Unsloth RCE makes that matter.",
+  "date": "Oct 2",
+  "category": "Guide",
+  "tags": ["shell-online", "docker", "terminal-sharing", "ml-security", "end-to-end-encryption"],
+  "banner": "banners/a-browser-terminal-for-a-docker-container-that-keeps-one-link-across-restarts-af.svg",
+  "iso_date": "2026-10-02"
  }
 ]
