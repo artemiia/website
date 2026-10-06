@@ -1798,5 +1798,15 @@
   "tags": ["shell-online", "windows", "conpty", "codex", "terminal-sharing"],
   "banner": "banners/share-a-windows-terminal-session-in-the-browser-codex-on-conpty-without-openssh.svg",
   "iso_date": "2026-10-05"
+ },
+ {
+  "slug": "a-terminal-sharing-link-that-expires-at-a-set-time-what-shell-online-auto-close",
+  "title": "A Terminal Sharing Link That Expires at a Set Time: What shell.online --auto-close Actually Stops",
+  "description": "A terminal sharing link that expires on a deadline: how shell.online --auto-close stops an unattended agent, and what it does not cover.",
+  "date": "Oct 6",
+  "category": "Security",
+  "tags": ["shell-online", "terminal-sharing", "ai-agents", "security"],
+  "banner": "banners/a-terminal-sharing-link-that-expires-at-a-set-time-what-shell-online-auto-close.svg",
+  "iso_date": "2026-10-06"
  }
 ]
