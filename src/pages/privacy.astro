@@ -20,7 +20,7 @@ const canonicalUrl = "https://pilotprotocol.network/privacy";
 <main class="prose" style="padding: 96px 32px 80px; max-width: 760px; margin: 0 auto;">
   <h1>Privacy <em>Policy</em></h1>
   <p class="article-meta" style="display:flex;gap:14px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 0 36px;">
-    Effective: May 28, 2026 · Last updated: July 31, 2026
+    Effective: May 28, 2026 · Last updated: October 7, 2026
   </p>
 
   <p><strong>Pilot Protocol</strong> is operated by Vulture Labs, Inc., a Delaware corporation ("Vulture Labs"). This Privacy Policy explains what data we collect, why we collect it, and what rights you have. It covers the Pilot Protocol daemon, the pilotprotocol.network website, the rendezvous service, and any Pilot-operated specialist agents (together, the "Services").</p>
@@ -82,7 +82,7 @@ const canonicalUrl = "https://pilotprotocol.network/privacy";
     <li><strong>Consent (Art. 6(1)(a))</strong> — For Google Analytics cookies, the X (Twitter) advertising pixel, any optional telemetry, and SMS messages sent to a phone number you provide. You may withdraw consent at any time — for analytics, by clearing your browser's <code>pilot_consent</code> localStorage entry; for SMS, by replying <code>STOP</code> to any message.</li>
   </ul>
 
-  <h2>6. Data Retention</h2>
+  <h2 id="retention" style="scroll-margin-top: calc(var(--nav-h, 72px) + 18px);">6. Data Retention</h2>
   <ul>
     <li><strong>Daemon registration data</strong> (IP, hostname, public key, tags, version) — Retained while your agent is registered. Automatically removed if the agent is offline for 30 consecutive days.</li>
     <li><strong>Phone number &amp; SMS consent records</strong> — Retained while your number is enrolled to receive messages, and for a reasonable period afterward to evidence consent and opt-out as required by carrier rules and applicable law. Removed on request or after you opt out.</li>
@@ -93,7 +93,7 @@ const canonicalUrl = "https://pilotprotocol.network/privacy";
     <li><strong>X (Twitter) pixel data</strong> — Retained by X Corp. under its own retention schedule, which we do not control. See the X Privacy Policy. The cookies it sets on your browser last up to 2 years and can be cleared at any time.</li>
   </ul>
 
-  <h2>7. Sub-Processors</h2>
+  <h2 id="subprocessors" style="scroll-margin-top: calc(var(--nav-h, 72px) + 18px);">7. Sub-Processors</h2>
   <p>We use the following third-party service providers to operate the Services:</p>
   <ul>
     <li><strong>Google Cloud Platform (GCP)</strong> — Hosts the rendezvous registry and any Pilot-operated specialist agents. Data at rest in <code>us-central1</code>.</li>
@@ -147,7 +147,7 @@ const canonicalUrl = "https://pilotprotocol.network/privacy";
   <h2>12. Automated Decision-Making</h2>
   <p>We do not use any form of automated decision-making or profiling that produces legal effects or similarly significant effects on individuals (GDPR Article 22). The rendezvous service uses automated matching of tags and hostnames, but this is purely operational and has no effect on individual rights.</p>
 
-  <h2>13. Security</h2>
+  <h2 id="security" style="scroll-margin-top: calc(var(--nav-h, 72px) + 18px);">13. Security</h2>
   <p>We implement appropriate technical and organizational measures to protect data: TLS (1.2 or higher) for control-plane transit, AES-256-GCM for encrypted peer tunnels, access controls on infrastructure, and regular security reviews. In the event of a data breach, we will notify affected users and relevant authorities as required by applicable law.</p>
 
   <h2>14. Changes to This Policy</h2>
@@ -157,6 +157,15 @@ const canonicalUrl = "https://pilotprotocol.network/privacy";
   <p>For privacy-related inquiries or to exercise your rights:</p>
   <p>Email: <a href="mailto:founders@pilotprotocol.network">founders@pilotprotocol.network</a></p>
   <p>We aim to acknowledge all privacy requests within 5 business days.</p>
+
+  <h2 id="legal-requests" style="scroll-margin-top: calc(var(--nav-h, 72px) + 18px);">16. Government and Third-Party Data Requests</h2>
+  <p>Vulture Labs, Inc. handles requests for user data from governments, law enforcement, and private parties as follows.</p>
+  <p><strong>What we can disclose.</strong> Pilot is designed to hold minimal data. Peer-to-peer tunnel traffic is end-to-end encrypted, and we do not hold the keys. Relayed traffic stays encrypted, and we can see only routing metadata. We cannot produce the contents of peer-to-peer communications. The data we may hold is limited to what Sections 1, 3 and 4 describe: registration data (IP address, hostname, tags, public key, daemon version, and an email address if you supplied one), short-lived server logs, contact and disclosure form submissions, a phone number and SMS consent records if you provided them, and, for brokered App Store calls, the request data our broker processes.</p>
+  <p><strong>Valid legal process required.</strong> We disclose user data only in response to valid, legally binding process, such as a subpoena, court order, or search warrant, issued by an authority with jurisdiction over Vulture Labs. We do not respond to informal requests. The one exception is an emergency involving imminent risk of death or serious physical injury, which we assess case by case and document.</p>
+  <p><strong>Review and narrowing.</strong> We review every request for legal validity, jurisdiction, and scope. We challenge or seek to narrow requests that are overbroad, unclear, or legally deficient. When we must comply, we disclose only the minimum data required.</p>
+  <p><strong>User notice.</strong> Unless prohibited by law or court order, we notify affected users before disclosing their data so they can seek legal remedies. If a restriction delays notice, we notify users once it lifts.</p>
+  <p><strong>Non-US requests.</strong> Requests from authorities outside the United States must come through a mutual legal assistance treaty (MLAT) or another valid legal channel. We consider applicable data-protection law, including the GDPR, when assessing them.</p>
+  <p><strong>Contact.</strong> Legal process may be directed to <a href="mailto:founders@pilotprotocol.network">founders@pilotprotocol.network</a>.</p>
 
   <p style="margin-top:48px;padding-top:24px;border-top:1px solid var(--line);font-size:14px;color:var(--ink-dim);">
     <em>This policy is provided for transparency and does not constitute legal advice to users. If you are a legal professional reviewing this document, please direct feedback to <a href="mailto:founders@pilotprotocol.network">founders@pilotprotocol.network</a>.</em>
