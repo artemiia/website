@@ -1818,5 +1818,15 @@
   "tags": ["shell-online", "routers", "ssh", "network-security", "embedded-linux"],
   "banner": "banners/a-remote-router-shell-without-port-forwarding-or-an-exposed-ssh-port-after-mikro.svg",
   "iso_date": "2026-10-07"
+ },
+ {
+  "slug": "two-people-one-collaborative-terminal-session-in-the-browser-how-shell-online-de",
+  "title": "Two People, One Collaborative Terminal Session in the Browser: How shell.online Decides Who Types During a GhostAction Cleanup",
+  "description": "How a collaborative terminal session in the browser decides who types: shell.online's 1.8-second input lease, read-only links and rotation.",
+  "date": "Oct 8",
+  "category": "Security",
+  "tags": ["shell-online", "incident-response", "github-actions", "terminal-sharing"],
+  "banner": "banners/two-people-one-collaborative-terminal-session-in-the-browser-how-shell-online-de.svg",
+  "iso_date": "2026-10-08"
  }
 ]
