@@ -1838,5 +1838,15 @@
   "tags": ["shell-online", "terminal-sharing", "linux", "coding-agents", "security"],
   "banner": "banners/a-persistent-terminal-sharing-link-that-survives-a-reboot-shell-online-persisten.svg",
   "iso_date": "2026-10-09"
+ },
+ {
+  "slug": "share-a-dev-servers-terminal-with-a-teammate-not-its-port-restarting-on-go-1-26",
+  "title": "Share a Dev Server's Terminal With a Teammate, Not Its Port: Restarting on Go 1.26.9 After Two net/http Fixes",
+  "description": "Go 1.26.9 patches two net/http bugs. Share the dev server's terminal with a teammate in the browser while the server itself stays on localhost.",
+  "date": "Oct 10",
+  "category": "Guide",
+  "tags": ["shell-online", "golang", "terminal-sharing", "dev-server", "security"],
+  "banner": "banners/share-a-dev-servers-terminal-with-a-teammate-not-its-port-restarting-on-go-1-26.svg",
+  "iso_date": "2026-10-10"
  }
 ]
