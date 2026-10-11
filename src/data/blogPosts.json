@@ -1848,5 +1848,15 @@
   "tags": ["shell-online", "golang", "terminal-sharing", "dev-server", "security"],
   "banner": "banners/share-a-dev-servers-terminal-with-a-teammate-not-its-port-restarting-on-go-1-26.svg",
   "iso_date": "2026-10-10"
+ },
+ {
+  "slug": "keep-a-terminal-session-alive-after-a-disconnect-what-a-long-agent-run-on-shell",
+  "title": "Keep a Terminal Session Alive After a Disconnect: What a Long Agent Run on shell.online Survives",
+  "description": "How to keep a terminal session alive after a disconnect: what shell.online does when the phone, the network or the host drops during a long agent run.",
+  "date": "Oct 11",
+  "category": "Operations",
+  "tags": ["shell-online", "terminal", "ai-agents", "reliability"],
+  "banner": "banners/keep-a-terminal-session-alive-after-a-disconnect-what-a-long-agent-run-on-shell.svg",
+  "iso_date": "2026-10-11"
  }
 ]
