@@ -6,14 +6,246 @@
     <description>Technical articles on AI agent networking, P2P infrastructure, NAT traversal, trust models, and building with Pilot Protocol.</description>
     <language>en</language>
     <atom:link href="https://pilotprotocol.network/blog/feed.xml" rel="self" type="application/rss+xml"/>
-    <lastBuildDate>Fri, 18 Sep 2026 12:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Thu, 15 Oct 2026 12:00:00 GMT</lastBuildDate>
+    <item>
+      <title><![CDATA[How to Give a Coding Agent Its Own Network Node With One MCP URL]]></title>
+      <link>https://pilotprotocol.network/blog/how-to-give-a-coding-agent-its-own-network-node-with-one-mcp-url</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/how-to-give-a-coding-agent-its-own-network-node-with-one-mcp-url</guid>
+      <description><![CDATA[Add cloud.pilotprotocol.network/mcp to Claude Code or Cursor, sign in once, and the agent gets an always-on Pilot node: messaging, trust, live-data specialis...]]></description>
+      <pubDate>Thu, 15 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Two People, One Collaborative Terminal Session in the Browser: How shell.online Decides Who Types During a GhostAction Cleanup]]></title>
+      <link>https://pilotprotocol.network/blog/two-people-one-collaborative-terminal-session-in-the-browser-how-shell-online-de</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/two-people-one-collaborative-terminal-session-in-the-browser-how-shell-online-de</guid>
+      <description><![CDATA[How a collaborative terminal session in the browser decides who types: shell.online's 1.8-second input lease, read-only links and rotation.]]></description>
+      <pubDate>Thu, 08 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[A Remote Router Shell Without Port Forwarding or an Exposed SSH Port, After MikroTrick]]></title>
+      <link>https://pilotprotocol.network/blog/a-remote-router-shell-without-port-forwarding-or-an-exposed-ssh-port-after-mikro</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/a-remote-router-shell-without-port-forwarding-or-an-exposed-ssh-port-after-mikro</guid>
+      <description><![CDATA[A remote router shell without port forwarding: shell.online connects out from the device, so no SSH port waits on the WAN for the next MikroTrick.]]></description>
+      <pubDate>Wed, 07 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[A Terminal Sharing Link That Expires at a Set Time: What shell.online --auto-close Actually Stops]]></title>
+      <link>https://pilotprotocol.network/blog/a-terminal-sharing-link-that-expires-at-a-set-time-what-shell-online-auto-close</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/a-terminal-sharing-link-that-expires-at-a-set-time-what-shell-online-auto-close</guid>
+      <description><![CDATA[A terminal sharing link that expires on a deadline: how shell.online --auto-close stops an unattended agent, and what it does not cover.]]></description>
+      <pubDate>Tue, 06 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[Share a Windows Terminal Session in the Browser: Codex on ConPTY, Without OpenSSH or WSL]]></title>
+      <link>https://pilotprotocol.network/blog/share-a-windows-terminal-session-in-the-browser-codex-on-conpty-without-openssh</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/share-a-windows-terminal-session-in-the-browser-codex-on-conpty-without-openssh</guid>
+      <description><![CDATA[Share a Windows terminal session in the browser with shell.online: Codex on native ConPTY, no OpenSSH server or WSL, and the Windows-only limits.]]></description>
+      <pubDate>Mon, 05 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[A Browser Terminal for a Docker Container That Keeps One Link Across Restarts, After the Unsloth Studio RCE]]></title>
+      <link>https://pilotprotocol.network/blog/a-browser-terminal-for-a-docker-container-that-keeps-one-link-across-restarts-af</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/a-browser-terminal-for-a-docker-container-that-keeps-one-link-across-restarts-af</guid>
+      <description><![CDATA[A browser terminal for a Docker container with shell.online: one encrypted link across restarts, no SSH keys inside, and why the Unsloth RCE makes that matter.]]></description>
+      <pubDate>Fri, 02 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[See What a Coding Agent Is Doing Without Opening Its Terminal: Owner-Only Session Summaries in shell.online, After PixelLeak]]></title>
+      <link>https://pilotprotocol.network/blog/see-what-a-coding-agent-is-doing-without-opening-its-terminal-owner-only-session</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/see-what-a-coding-agent-is-doing-without-opening-its-terminal-owner-only-session</guid>
+      <description><![CDATA[See what a coding agent is doing from the session list: new shell.online summaries are sealed to the owner and unreadable by the service.]]></description>
+      <pubDate>Thu, 01 Oct 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[End-to-End Encrypted Terminal Sharing Has a Second Secret on the Host: shell.online v0.24.1 Takes the Session Password Out of Process Environments]]></title>
+      <link>https://pilotprotocol.network/blog/end-to-end-encrypted-terminal-sharing-has-a-second-secret-on-the-host-shell-onli</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/end-to-end-encrypted-terminal-sharing-has-a-second-secret-on-the-host-shell-onli</guid>
+      <description><![CDATA[What end-to-end encrypted terminal sharing hides from the relay, and why shell.online v0.24.1 moved the session password out of process environments.]]></description>
+      <pubDate>Wed, 30 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[Let a Coding Agent Share Its Own Terminal Session in the Browser: the shell.online Skill and shell --json]]></title>
+      <link>https://pilotprotocol.network/blog/let-a-coding-agent-share-its-own-terminal-session-in-the-browser-the-shell-onlin</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/let-a-coding-agent-share-its-own-terminal-session-in-the-browser-the-shell-onlin</guid>
+      <description><![CDATA[How the shell.online agent skill tells Claude Code or Codex to share a terminal session in the browser and hand you the link, read-only when it should be.]]></description>
+      <pubDate>Tue, 29 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Watch a Coding Agent Remotely Without Shrinking Its Terminal: shell.online v0.23.2 Gives the Host Its Grid and Each Viewer Its Own Layout]]></title>
+      <link>https://pilotprotocol.network/blog/watch-a-coding-agent-remotely-without-shrinking-its-terminal-shell-online-v0-23</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/watch-a-coding-agent-remotely-without-shrinking-its-terminal-shell-online-v0-23</guid>
+      <description><![CDATA[How to watch a coding agent remotely from a phone now that shell.online v0.23.2 lets the host own its terminal grid and each browser viewer reflow its own view.]]></description>
+      <pubDate>Sun, 27 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Engineering</category>
+    </item>
+    <item>
+      <title><![CDATA[Self-Hosted Terminal Sharing: Run the shell.online Relay on One Docker Host Instead of Cloudflare]]></title>
+      <link>https://pilotprotocol.network/blog/self-hosted-terminal-sharing-run-the-shell-online-relay-on-one-docker-host-inste</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/self-hosted-terminal-sharing-run-the-shell-online-relay-on-one-docker-host-inste</guid>
+      <description><![CDATA[Cloudflare had a Durable Objects incident on 25 September. Here is self-hosted terminal sharing with the standalone shell.online relay, step by step.]]></description>
+      <pubDate>Sat, 26 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Operations</category>
+    </item>
+    <item>
+      <title><![CDATA[Start a Terminal Session From the Browser on a Mac That Sat Idle for Days: the launchd Priority Fix in shell.online v0.23.3]]></title>
+      <link>https://pilotprotocol.network/blog/start-a-terminal-session-from-the-browser-on-a-mac-that-sat-idle-for-days-the-la</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/start-a-terminal-session-from-the-browser-on-a-mac-that-sat-idle-for-days-the-la</guid>
+      <description><![CDATA[Why browser-started sessions on an idle Mac lagged for seconds, and what v0.23.3 changes when you start a terminal session from the browser.]]></description>
+      <pubDate>Fri, 25 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Engineering</category>
+    </item>
+    <item>
+      <title><![CDATA[When the Egress Proxy Rotates Its Credentials]]></title>
+      <link>https://pilotprotocol.network/blog/rotating-egress-proxy-credentials</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/rotating-egress-proxy-credentials</guid>
+      <description><![CDATA[Inside Meta Muse the proxy credentials rotate every few minutes: long-lived processes start getting 407s while their old tunnels stay up. How to detect it, and a relay that fixes it.]]></description>
+      <pubDate>Thu, 24 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Engineering</category>
+    </item>
+    <item>
+      <title><![CDATA[Watch Claude Code From Your Phone as a Conversation, Not an 80-Column Grid]]></title>
+      <link>https://pilotprotocol.network/blog/watch-claude-code-from-your-phone-as-a-conversation-not-an-80-column-grid</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/watch-claude-code-from-your-phone-as-a-conversation-not-an-80-column-grid</guid>
+      <description><![CDATA[How to watch Claude Code from your phone with the shell.online chat renderer, what it reads from the screen, and where the transcript is kept.]]></description>
+      <pubDate>Thu, 24 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Engineering</category>
+    </item>
+    <item>
+      <title><![CDATA[Getting a Pilot Node Online From a Locked-Down Agent VM]]></title>
+      <link>https://pilotprotocol.network/blog/pilot-protocol-from-a-locked-down-agent-sandbox</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/pilot-protocol-from-a-locked-down-agent-sandbox</guid>
+      <description><![CDATA[How a Pilot Protocol node registered from inside Meta Muse's sandbox: no UDP, poisoned DNS, proxy-only egress, six dead ends, and the SNI router that worked.]]></description>
+      <pubDate>Wed, 23 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Engineering</category>
+    </item>
+    <item>
+      <title><![CDATA[Share a Terminal Session Password With a Teammate Without the Service Seeing It: shell.online v0.23.1 Password Requests]]></title>
+      <link>https://pilotprotocol.network/blog/share-a-terminal-session-password-with-a-teammate-without-the-service-seeing-it</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/share-a-terminal-session-password-with-a-teammate-without-the-service-seeing-it</guid>
+      <description><![CDATA[shell.online v0.23.1 lets a teammate ask a session owner for its password; the copy is sealed in the owner's browser and the service never holds it.]]></description>
+      <pubDate>Wed, 23 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[Which Agent Session Needs You? shell.online v0.22 Adds a Passive Pulse to Monitor a Coding Agent in the Browser]]></title>
+      <link>https://pilotprotocol.network/blog/which-agent-session-needs-you-shell-online-v0-22-adds-a-passive-pulse-to-monitor</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/which-agent-session-needs-you-shell-online-v0-22-adds-a-passive-pulse-to-monitor</guid>
+      <description><![CDATA[shell.online v0.22.0 adds a passive session pulse to monitor a coding agent in the browser across tabs, with no model calls, prompts, or extra connections.]]></description>
+      <pubDate>Tue, 22 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Engineering</category>
+    </item>
+    <item>
+      <title><![CDATA[MCP Terminal Access for an AI Agent: Scoped Grants That Expire and Revoke]]></title>
+      <link>https://pilotprotocol.network/blog/mcp-terminal-access-for-an-ai-agent-scoped-grants-that-expire-and-revoke</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/mcp-terminal-access-for-an-ai-agent-scoped-grants-that-expire-and-revoke</guid>
+      <description><![CDATA[How shell.online v0.21 gives an AI agent MCP terminal access through scoped, expiring, revocable grants, and what that costs you in end-to-end encryption.]]></description>
+      <pubDate>Mon, 21 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[A Read-Only Terminal Link for Your Coding Agent, After Plugin4Shell]]></title>
+      <link>https://pilotprotocol.network/blog/a-read-only-terminal-link-for-your-coding-agent-after-plugin4shell</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/a-read-only-terminal-link-for-your-coding-agent-after-plugin4shell</guid>
+      <description><![CDATA[Plugin4Shell showed how much a coding agent can reach. A read-only terminal link lets a reviewer watch that agent without holding a credential that types.]]></description>
+      <pubDate>Sun, 20 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[How to Revoke a Shared Terminal Link Without Killing the Process Behind It]]></title>
+      <link>https://pilotprotocol.network/blog/how-to-revoke-a-shared-terminal-link-without-killing-the-process-behind-it</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/how-to-revoke-a-shared-terminal-link-without-killing-the-process-behind-it</guid>
+      <description><![CDATA[Revoke a shared terminal link with one command: shell password rotate swaps the key, drops viewers, and leaves the process running.]]></description>
+      <pubDate>Sat, 19 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
     <item>
       <title><![CDATA[Cosift: A Collaborative Index Agents Build As They Work]]></title>
       <link>https://pilotprotocol.network/blog/cosift-a-collaborative-index-agents-build-as-they-work</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/cosift-a-collaborative-index-agents-build-as-they-work</guid>
-      <description><![CDATA[Cosift is an open-source, free index agents fill in as they browse: fetch a page once, index it, and every other agent retrieves it instead of refetching. 15M contributions and counting.]]></description>
+      <description><![CDATA[Cosift is a free, open-source index agents fill in as they browse. Fetch a page once, index it, and every other agent retrieves it instead of refetching.]]></description>
       <pubDate>Fri, 18 Sep 2026 12:00:00 GMT</pubDate>
       <category>Blog</category>
+    </item>
+    <item>
+      <title><![CDATA[End-to-End Encrypted Terminal Sharing: What the Relay Sees, and What It Can No Longer Replay]]></title>
+      <link>https://pilotprotocol.network/blog/end-to-end-encrypted-terminal-sharing-what-the-relay-sees-and-what-it-can-no-lon</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/end-to-end-encrypted-terminal-sharing-what-the-relay-sees-and-what-it-can-no-lon</guid>
+      <description><![CDATA[What end-to-end encrypted terminal sharing in shell.online hides from the relay, what it leaks, and how envelope v2 stops replayed keystrokes.]]></description>
+      <pubDate>Fri, 18 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[End-to-End Encrypted Terminal Sharing: What the Relay Can Still Do After shell.online v0.16.1]]></title>
+      <link>https://pilotprotocol.network/blog/end-to-end-encrypted-terminal-sharing-what-the-relay-can-still-do-after-shell-on</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/end-to-end-encrypted-terminal-sharing-what-the-relay-can-still-do-after-shell-on</guid>
+      <description><![CDATA[What end-to-end encrypted terminal sharing hides from a relay, what it never hid, and how shell.online v0.16.1 stops replayed keystrokes.]]></description>
+      <pubDate>Thu, 17 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[Track Terminal Sessions Across Machines by Name: shell.online v0.16 Adds --name and shell ls]]></title>
+      <link>https://pilotprotocol.network/blog/track-terminal-sessions-across-machines-by-name-shell-online-v0-16-adds-name-and</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/track-terminal-sessions-across-machines-by-name-shell-online-v0-16-adds-name-and</guid>
+      <description><![CDATA[shell.online v0.16.0 lets you name a session at start and list terminal sessions across machines with shell ls, as agents move into remote sandboxes.]]></description>
+      <pubDate>Wed, 16 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Engineering</category>
+    </item>
+    <item>
+      <title><![CDATA[A Browser Terminal on a ROS 2 Robot Without a VPN, and Why It Should Be Read-Only by Default]]></title>
+      <link>https://pilotprotocol.network/blog/a-browser-terminal-on-a-ros-2-robot-without-a-vpn-and-why-it-should-be-read-only</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/a-browser-terminal-on-a-ros-2-robot-without-a-vpn-and-why-it-should-be-read-only</guid>
+      <description><![CDATA[How to get a browser terminal on a ROS 2 robot with shell.online: one command, no VPN, read-only links, reconnects, and persistent URLs across reboots.]]></description>
+      <pubDate>Tue, 15 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[Connect an AI Agent to a Live Terminal Without Giving It the Machine: shell.online v0.15 Agent Handoffs]]></title>
+      <link>https://pilotprotocol.network/blog/connect-an-ai-agent-to-a-live-terminal-without-giving-it-the-machine-shell-onlin</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-an-ai-agent-to-a-live-terminal-without-giving-it-the-machine-shell-onlin</guid>
+      <description><![CDATA[How to connect an AI agent to a live terminal with shell.online v0.15: a revocable invitation, explicit completion evidence, and a process that stays yours.]]></description>
+      <pubDate>Mon, 14 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Engineering</category>
+    </item>
+    <item>
+      <title><![CDATA[Share a Terminal Session in the Browser Without Handing Over the Filesystem: shell.online v0.14 File Access]]></title>
+      <link>https://pilotprotocol.network/blog/share-a-terminal-session-in-the-browser-without-handing-over-the-filesystem-shel</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/share-a-terminal-session-in-the-browser-without-handing-over-the-filesystem-shel</guid>
+      <description><![CDATA[shell.online v0.14 adds opt-in, rooted file access, so you can share a terminal session in the browser and open only the files you chose.]]></description>
+      <pubDate>Sun, 13 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Security</category>
+    </item>
+    <item>
+      <title><![CDATA[Self-Hosted Terminal Sharing on One Docker Box: the shell.online Relay Without a Cloudflare Account]]></title>
+      <link>https://pilotprotocol.network/blog/self-hosted-terminal-sharing-on-one-docker-box-the-shell-online-relay-without-a</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/self-hosted-terminal-sharing-on-one-docker-box-the-shell-online-relay-without-a</guid>
+      <description><![CDATA[shell.online v0.12.2 adds self-hosted terminal sharing: a standalone relay on any Docker host, Caddy TLS, no Cloudflare account, same E2EE.]]></description>
+      <pubDate>Sat, 12 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Operations</category>
+    </item>
+    <item>
+      <title><![CDATA[A Read-Only Terminal Link for a Training Run You Check From Your Phone]]></title>
+      <link>https://pilotprotocol.network/blog/a-read-only-terminal-link-for-a-training-run-you-check-from-your-phone</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/a-read-only-terminal-link-for-a-training-run-you-check-from-your-phone</guid>
+      <description><![CDATA[Share a training run with a read-only terminal link: one command, a phone-sized grid, relay-enforced no-input, E2EE, and what happens when the network drops.]]></description>
+      <pubDate>Fri, 11 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
+    </item>
+    <item>
+      <title><![CDATA[VS Code 1.137 Runs Agent Sessions in Their Own Process. Terminal Sharing Without SSH or VPN Does That for a Failing Build]]></title>
+      <link>https://pilotprotocol.network/blog/vs-code-1-137-runs-agent-sessions-in-their-own-process-terminal-sharing-without</link>
+      <guid isPermaLink="true">https://pilotprotocol.network/blog/vs-code-1-137-runs-agent-sessions-in-their-own-process-terminal-sharing-without</guid>
+      <description><![CDATA[How to pair-debug a failing build with terminal sharing without SSH or VPN, and how that compares to the Agent Host in VS Code 1.137.]]></description>
+      <pubDate>Thu, 10 Sep 2026 12:00:00 GMT</pubDate>
+      <category>Guide</category>
     </item>
     <item>
       <title><![CDATA[Team Terminal Sharing, Sealed So the Service Can't Open It]]></title>
@@ -35,39 +267,39 @@
       <title><![CDATA[Connect Claude Code to Pilot Protocol with MCP Tools]]></title>
       <link>https://pilotprotocol.network/blog/connect-claude-code-to-pilot-protocol</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-claude-code-to-pilot-protocol</guid>
-      <description><![CDATA[Add Pilot agent discovery, messaging, and policy hooks to Claude Code without replacing existing MCP servers or settings.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to Claude Code with one command: agent messaging, live data and the app store, with nothing to install.]]></description>
       <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>
     <item>
-      <title><![CDATA[Connect Cline to Pilot Protocol with MCP and Hooks Safely]]></title>
+      <title><![CDATA[Connect Cline to Pilot Protocol with MCP]]></title>
       <link>https://pilotprotocol.network/blog/connect-cline-to-pilot-protocol</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-cline-to-pilot-protocol</guid>
-      <description><![CDATA[Connect Cline to Pilot MCP, install its native tool hooks, and preserve existing servers and user-owned hook scripts.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to Cline: agent messaging, live data and the app store, with nothing to install.]]></description>
       <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>
     <item>
-      <title><![CDATA[Connect Codex CLI to Pilot Protocol with MCP Hooks]]></title>
+      <title><![CDATA[Connect Codex CLI to Pilot Protocol with MCP]]></title>
       <link>https://pilotprotocol.network/blog/connect-codex-cli-to-pilot-protocol</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-codex-cli-to-pilot-protocol</guid>
-      <description><![CDATA[Add Pilot MCP and local tool hooks to Codex CLI while preserving existing TOML configuration and hook groups.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to Codex CLI with two commands: agent messaging, live data and the app store, with nothing to install.]]></description>
       <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>
     <item>
-      <title><![CDATA[Connect Cursor to Pilot Protocol with MCP and Hooks]]></title>
+      <title><![CDATA[Connect Cursor to Pilot Protocol with MCP]]></title>
       <link>https://pilotprotocol.network/blog/connect-cursor-to-pilot-protocol</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-cursor-to-pilot-protocol</guid>
-      <description><![CDATA[Configure Pilot MCP and fail-closed native tool hooks in Cursor while preserving the rest of your user configuration.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to Cursor with one URL: agent messaging, live data and the app store, with nothing to install.]]></description>
       <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>
     <item>
-      <title><![CDATA[Connect Gemini CLI to Pilot Protocol with MCP Hooks]]></title>
+      <title><![CDATA[Connect Gemini CLI to Pilot Protocol with MCP]]></title>
       <link>https://pilotprotocol.network/blog/connect-gemini-cli-to-pilot-protocol</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-gemini-cli-to-pilot-protocol</guid>
-      <description><![CDATA[Connect Gemini CLI to Pilot MCP and install sequential BeforeTool and AfterTool hooks in its user settings.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to Gemini CLI with one command: agent messaging, live data and the app store, with nothing to install.]]></description>
       <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>
@@ -75,15 +307,15 @@
       <title><![CDATA[Connect GitHub Copilot to Pilot Protocol with MCP Tools]]></title>
       <link>https://pilotprotocol.network/blog/connect-github-copilot-to-pilot-protocol</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-github-copilot-to-pilot-protocol</guid>
-      <description><![CDATA[Configure Pilot MCP and cross-platform tool hooks for GitHub Copilot CLI without rewriting unrelated user settings.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to GitHub Copilot CLI with one command: agent messaging, live data and the app store, with nothing to install.]]></description>
       <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>
     <item>
-      <title><![CDATA[Connect Hermes to Pilot Protocol with MCP and Hooks]]></title>
+      <title><![CDATA[Connect Hermes to Pilot Protocol with MCP]]></title>
       <link>https://pilotprotocol.network/blog/connect-hermes-to-pilot-protocol</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-hermes-to-pilot-protocol</guid>
-      <description><![CDATA[Add Pilot MCP and native pre- and post-tool hooks to Hermes CLI and Gateway sessions with one configuration command.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to Hermes Agent with one command: agent messaging, live data and the app store, with nothing to install.]]></description>
       <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>
@@ -91,23 +323,23 @@
       <title><![CDATA[Connect JetBrains Junie to Pilot Protocol with MCP]]></title>
       <link>https://pilotprotocol.network/blog/connect-junie-to-pilot-protocol</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-junie-to-pilot-protocol</guid>
-      <description><![CDATA[Add Pilot MCP to Junie CLI and use the same standard server definition in JetBrains AI Assistant settings.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to JetBrains Junie: agent messaging, live data and the app store, with nothing to install.]]></description>
       <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>
     <item>
-      <title><![CDATA[Connect OpenHands to Pilot Protocol with MCP Hooks]]></title>
+      <title><![CDATA[Connect OpenHands to Pilot Protocol with MCP]]></title>
       <link>https://pilotprotocol.network/blog/connect-openhands-to-pilot-protocol</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-openhands-to-pilot-protocol</guid>
-      <description><![CDATA[Configure Pilot for OpenHands at user scope and add project-scoped tool hooks without changing unrelated settings.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to the OpenHands CLI with one command: agent messaging, live data and the app store, with nothing to install.]]></description>
       <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>
     <item>
-      <title><![CDATA[Connect PicoClaw to Pilot Protocol with MCP Hooks Safely]]></title>
+      <title><![CDATA[Connect PicoClaw to Pilot Protocol with MCP]]></title>
       <link>https://pilotprotocol.network/blog/connect-picoclaw-to-pilot-protocol</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/connect-picoclaw-to-pilot-protocol</guid>
-      <description><![CDATA[Enable Pilot MCP and PicoClaw’s process-hook boundary for lightweight agents running on constrained devices.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to PicoClaw with one command, so agents on small devices get messaging, live data and apps without running a node.]]></description>
       <pubDate>Sat, 05 Sep 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>
@@ -816,10 +1048,10 @@
       <category>Security</category>
     </item>
     <item>
-      <title><![CDATA[Connect OpenClaw to Pilot Protocol with Native Policy]]></title>
+      <title><![CDATA[Connect OpenClaw to Pilot Protocol with MCP]]></title>
       <link>https://pilotprotocol.network/blog/openclaw-meets-pilot-agent-networking-one-command</link>
       <guid isPermaLink="true">https://pilotprotocol.network/blog/openclaw-meets-pilot-agent-networking-one-command</guid>
-      <description><![CDATA[Install Pilot’s native OpenClaw plugin for agent networking, message checks, policy decisions, and post-action evidence.]]></description>
+      <description><![CDATA[Add the hosted Pilot MCP server to OpenClaw with one command: agent messaging, live data and the app store, with nothing to install.]]></description>
       <pubDate>Sun, 01 Mar 2026 12:00:00 GMT</pubDate>
       <category>Integration</category>
     </item>

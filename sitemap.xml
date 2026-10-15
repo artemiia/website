@@ -3,6 +3,12 @@
   <url><loc>https://pilotprotocol.network/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://pilotprotocol.network/app-store</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://pilotprotocol.network/aup</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/a-browser-terminal-for-a-docker-container-that-keeps-one-link-across-restarts-af</loc><lastmod>2026-10-02</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/a-browser-terminal-on-a-ros-2-robot-without-a-vpn-and-why-it-should-be-read-only</loc><lastmod>2026-09-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/a-read-only-terminal-link-for-a-training-run-you-check-from-your-phone</loc><lastmod>2026-09-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/a-read-only-terminal-link-for-your-coding-agent-after-plugin4shell</loc><lastmod>2026-09-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/a-remote-router-shell-without-port-forwarding-or-an-exposed-ssh-port-after-mikro</loc><lastmod>2026-10-07</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/a-terminal-sharing-link-that-expires-at-a-set-time-what-shell-online-auto-close</loc><lastmod>2026-10-06</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/a2a-agent-cards-over-pilot-tunnels</loc><lastmod>2026-02-16</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/advanced-network-automation-tips-secure-ai-systems</loc><lastmod>2026-08-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/aegis-agent-firewall-prompt-injection</loc><lastmod>2026-06-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -27,6 +33,7 @@
   <url><loc>https://pilotprotocol.network/blog/cloud-networking-secure-peer-to-peer-distributed-ai</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/connect-agents-across-aws-gcp-azure-without-vpn</loc><lastmod>2026-06-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/connect-ai-agents-behind-nat-without-vpn</loc><lastmod>2026-05-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/connect-an-ai-agent-to-a-live-terminal-without-giving-it-the-machine-shell-onlin</loc><lastmod>2026-09-14</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/connect-claude-code-to-pilot-protocol</loc><lastmod>2026-09-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/connect-cline-to-pilot-protocol</loc><lastmod>2026-09-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/connect-codex-cli-to-pilot-protocol</loc><lastmod>2026-09-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -50,6 +57,9 @@
   <url><loc>https://pilotprotocol.network/blog/encrypted-data-exchange-for-decentralized-ai-systems</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/encrypted-tunnel-advantages-peer-to-peer-ai-networks</loc><lastmod>2026-08-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/encryption-protocols-for-secure-ai-systems-a-practical-guide</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/end-to-end-encrypted-terminal-sharing-has-a-second-secret-on-the-host-shell-onli</loc><lastmod>2026-09-30</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/end-to-end-encrypted-terminal-sharing-what-the-relay-can-still-do-after-shell-on</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/end-to-end-encrypted-terminal-sharing-what-the-relay-sees-and-what-it-can-no-lon</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/enterprise-identity-integration-pilot-protocol</loc><lastmod>2026-03-21</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/enterprise-phase-3-rbac-policies-audit-fleet</loc><lastmod>2026-03-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/enterprise-private-networks-roadmap</loc><lastmod>2026-03-23</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -61,12 +71,16 @@
   <url><loc>https://pilotprotocol.network/blog/how-ai-agents-discover-each-other</loc><lastmod>2026-05-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/how-mutual-trust-secures-decentralized-ai-agent-networks</loc><lastmod>2026-05-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/how-pilot-protocol-works</loc><lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/how-to-give-a-coding-agent-its-own-network-node-with-one-mcp-url</loc><lastmod>2026-10-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/how-to-revoke-a-shared-terminal-link-without-killing-the-process-behind-it</loc><lastmod>2026-09-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/how-to-watch-a-coding-agent-remotely-after-you-turn-off-its-permission-prompts</loc><lastmod>2026-09-08</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/http-services-over-encrypted-overlay</loc><lastmod>2026-02-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://pilotprotocol.network/blog/legacy-protocol-integration-for-secure-distributed-ai</loc><lastmod>2026-05-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/let-a-coding-agent-share-its-own-terminal-session-in-the-browser-the-shell-onlin</loc><lastmod>2026-09-29</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/lightweight-swarm-communication-drones-robots</loc><lastmod>2026-06-21</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/mcp-plus-pilot-tools-and-network</loc><lastmod>2026-02-14</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/mcp-terminal-access-for-an-ai-agent-scoped-grants-that-expire-and-revoke</loc><lastmod>2026-09-21</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/move-beyond-rest-persistent-connections-for-agents</loc><lastmod>2026-07-07</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/multi-agent-pipelines-openclaw-encrypted-tunnels</loc><lastmod>2026-03-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/multi-agent-system-networking-guide-ai-developers</loc><lastmod>2026-07-21</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -86,6 +100,7 @@
   <url><loc>https://pilotprotocol.network/blog/persistent-address-strategies-for-distributed-ai-systems</loc><lastmod>2026-04-29</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/persistent-addresses-distributed-autonomous-systems</loc><lastmod>2026-08-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/persistent-network-addressing-secure-ai-systems</loc><lastmod>2026-04-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/pilot-protocol-from-a-locked-down-agent-sandbox</loc><lastmod>2026-09-23</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/pilot-vs-tailscale-nebula-zerotier-ai-agents</loc><lastmod>2026-06-23</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/pilot-vs-tcp-grpc-nats-comparison</loc><lastmod>2026-02-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/preferential-attachment-ai-networks-trust-graph</loc><lastmod>2026-07-17</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -95,6 +110,7 @@
   <url><loc>https://pilotprotocol.network/blog/python-sdk-pilot-protocol</loc><lastmod>2026-03-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/replace-message-broker-twelve-lines-go</loc><lastmod>2026-02-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/replace-webhooks-with-persistent-agent-tunnels</loc><lastmod>2026-07-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/rotating-egress-proxy-credentials</loc><lastmod>2026-09-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/run-agent-network-without-cloud-dependency</loc><lastmod>2026-05-29</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/scaling-openclaw-fleets-thousands-agents</loc><lastmod>2026-03-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/scriptorium-replace-agentic-active-research-ready-intelligence</loc><lastmod>2026-04-03</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -105,17 +121,30 @@
   <url><loc>https://pilotprotocol.network/blog/secure-network-infrastructure-ai-agents-practical-guide</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/secure-research-collaboration-share-models-not-data</loc><lastmod>2026-06-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/securing-ai-agent-networks-multi-cloud-environments</loc><lastmod>2026-04-07</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/see-what-a-coding-agent-is-doing-without-opening-its-terminal-owner-only-session</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/self-hosted-terminal-sharing-on-one-docker-box-the-shell-online-relay-without-a</loc><lastmod>2026-09-12</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/self-hosted-terminal-sharing-run-the-shell-online-relay-on-one-docker-host-inste</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/share-a-terminal-session-in-the-browser-without-handing-over-the-filesystem-shel</loc><lastmod>2026-09-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/share-a-terminal-session-password-with-a-teammate-without-the-service-seeing-it</loc><lastmod>2026-09-23</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/share-a-windows-terminal-session-in-the-browser-codex-on-conpty-without-openssh</loc><lastmod>2026-10-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/shell-online-live-terminal-browser-link</loc><lastmod>2026-09-02</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/smart-home-without-cloud-local-device-communication</loc><lastmod>2026-06-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/sociology-of-machines-626-agents</loc><lastmod>2026-03-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/start-a-terminal-session-from-the-browser-on-a-mac-that-sat-idle-for-days-the-la</loc><lastmod>2026-09-25</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/team-terminal-sharing-sealed-so-the-service-cant-open-it</loc><lastmod>2026-09-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/track-terminal-sessions-across-machines-by-name-shell-online-v0-16-adds-name-and</loc><lastmod>2026-09-16</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/trust-model-agents-invisible-by-default</loc><lastmod>2026-02-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/trust-network-protocols-secure-decentralized-systems</loc><lastmod>2026-04-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/trustless-protocols-that-secure-decentralized-ai-systems</loc><lastmod>2026-05-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/two-people-one-collaborative-terminal-session-in-the-browser-how-shell-online-de</loc><lastmod>2026-10-08</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/userspace-tcp-over-udp-stack-pure-go</loc><lastmod>2026-04-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/virtual-network-addresses-for-secure-decentralized-ai</loc><lastmod>2026-05-03</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/vs-code-1-137-runs-agent-sessions-in-their-own-process-terminal-sharing-without</loc><lastmod>2026-09-10</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/watch-a-coding-agent-remotely-without-shrinking-its-terminal-shell-online-v0-23</loc><lastmod>2026-09-27</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/watch-claude-code-from-your-phone-as-a-conversation-not-an-80-column-grid</loc><lastmod>2026-09-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/web-search-api-for-ai-agents-grounded-research</loc><lastmod>2026-07-03</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/what-is-protocol-overlay-fundamentals-practical</loc><lastmod>2026-08-07</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/blog/which-agent-session-needs-you-shell-online-v0-22-adds-a-passive-pulse-to-monitor</loc><lastmod>2026-09-22</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/why-ai-agents-need-network-stack</loc><lastmod>2026-02-02</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/why-autonomous-agents-need-private-discovery</loc><lastmod>2026-03-03</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/blog/why-direct-p2p-connections-power-secure-ai-networking</loc><lastmod>2026-05-07</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -143,14 +172,7 @@
   <url><loc>https://pilotprotocol.network/docs/go-sdk</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/docs/</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://pilotprotocol.network/docs/integration</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pilotprotocol.network/docs/managed-accounts</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pilotprotocol.network/docs/managed-agent-adoption</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pilotprotocol.network/docs/managed-control-plane</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pilotprotocol.network/docs/managed-fleet</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pilotprotocol.network/docs/managed-harnesses</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pilotprotocol.network/docs/managed-policies</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pilotprotocol.network/docs/managed-readiness</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pilotprotocol.network/docs/mcp-setup</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://pilotprotocol.network/docs/mcp</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/docs/messaging</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/docs/motd</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/docs/networks</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -168,8 +190,6 @@
   <url><loc>https://pilotprotocol.network/docs/troubleshooting</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://pilotprotocol.network/docs/trust</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/docs/webhooks</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pilotprotocol.network/enterprise/autonomous-ai-agents</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://pilotprotocol.network/enterprise/claude-code-management</loc><lastmod>2026-08-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/for/compatibility</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/for/mcp</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://pilotprotocol.network/for/networks</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -183,8 +203,10 @@
   <url><loc>https://pilotprotocol.network/learn/grpc-udp-transport</loc><lastmod>2026-07-23</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://pilotprotocol.network/learn/how-are-network-agent-tokens-different</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://pilotprotocol.network/learn/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pilotprotocol.network/learn/install-pilot-skills-in-meta-muse</loc><lastmod>2026-09-23</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://pilotprotocol.network/learn/mcp-tunnels-vs-vpn</loc><lastmod>2026-07-25</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://pilotprotocol.network/learn/nats-vs-grpc-agent-messaging</loc><lastmod>2026-07-23</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://pilotprotocol.network/learn/pilot-node-through-https-only-egress-proxy</loc><lastmod>2026-09-23</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://pilotprotocol.network/learn/webhooks-sse-streaming-long-running-jobs</loc><lastmod>2026-08-20</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://pilotprotocol.network/learn/what-is-pilot-protocol</loc><lastmod>2026-07-30</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://pilotprotocol.network/learn/what-makes-a-pilot-agent</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
