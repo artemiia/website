@@ -1858,5 +1858,15 @@
   "tags": ["shell-online", "terminal", "ai-agents", "reliability"],
   "banner": "banners/keep-a-terminal-session-alive-after-a-disconnect-what-a-long-agent-run-on-shell.svg",
   "iso_date": "2026-10-11"
+ },
+ {
+  "slug": "terminal-sharing-security-when-infostealers-go-after-coding-agents-what-shell-on",
+  "title": "Terminal Sharing Security When Infostealers Go After Coding Agents: What shell.online Leaves on Disk, and What to Revoke",
+  "description": "Terminal sharing security after Gen Digital's infostealer report: the two files shell.online keeps on a host, what each unlocks, and the cleanup order.",
+  "date": "Oct 15",
+  "category": "Security",
+  "tags": ["shell-online", "security", "infostealers", "coding-agents", "terminal-sharing"],
+  "banner": "banners/terminal-sharing-security-when-infostealers-go-after-coding-agents-what-shell-on.svg",
+  "iso_date": "2026-10-15"
  }
 ]
