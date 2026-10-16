@@ -1868,5 +1868,15 @@
   "tags": ["shell-online", "security", "infostealers", "coding-agents", "terminal-sharing"],
   "banner": "banners/terminal-sharing-security-when-infostealers-go-after-coding-agents-what-shell-on.svg",
   "iso_date": "2026-10-15"
+ },
+ {
+  "slug": "verify-an-install-script-before-running-it-what-the-shell-online-installer-check",
+  "title": "Verify an Install Script Before Running It: What the shell.online Installer Checks, and What It Can't, After Tensorlake 0.5.144",
+  "description": "How to verify an install script before running it, using the shell.online installer after the Tensorlake npm compromise: what the checksum proves and doesn't.",
+  "date": "Oct 16",
+  "category": "Security",
+  "tags": ["shell-online", "supply-chain-security", "checksums", "coding-agents"],
+  "banner": "banners/verify-an-install-script-before-running-it-what-the-shell-online-installer-check.svg",
+  "iso_date": "2026-10-16"
  }
 ]
