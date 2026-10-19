@@ -1898,5 +1898,15 @@
   "tags": ["shell-online", "mcp", "ai-agents", "security"],
   "banner": "banners/ai-agent-terminal-access-over-mcp-without-trusting-the-agents-arguments-what-she.svg",
   "iso_date": "2026-10-18"
+ },
+ {
+  "slug": "share-an-opencode-session-after-share-was-retired-a-live-terminal-link-instead-o",
+  "title": "Share an OpenCode Session After /share Was Retired: A Live Terminal Link Instead of a Public Transcript",
+  "description": "OpenCode 1.19.1 retired /share. How to share an OpenCode session as a live, end-to-end encrypted terminal link, and what you give up.",
+  "date": "Oct 19",
+  "category": "Guide",
+  "tags": ["shell-online", "opencode", "coding-agents", "terminal-sharing"],
+  "banner": "banners/share-an-opencode-session-after-share-was-retired-a-live-terminal-link-instead-o.svg",
+  "iso_date": "2026-10-19"
  }
 ]
