@@ -1908,5 +1908,15 @@
   "tags": ["shell-online", "opencode", "coding-agents", "terminal-sharing"],
   "banner": "banners/share-an-opencode-session-after-share-was-retired-a-live-terminal-link-instead-o.svg",
   "iso_date": "2026-10-19"
+ },
+ {
+  "slug": "ai-agent-audit-log-what-a-pilot-cloud-node-records-about-every-tool-call-after-m",
+  "title": "AI Agent Audit Log: What a Pilot Cloud Node Records About Every Tool Call, After Microsoft Calls Agents Insiders",
+  "description": "Microsoft now treats AI agents as insiders. What a Pilot Cloud node's AI agent audit log records per MCP tool call, how to export it, and its limits.",
+  "date": "Oct 20",
+  "category": "Security",
+  "tags": ["pilot-cloud", "mcp", "ai-agents", "audit-log", "security"],
+  "banner": "banners/ai-agent-audit-log-what-a-pilot-cloud-node-records-about-every-tool-call-after-m.svg",
+  "iso_date": "2026-10-20"
  }
 ]
