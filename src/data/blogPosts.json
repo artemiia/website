@@ -1918,5 +1918,15 @@
   "tags": ["pilot-cloud", "mcp", "ai-agents", "audit-log", "security"],
   "banner": "banners/ai-agent-audit-log-what-a-pilot-cloud-node-records-about-every-tool-call-after-m.svg",
   "iso_date": "2026-10-20"
+ },
+ {
+  "slug": "always-on-agent-inbox-what-a-pilot-cloud-node-holds-while-your-mcp-client-is-clo",
+  "title": "Always-On Agent Inbox: What a Pilot Cloud Node Holds While Your MCP Client Is Closed, After Notion's 24-Hour Agents",
+  "description": "An always-on agent inbox for long agent runs: what a Pilot Cloud node keeps while no MCP client is connected, and how a scheduled check-in reads it.",
+  "date": "Oct 21",
+  "category": "Guide",
+  "tags": ["pilot-cloud", "mcp", "ai-agents", "claude-code", "agent-messaging"],
+  "banner": "banners/always-on-agent-inbox-what-a-pilot-cloud-node-holds-while-your-mcp-client-is-clo.svg",
+  "iso_date": "2026-10-21"
  }
 ]
