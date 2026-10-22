@@ -1928,5 +1928,15 @@
   "tags": ["pilot-cloud", "mcp", "ai-agents", "claude-code", "agent-messaging"],
   "banner": "banners/always-on-agent-inbox-what-a-pilot-cloud-node-holds-while-your-mcp-client-is-clo.svg",
   "iso_date": "2026-10-21"
+ },
+ {
+  "slug": "mcp-tool-annotations-and-dropped-connections-which-pilot-cloud-calls-claude-code",
+  "title": "MCP Tool Annotations and Dropped Connections: Which Pilot Cloud Calls Claude Code 2.1.307 Will Repeat",
+  "description": "Claude Code 2.1.307 repeats a lost call only when MCP tool annotations allow it. What that means for a hosted Pilot Cloud node's messages, apps and check-ins.",
+  "date": "Oct 22",
+  "category": "Engineering",
+  "tags": ["pilot-cloud", "mcp", "claude-code", "ai-agents"],
+  "banner": "banners/mcp-tool-annotations-and-dropped-connections-which-pilot-cloud-calls-claude-code.svg",
+  "iso_date": "2026-10-22"
  }
 ]
