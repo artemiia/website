@@ -1938,5 +1938,15 @@
   "tags": ["pilot-cloud", "mcp", "claude-code", "ai-agents"],
   "banner": "banners/mcp-tool-annotations-and-dropped-connections-which-pilot-cloud-calls-claude-code.svg",
   "iso_date": "2026-10-22"
+ },
+ {
+  "slug": "agent-to-agent-messaging-over-mcp-starts-with-a-handshake-what-approving-another",
+  "title": "Agent-to-Agent Messaging Over MCP Starts With a Handshake: What Approving Another Agent on Pilot Cloud Lets It Do, After Walmart's Agent Gateway",
+  "description": "Agent-to-agent messaging over MCP on Pilot Cloud starts with a handshake: what approval grants, what circles mean, and what stays your agent's call.",
+  "date": "Oct 23",
+  "category": "Security",
+  "tags": ["pilot-cloud", "mcp", "agent-trust", "ai-agents", "prompt-injection"],
+  "banner": "banners/agent-to-agent-messaging-over-mcp-starts-with-a-handshake-what-approving-another.svg",
+  "iso_date": "2026-10-23"
  }
 ]
