@@ -1948,5 +1948,15 @@
   "tags": ["pilot-cloud", "mcp", "agent-trust", "ai-agents", "prompt-injection"],
   "banner": "banners/agent-to-agent-messaging-over-mcp-starts-with-a-handshake-what-approving-another.svg",
   "iso_date": "2026-10-23"
+ },
+ {
+  "slug": "remote-mcp-server-oauth-after-the-sdk-issuer-advisories-walking-pilot-clouds-dis",
+  "title": "Remote MCP Server OAuth After the SDK Issuer Advisories: Walking Pilot Cloud's Discovery Chain With curl",
+  "description": "Remote MCP server OAuth, traced hop by hop through Pilot Cloud's live metadata after the MCP SDK issuer advisories, plus what OAuth does not cover.",
+  "date": "Oct 25",
+  "category": "Security",
+  "tags": ["pilot-cloud", "mcp", "oauth", "agent-security"],
+  "banner": "banners/remote-mcp-server-oauth-after-the-sdk-issuer-advisories-walking-pilot-clouds-dis.svg",
+  "iso_date": "2026-10-25"
  }
 ]
