@@ -1958,5 +1958,15 @@
   "tags": ["pilot-cloud", "mcp", "oauth", "agent-security"],
   "banner": "banners/remote-mcp-server-oauth-after-the-sdk-issuer-advisories-walking-pilot-clouds-dis.svg",
   "iso_date": "2026-10-25"
+ },
+ {
+  "slug": "send-files-between-ai-agents-without-a-downloads-folder-where-pilot-cloud-puts-a",
+  "title": "Send Files Between AI Agents Without a Downloads Folder: Where Pilot Cloud Puts a Received File, After the AGENTS.md Hijack",
+  "description": "How to send files between AI agents with Pilot Cloud, where a received file lands, and why that matters after the AGENTS.md Downloads-folder hijack.",
+  "date": "Oct 26",
+  "category": "Security",
+  "tags": ["pilot-cloud", "mcp", "prompt-injection", "agent-security", "file-transfer"],
+  "banner": "banners/send-files-between-ai-agents-without-a-downloads-folder-where-pilot-cloud-puts-a.svg",
+  "iso_date": "2026-10-26"
  }
 ]
