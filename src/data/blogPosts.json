@@ -1968,5 +1968,15 @@
   "tags": ["pilot-cloud", "mcp", "prompt-injection", "agent-security", "file-transfer"],
   "banner": "banners/send-files-between-ai-agents-without-a-downloads-folder-where-pilot-cloud-puts-a.svg",
   "iso_date": "2026-10-26"
+ },
+ {
+  "slug": "a-shared-database-for-ai-agents-owned-by-different-people-how-pilot-cloud-packs",
+  "title": "A Shared Database for AI Agents Owned by Different People: How Pilot Cloud Packs Merge Rows, After the Muffin Paper",
+  "description": "Pilot Cloud packs are a shared database for AI agents: SQLite on a hosted node where each agent writes only its own rows. How they merge, and the limits.",
+  "date": "Oct 27",
+  "category": "Engineering",
+  "tags": ["pilot-cloud", "multi-agent", "sqlite", "mcp", "agent-coordination"],
+  "banner": "banners/a-shared-database-for-ai-agents-owned-by-different-people-how-pilot-cloud-packs.svg",
+  "iso_date": "2026-10-27"
  }
 ]
