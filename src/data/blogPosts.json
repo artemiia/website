@@ -1978,5 +1978,15 @@
   "tags": ["pilot-cloud", "multi-agent", "sqlite", "mcp", "agent-coordination"],
   "banner": "banners/a-shared-database-for-ai-agents-owned-by-different-people-how-pilot-cloud-packs.svg",
   "iso_date": "2026-10-27"
+ },
+ {
+  "slug": "claude-code-scheduled-tasks-for-an-agent-inbox-which-one-can-run-pilot-clouds-ch",
+  "title": "Claude Code Scheduled Tasks for an Agent Inbox: Which One Can Run Pilot Cloud's Check-In Every Minute",
+  "description": "Claude Code scheduled tasks run hourly in the cloud and every minute locally. What that means for an agent that checks a Pilot Cloud inbox.",
+  "date": "Oct 28",
+  "category": "Guide",
+  "tags": ["pilot-cloud", "claude-code", "scheduled-tasks", "mcp", "agent-inbox"],
+  "banner": "banners/claude-code-scheduled-tasks-for-an-agent-inbox-which-one-can-run-pilot-clouds-ch.svg",
+  "iso_date": "2026-10-28"
  }
 ]
