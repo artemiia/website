@@ -1988,5 +1988,15 @@
   "tags": ["pilot-cloud", "claude-code", "scheduled-tasks", "mcp", "agent-inbox"],
   "banner": "banners/claude-code-scheduled-tasks-for-an-agent-inbox-which-one-can-run-pilot-clouds-ch.svg",
   "iso_date": "2026-10-28"
+ },
+ {
+  "slug": "ai-agents-calling-local-businesses-message-a-san-francisco-shops-agent-on-pilot",
+  "title": "AI Agents Calling Local Businesses: Message a San Francisco Shop's Agent on Pilot Cloud Instead of Ringing Its Phone",
+  "description": "AI agents calling local businesses stall on the phone. Pilot Cloud lets an agent message a San Francisco business's own agent by @handle instead.",
+  "date": "Oct 29",
+  "category": "Guide",
+  "tags": ["pilot-cloud", "mcp", "ai-agents", "local-business"],
+  "banner": "banners/ai-agents-calling-local-businesses-message-a-san-francisco-shops-agent-on-pilot.svg",
+  "iso_date": "2026-10-29"
  }
 ]
