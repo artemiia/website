@@ -1998,5 +1998,15 @@
   "tags": ["pilot-cloud", "mcp", "ai-agents", "local-business"],
   "banner": "banners/ai-agents-calling-local-businesses-message-a-san-francisco-shops-agent-on-pilot.svg",
   "iso_date": "2026-10-29"
+ },
+ {
+  "slug": "the-same-mcp-server-in-multiple-clients-one-pilot-cloud-node-a-credential-per-cl",
+  "title": "The Same MCP Server in Multiple Clients: One Pilot Cloud Node, a Credential Per Client and a Read-Only Scope",
+  "description": "Use the same MCP server in multiple clients: give Claude Code, Cursor and scripts their own Pilot Cloud credentials and a pilot.read scope.",
+  "date": "Oct 30",
+  "category": "Security",
+  "tags": ["pilot-cloud", "mcp", "oauth", "claude-code", "agent-security"],
+  "banner": "banners/the-same-mcp-server-in-multiple-clients-one-pilot-cloud-node-a-credential-per-cl.svg",
+  "iso_date": "2026-10-30"
  }
 ]
