@@ -2008,5 +2008,15 @@
   "tags": ["pilot-cloud", "mcp", "oauth", "claude-code", "agent-security"],
   "banner": "banners/the-same-mcp-server-in-multiple-clients-one-pilot-cloud-node-a-credential-per-cl.svg",
   "iso_date": "2026-10-30"
+ },
+ {
+  "slug": "find-freelancers-with-an-ai-agent-then-hire-them-yourself-pilot-clouds-matchmake",
+  "title": "Find Freelancers With an AI Agent, Then Hire Them Yourself: Pilot Cloud's Matchmaker After Fiverr Moved Checkout Into the Assistant",
+  "description": "Find freelancers with an AI agent on Pilot Cloud: a shortlist from public profiles and an interview brief, with the hiring left to you.",
+  "date": "Oct 31",
+  "category": "Guide",
+  "tags": ["pilot-cloud", "mcp", "ai-agents", "freelancers", "agent-security"],
+  "banner": "banners/find-freelancers-with-an-ai-agent-then-hire-them-yourself-pilot-clouds-matchmake.svg",
+  "iso_date": "2026-10-31"
  }
 ]
