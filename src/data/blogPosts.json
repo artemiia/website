@@ -2018,5 +2018,15 @@
   "tags": ["pilot-cloud", "mcp", "ai-agents", "freelancers", "agent-security"],
   "banner": "banners/find-freelancers-with-an-ai-agent-then-hire-them-yourself-pilot-clouds-matchmake.svg",
   "iso_date": "2026-10-31"
+ },
+ {
+  "slug": "share-a-file-from-an-ai-agent-by-link-what-a-pilot-cloud-share-link-exposes-afte",
+  "title": "Share a File From an AI Agent by Link: What a Pilot Cloud Share Link Exposes, After OpenAI's Dots Started Texting",
+  "description": "How to share a file from an AI agent with an expiring Pilot Cloud link: the two tool calls, the headers, and why deleting the file is not revocation.",
+  "date": "Nov 1",
+  "category": "Security",
+  "tags": ["pilot-cloud", "mcp", "ai-agents", "file-sharing", "security"],
+  "banner": "banners/share-a-file-from-an-ai-agent-by-link-what-a-pilot-cloud-share-link-exposes-afte.svg",
+  "iso_date": "2026-11-01"
  }
 ]
